@@ -1,6 +1,6 @@
 ## CS546-Project
 
-Introduction
+
 This website is an online platform to freelance services like such as web 
 development, app development, logo designing, photography, and digital 
 marketing etc. This website serves for both people who are looking for 
