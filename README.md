@@ -1,10 +1,12 @@
 ## CS546-Project
-#Introduction
+
+Introduction
 This website is an online platform to freelance services like such as web 
 development, app development, logo designing, photography, and digital 
 marketing etc. This website serves for both people who are looking for 
 freelancers as well as jobs.
-#Core Features
+
+Core Features
 1. Landing Page: Will have the list of jobs that is available (to show more 
 relevant result, will show the jobs that matches the user interest and jobs
 available in his location). The page will also have search bar that includes 
@@ -38,7 +40,7 @@ employee), the Employer should be able to Review, Rate and Report an
 employee and the Employee should be able to Review, Rate and Report 
 an employer.
 
-#Extra Features
+Extra Features
 1. Email verification - User should be able to create their profile through 
 email verification, a token will be generated and sent to the user for 
 him/her to verify their email ID. 
