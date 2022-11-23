@@ -88,7 +88,7 @@ const createEmployee = async (userName, preferences) => {
     resume: null,
     wishList: [],
     historyOfJobs: [],
-    overallRating: [],
+    overallRating: 0,
     reported: [],
     flag: false,
     currentJobsTaken: [],
