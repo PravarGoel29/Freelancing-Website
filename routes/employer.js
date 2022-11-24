@@ -6,7 +6,7 @@ const db = require("../config");
 const userData = require("../data/user");
 
 router
-    .route('/employer/:userId')
+    .route('/employer')
     .get(async (req, res) => {
         //code here for GET
         try {
