@@ -1,8 +1,6 @@
 const db = require("../config");
 const users = db.usersCollection;
-const employers = db.employerCollection;
-const employees = db.employeeCollection;
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const errorHandling = require("../validations");
 const validations = errorHandling.userValidations;
 const { ObjectId } = require("mongodb");
@@ -10,21 +8,31 @@ const moment = require("moment");
 
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */
-const createUser = async (userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences) => {
+const createUser = async (
+  userName,
+  firstName,
+  lastName,
+  email,
+  password,
+  contactNumber,
+  gender,
+  dob,
+  preferences
+) => {
   //1. validate arguments
-  if (arguments.length !== 8) throw "Incorrect number of arguments!";
-  validations.createUserValidation(
-    userName,
-    firstName,
-    lastName,
-    email,
-    password,
-    contactNumber,
-    gender,
-    dob,
-    preferences
-  );
-  validations.stringtrim(arguments);
+  if (arguments.length !== 9) throw "Incorrect number of arguments!";
+  // validations.createUserValidation(
+  //   userName,
+  //   firstName,
+  //   lastName,
+  //   email,
+  //   password,
+  //   contactNumber,
+  //   gender,
+  //   dob,
+  //   preferences
+  // );
+  // validations.stringtrim(arguments);
 
   //2. establish db connection
   const usersCollection = await users();
@@ -33,7 +41,9 @@ const createUser = async (userName, firstName, lastName, email, password, contac
   const count = await usersCollection.countDocuments();
   if (count !== 0) {
     //checks if the email is already in the DB
-    const findEmail = await usersCollection.findOne({ email: email.toLowerCase() });
+    const findEmail = await usersCollection.findOne({
+      email: email.toLowerCase(),
+    });
     if (findEmail !== null) throw "Email is already in use!";
   }
 
@@ -53,7 +63,7 @@ const createUser = async (userName, firstName, lastName, email, password, contac
   let employeeId = createEmployee(userName, preferences);
 
   //7. Create employee
-  let employerId = createEmployee(userName);
+  let employerId = createEmployer(userName);
 
   //8. Create new user obj
   let newUser = {
@@ -64,6 +74,7 @@ const createUser = async (userName, firstName, lastName, email, password, contac
     hashedPassword: hashedPw,
     dob: new Date(dob),
     contactNumber: contactNumber,
+    gender: gender,
     createdAt: new Date().toLocaleDateString(),
     employeeId: employeeId,
     employerId: employerId,
@@ -71,61 +82,82 @@ const createUser = async (userName, firstName, lastName, email, password, contac
 
   //9. insert user into the db
   let insertData = await usersCollection.insertOne(newUser);
-  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0) throw "Could not add new user!";
+  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0)
+    throw "Could not add new user!";
 
   //10. get user id
   let user = await usersCollection.findOne({ email: email.toLowerCase() });
   return user["_id"].toString();
 };
-/**Database function for the Employee Collection */
-const createEmployee = async (userName, preferences) => {
-  //0. establish db connection
-  const employeeCollection = await employees();
-  //1. create a new employee obj
-  let newEmployee = {
-    userName: userName,
+
+const getUserById = async (_id) => {
+  //1. validate argument
+  // check.idValidation(_id);
+  _id = _id.trim();
+
+  //2. establish db connection
+  const usersCollection = await users();
+
+  //3. checks if the user with the given id is already in the DB
+  const thisUser = await usersCollection.findOne({ _id: ObjectId(_id) });
+  if (thisUser === null) throw "No user with that id found";
+
+  //4. converts objectID to a string and returns it
+  thisUser._id = thisUser._id.toString();
+  return thisUser;
+};
+
+const updateUser = async (
+  _id,
+  userName,
+  firstName,
+  lastName,
+  email,
+  password,
+  contactNumber,
+  gender,
+  preferences
+) => {
+  //1. get user's data with the given id
+  let user_var = await getUserById(_id);
+
+  //2. validate argument
+  // check.idValidation(movieId);
+  // check.titleValidation(title);
+
+  //3. establish db connection
+  const usersCollection = await users();
+
+  //4. Updating user obj
+  const updatedUser = {
+    userName: userName.trim(),
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    password: password.trim(),
+    contactNumber: contactNumber.trim(),
+    gender: gender,
     preferences: preferences,
-    resume: null,
-    wishList: [],
-    historyOfJobs: [],
-    overallRating: [],
-    reported: [],
-    flag: false,
-    currentJobsTaken: [],
-    invites: [],
   };
 
-  //2. insert employee into the db
-  let insertEmployeeData = await employeeCollection.insertOne(newEmployee);
-  if (insertEmployeeData.acknowldeged === 0 || !insertEmployeeData.insertedId === 0)
-    throw "Could not add new employee!";
+  //5. Storing the updated user in DB
+  const updatedInfo = await usersCollection.updateOne(
+    { _id: ObjectId(_id) },
+    { $set: updatedUser }
+  );
 
-  //3. get user id
-  let employee = await employeeCollection.findOne({ userName: userName });
-  return employee["_id"].toString();
+  //6. checks if the user was successfully updated and stored in the DB
+  if (updatedInfo.modifiedCount === 0) {
+    throw "could not update the user successfully";
+  }
+
+  //7. returns the updated user's id
+  return await getUserById(_id);
 };
 
-/**Database function for the Employer Collection */
-const createEmployer = async (userName) => {
-  //0. establish db connection
-  const employerCollection = await employers();
-  //1. create a new employee obj
-  let newEmployer = {
-    userName: userName,
-    historyOfJobs: [],
-    overallRating: [],
-    reported: [],
-    flag: false,
-  };
-
-  //2. insert employee into the db
-  let insertEmployerData = await employerCollection.insertOne(newEmployer);
-  if (insertEmployerData.acknowldeged === 0 || !insertEmployerData.insertedId === 0)
-    throw "Could not add new employer!";
-
-  //3. get user id
-  let employer = await employerCollection.findOne({ userName: userName });
-  return employer["_id"].toString();
+/**Exporting Modules*/
+module.exports = {
+  createUser,
+  getUserById,
+  updateUser,
 };
-
-module.exports = { createUser, createEmployee, createEmployer };
