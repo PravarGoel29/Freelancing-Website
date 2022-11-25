@@ -5,6 +5,8 @@ const errorHandling = require("../validations");
 const validations = errorHandling.userValidations;
 const { ObjectId } = require("mongodb");
 const moment = require("moment");
+const Employee = require("./employee");
+const Employer = require("./employer");
 
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */
@@ -20,7 +22,7 @@ const createUser = async (
   preferences
 ) => {
   //1. validate arguments
-  if (arguments.length !== 9) throw "Incorrect number of arguments!";
+  if (arguments.length !== 5) throw "Incorrect number of arguments!";
   // validations.createUserValidation(
   //   userName,
   //   firstName,
@@ -60,10 +62,10 @@ const createUser = async (
   const hashedPw = await bcrypt.hash(password, saltRounds);
 
   //6. Create employee
-  let employeeId = createEmployee(userName, preferences);
+  let employeeId = Employee.createEmployee(userName, preferences);
 
   //7. Create employee
-  let employerId = createEmployer(userName);
+  let employerId = Employer.createEmployer(userName);
 
   //8. Create new user obj
   let newUser = {
