@@ -20,7 +20,7 @@ router
     //code for GET
 
     //rendering the signup page
-    res.sendFile(path.resolve("static/signup.html"));
+    res.sendFile(path.resolve("static/login.html"));
   })
   .post(async (req, res) => {
     //code for POST
@@ -29,17 +29,7 @@ router
     const UserInfo = req.body;
 
     try {
-      const {
-        userName,
-        firstName,
-        lastName,
-        email,
-        password,
-        contactNumber,
-        gender,
-        dob,
-        preferences,
-      } = UserInfo;
+      const { userName, password } = UserInfo;
 
       //Validating the contents of UserInfo obj
       // try {
