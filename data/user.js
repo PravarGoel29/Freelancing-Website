@@ -128,4 +128,15 @@ const createEmployer = async (userName) => {
   return employer["_id"].toString();
 };
 
-module.exports = { createUser, createEmployee, createEmployer };
+const getAllUser = async () => {
+  const userCollection = await users();
+  const userList = await userCollection.find({}).toArray();
+  for (let userData of userList) {
+    userData._id = userData._id.toString();
+  }
+  return userList;
+};
+
+
+
+module.exports = { createUser, createEmployee, createEmployer, getAllUser };
