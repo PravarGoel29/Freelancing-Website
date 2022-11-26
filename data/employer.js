@@ -32,16 +32,6 @@ const createEmployer = async (userName) => {
   return employer["_id"].toString();
 };
 
-
-const getAllEmployer = async () => {
-  const employerCollection = await employers();
-  const employerList = await employerCollection.find({}).toArray();
-  for (let employerData of employerList) {
-    employerData._id = employerData._id.toString();
-  }
-  return employerList;
-};
-
 const getEmployerById = async (_id) => {
   //0. validate arguments
   // check.idValidation(_id);
@@ -63,6 +53,4 @@ const getEmployerById = async (_id) => {
 module.exports = {
   createEmployer,
   getEmployerById,
-
-  getAllEmployer
 };

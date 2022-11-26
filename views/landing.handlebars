@@ -1,0 +1,35 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/public/main-styles.css" rel="stylesheet">
+    <title>{{title}}</title>
+</head>
+<body>
+    <a  href="/static/homepage.html">Make Another Search</a>
+    <header>
+        <h1>{{title}}</h1>
+        <h2>Jobs</h2>
+    </header>
+    <main>
+        
+        <div>
+        {{#if peopleStatus}}
+ {{#each allPosts}}
+         <ul>
+                <li>
+                   {{this.location}}
+                </li>
+        </ul>
+{{/each}}
+         {{else}}
+        <p class="not-found">We're sorry, but no results were found for.</p>
+    {{/if}}
+    </div>
+    </main>
+</body>
+</html>

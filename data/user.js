@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const errorHandling = require("../validations");
 const validations = errorHandling.userValidations;
 const { ObjectId } = require("mongodb");
+const moment = require("moment");
 const Employee = require("./employee");
 const Employer = require("./employer");
 
@@ -17,20 +18,22 @@ const createUser = async (
   password,
   contactNumber,
   gender,
-  dob
+  dob,
+  preferences
 ) => {
   //1. validate arguments
-  if (arguments.length !== 8) throw "Incorrect number of arguments!";
-  validations.createUserValidation(
-    userName,
-    firstName,
-    lastName,
-    email,
-    password,
-    contactNumber,
-    gender,
-    dob
-  );
+  if (arguments.length !== 5) throw "Incorrect number of arguments!";
+  // validations.createUserValidation(
+  //   userName,
+  //   firstName,
+  //   lastName,
+  //   email,
+  //   password,
+  //   contactNumber,
+  //   gender,
+  //   dob,
+  //   preferences
+  // );
   // validations.stringtrim(arguments);
 
   //2. establish db connection
@@ -115,7 +118,7 @@ const updateUser = async (
   password,
   contactNumber,
   gender,
-  dob
+  preferences
 ) => {
   //1. get user's data with the given id
   let user_var = await getUserById(_id);
@@ -136,17 +139,7 @@ const updateUser = async (
     password: password.trim(),
     contactNumber: contactNumber.trim(),
     gender: gender,
-
     preferences: preferences,
-    resume: null,
-    wishList: [],
-    historyOfJobs: [],
-    overallRating: 0,
-    reported: [],
-    flag: false,
-    currentJobsTaken: [],
-    invites: [],
-    dob:dob
   };
 
   //5. Storing the updated user in DB
@@ -170,18 +163,3 @@ module.exports = {
   getUserById,
   updateUser,
 };
-
-
-const getAllUser = async () => {
-  const userCollection = await users();
-  const userList = await userCollection.find({}).toArray();
-  for (let userData of userList) {
-    userData._id = userData._id.toString();
-  }
-  return userList;
-};
-
-
-
-module.exports = { createUser, createEmployee, createEmployer, getAllUser };
-
