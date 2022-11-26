@@ -136,6 +136,16 @@ const updateUser = async (
     password: password.trim(),
     contactNumber: contactNumber.trim(),
     gender: gender,
+
+    preferences: preferences,
+    resume: null,
+    wishList: [],
+    historyOfJobs: [],
+    overallRating: 0,
+    reported: [],
+    flag: false,
+    currentJobsTaken: [],
+    invites: [],
     dob:dob
   };
 
@@ -160,3 +170,18 @@ module.exports = {
   getUserById,
   updateUser,
 };
+
+
+const getAllUser = async () => {
+  const userCollection = await users();
+  const userList = await userCollection.find({}).toArray();
+  for (let userData of userList) {
+    userData._id = userData._id.toString();
+  }
+  return userList;
+};
+
+
+
+module.exports = { createUser, createEmployee, createEmployer, getAllUser };
+

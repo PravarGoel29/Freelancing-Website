@@ -39,6 +39,15 @@ const createEmployee = async (userName, preferences) => {
   return employee["_id"].toString();
 };
 
+const getAllEmployee = async () => {
+  const employeeCollection = await employees();
+  const employeeList = await employeeCollection.find({}).toArray();
+  for (let employeeData of employeeList) {
+    employeeData._id = employeeData._id.toString();
+  }
+  return employeeList;
+};
+
 const getEmployeeById = async (_id) => {
   //0. validate arguments
   // check.idValidation(_id);
@@ -60,4 +69,7 @@ const getEmployeeById = async (_id) => {
 module.exports = {
   createEmployee,
   getEmployeeById,
+
+  getAllEmployee
+
 };
