@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const errorHandling = require("../validations");
 const validations = errorHandling.userValidations;
 const { ObjectId } = require("mongodb");
-const moment = require("moment");
 const Employee = require("./employee");
 const Employer = require("./employer");
 
@@ -18,22 +17,20 @@ const createUser = async (
   password,
   contactNumber,
   gender,
-  dob,
-  preferences
+  dob
 ) => {
   //1. validate arguments
-  if (arguments.length !== 5) throw "Incorrect number of arguments!";
-  // validations.createUserValidation(
-  //   userName,
-  //   firstName,
-  //   lastName,
-  //   email,
-  //   password,
-  //   contactNumber,
-  //   gender,
-  //   dob,
-  //   preferences
-  // );
+  if (arguments.length !== 8) throw "Incorrect number of arguments!";
+  validations.createUserValidation(
+    userName,
+    firstName,
+    lastName,
+    email,
+    password,
+    contactNumber,
+    gender,
+    dob
+  );
   // validations.stringtrim(arguments);
 
   //2. establish db connection
@@ -118,7 +115,7 @@ const updateUser = async (
   password,
   contactNumber,
   gender,
-  preferences
+  dob
 ) => {
   //1. get user's data with the given id
   let user_var = await getUserById(_id);
@@ -139,7 +136,7 @@ const updateUser = async (
     password: password.trim(),
     contactNumber: contactNumber.trim(),
     gender: gender,
-    preferences: preferences,
+    dob:dob
   };
 
   //5. Storing the updated user in DB

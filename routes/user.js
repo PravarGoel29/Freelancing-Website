@@ -10,7 +10,7 @@ const userData = data.users;
 const path = require("path");
 
 //require validations file
-//const validation = require("../validations");
+const validation = require("../validations");
 
 router
   .route("/")
@@ -39,11 +39,11 @@ router
         preferences,
       } = UserInfo;
 
-      //Validating the contents of UserInfo obj
-      // try {
-      // } catch (e) {
-      //   return res.status(400).json({ error: e });
-      // }
+      // Validating the contents of UserInfo obj
+      try {
+      } catch (e) {
+        return res.status(400).json({ error: e });
+      }
 
       //calling the createUser function with post body contents as it's arguments
       const newUser = await userData.createUser(
@@ -71,11 +71,11 @@ router
     //code here for GET by id
 
     //Validating the id
-    // try {
-    //   validation.idValidation(req.params._id);
-    // } catch (e) {
-    //   return res.status(400).json({ error: e });
-    // }
+    try {
+      validation.idValidation(req.params._id);
+    } catch (e) {
+      return res.status(400).json({ error: e });
+    }
 
     //getting the user with the given id from the DB
     try {
@@ -106,10 +106,10 @@ router
     } = UserInfo;
 
     //Validating the contents of UserInfo obj
-    // try {
-    // } catch (e) {
-    //   return res.status(400).json({ error: e });
-    // }
+    try {
+    } catch (e) {
+      return res.status(400).json({ error: e });
+    }
 
     //checks if the user with given id is present in the database
     try {
