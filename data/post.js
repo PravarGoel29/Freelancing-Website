@@ -7,26 +7,26 @@ const { ObjectId } = require("mongodb");
 
 /**Database function for the Post Collection */
 const getPostById = async (PostId) => {
-    // if (!PostId) {
-    //   throw 'You must provide an id to search for';
-    // }
-    // if (typeof PostId !== 'string') {
-    //   throw 'Id must be a string';
-    // }
-    // if (PostId.trim().length === 0) {
-    //   throw 'Id cannot be an empty string or just spaces';
-    // }
-    // id = PostId.trim();
-    // if (!ObjectId.isValid(id)) {
-    //   throw 'invalid object ID';
-    // }
-    // const postCollection = await posts();
-    // const post = await postCollection.findOne({ _id: ObjectId(id)});
-    // if (post === null) {
-    //   throw 'no post with that id';
-    // }
-    // post._id = post._id.toString();
-    // return post;
+    if (!PostId) {
+      throw 'You must provide an id to search for';
+    }
+    if (typeof PostId !== 'string') {
+      throw 'Id must be a string';
+    }
+    if (PostId.trim().length === 0) {
+      throw 'Id cannot be an empty string or just spaces';
+    }
+    id = PostId.trim();
+    if (!ObjectId.isValid(id)) {
+      throw 'invalid object ID';
+    }
+    const postCollection = await posts();
+    const post = await postCollection.findOne({ _id: ObjectId(id)});
+    if (post === null) {
+      throw 'no post with that id';
+    }
+    post._id = post._id.toString();
+    return post;
   };
   
 

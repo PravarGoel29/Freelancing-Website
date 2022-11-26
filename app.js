@@ -24,25 +24,3 @@ app.listen(3000, () => {
   console.log("Your routes will be running on http://localhost:3000");
 });
 
-// async function main() {
-//   try {
-//     const peopledata = await people.getAllPeople();
-//     //console.log(peopledata);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   try {
-//     const peopledata1 = await people.searchPeopleByName("rob");
-//     console.log(peopledata1);
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   try {
-//     const peopledata2 = await people.searchPeopleByID(27888);
-//     console.log(typeof peopledata2);
-//   } catch (e) {
-//     console.log(e);
-//   }
-// }
-
-// main();
