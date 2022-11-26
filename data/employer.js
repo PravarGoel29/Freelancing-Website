@@ -32,6 +32,7 @@ const createEmployer = async (userName) => {
   return employer["_id"].toString();
 };
 
+
 const getAllEmployer = async () => {
   const employerCollection = await employers();
   const employerList = await employerCollection.find({}).toArray();
@@ -62,5 +63,6 @@ const getEmployerById = async (_id) => {
 module.exports = {
   createEmployer,
   getEmployerById,
+
   getAllEmployer
 };

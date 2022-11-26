@@ -69,5 +69,7 @@ const getEmployeeById = async (_id) => {
 module.exports = {
   createEmployee,
   getEmployeeById,
+
   getAllEmployee
+
 };

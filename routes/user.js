@@ -1,4 +1,3 @@
-//require express and express router as shown in lecture code
 const express = require("express");
 const router = express.Router();
 const validations = errorHandling.userValidations;
@@ -76,58 +75,43 @@ router
     }
   });
 
-router
-  .route("/")
-  .get(async (req, res) => {
-    //code for GET
+const {
+  userName,
+  firstName,
+  lastName,
+  email,
+  password,
+  contactNumber,
+  gender,
+  dob,
+  preferences,
+} = UserInfo;
 
-    //rendering the signup page
-    res.sendFile(path.resolve("static/signup.html"));
-  })
-  .post(async (req, res) => {
-    //code for POST
+//Validating the contents of UserInfo obj
+// try {
+// } catch (e) {
+//   return res.status(400).json({ error: e });
+// }
 
-    //getting the post body
-    const UserInfo = req.body;
+//calling the createUser function with post body contents as it's arguments
+try {
+  const newUser = await userData.createUser(
+    userName,
+    firstName,
+    lastName,
+    email,
+    password,
+    contactNumber,
+    gender,
+    dob,
+    preferences
+  );
 
-    try {
-      const {
-        userName,
-        firstName,
-        lastName,
-        email,
-        password,
-        contactNumber,
-        gender,
-        dob,
-        preferences,
-      } = UserInfo;
-
-      //Validating the contents of UserInfo obj
-      // try {
-      // } catch (e) {
-      //   return res.status(400).json({ error: e });
-      // }
-
-      //calling the createUser function with post body contents as it's arguments
-      const newUser = await userData.createUser(
-        userName,
-        firstName,
-        lastName,
-        email,
-        password,
-        contactNumber,
-        gender,
-        dob,
-        preferences
-      );
-
-      //Displaying the success message
-      res.status(200).json("Successfully Signed Up !");
-    } catch (e) {
-      res.status(500).json({ error: e });
-    }
-  });
+  //Displaying the success message
+  res.status(200).json("Successfully Signed Up !");
+} catch (e) {
+  res.status(500).json({ error: e });
+}
 
 router
   .route("/:_id")
