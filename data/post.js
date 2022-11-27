@@ -84,6 +84,7 @@ const addPost = async (
 const getAllPosts = async () => {
   const postCollection = await posts();
   const PostList = await postCollection.find({}).toArray();
+  //if (!PostList) throw "Could not get all posts";
   return PostList;
 };
 
