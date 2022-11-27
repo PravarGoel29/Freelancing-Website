@@ -1,6 +1,5 @@
 const db = require("../config");
 const employers = db.employerCollection;
-const bcrypt = require("bcryptjs");
 const errorHandling = require("../validations");
 const validations = errorHandling.userValidations;
 const { ObjectId } = require("mongodb");
@@ -49,8 +48,36 @@ const getEmployerById = async (_id) => {
   return thisEmployer;
 };
 
+const getAllEmployers = async () => {
+  const employerCollection = await employers();
+  const employersList = await employerCollection.find({}).toArray();
+  if (!employersList) throw "Could not get all employers";
+  return employersList;
+};
+
+const removeEmployer = async (id) => {
+  //check.idValidation(id);
+
+  const employer = await getEmployerById(id);
+  const employerCollection = await employers();
+  const deletionInfo = await employerCollection.deleteOne({
+    _id: ObjectId(id),
+  });
+
+  if (deletionInfo.deletedCount === 0) {
+    throw `Could not delete the employer with id of ${id}`;
+  }
+
+  {
+    deleted: true;
+  }
+  return employer.userName + " has been successfully deleted";
+};
+
 /**Exporting Modules*/
 module.exports = {
   createEmployer,
   getEmployerById,
+  getAllEmployers,
+  removeEmployer,
 };
