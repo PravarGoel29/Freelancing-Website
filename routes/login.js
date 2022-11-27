@@ -37,18 +37,26 @@ router
       //   return res.status(400).json({ error: e });
       // }
 
-      //calling the createUser function with post body contents as it's arguments
-      const newUser = await userData.createUser(
-        userName,
-        firstName,
-        lastName,
-        email,
-        password,
-        contactNumber,
-        gender,
-        dob,
-        preferences
-      );
+      //calling the getAllUsers function with post body contents as it's arguments
+      const AllUsers = await userData.getAllUsers();
+
+      let flag = false;
+
+      for (let index = 0; index < AllUsers.length; index++) {
+        let currentUser = AllUsers[index];
+        console.log(typeof currentUser);
+        if (userName === currentUser.userName) {
+          if (password === currentUser.hashedPassword) {
+            flag = true;
+            break;
+          } else {
+            throw "Incorrect username or password !";
+          }
+        }
+        if (!flag) {
+          throw "Incorrect username or password!";
+        }
+      }
 
       const allPosts = await postData.getAllPosts();
 
@@ -64,78 +72,6 @@ router
       //res.status(200).json("Successfully Signed Up !");
     } catch (e) {
       res.status(500).json({ error: e });
-    }
-  });
-
-router
-  .route("/:_id")
-  .get(async (req, res) => {
-    //code here for GET by id
-
-    //Validating the id
-    // try {
-    //   validation.idValidation(req.params._id);
-    // } catch (e) {
-    //   return res.status(400).json({ error: e });
-    // }
-
-    //getting the user with the given id from the DB
-    try {
-      let thisUser = await userData.getUserById(req.params._id);
-      res.json(thisUser);
-    } catch (e) {
-      console.log(req.params._id);
-      res.status(404).json({ error: "User not found" });
-    }
-  })
-
-  .put(async (req, res) => {
-    //code for PUT
-
-    //getting the put body
-    let UserInfo = req.body;
-
-    const {
-      _id,
-      userName,
-      firstName,
-      lastName,
-      email,
-      password,
-      contactNumber,
-      gender,
-      preferences,
-    } = UserInfo;
-
-    //Validating the contents of UserInfo obj
-    // try {
-    // } catch (e) {
-    //   return res.status(400).json({ error: e });
-    // }
-
-    //checks if the user with given id is present in the database
-    try {
-      await userData.getUserById(req.params._id);
-    } catch (e) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    //updating the user data
-    try {
-      const updatedUser = await userData.updateUser(
-        _id,
-        userName,
-        firstName,
-        lastName,
-        email,
-        password,
-        contactNumber,
-        gender,
-        preferences
-      );
-      res.json(updatedUser);
-    } catch (e) {
-      res.status(500).send(e);
     }
   });
 

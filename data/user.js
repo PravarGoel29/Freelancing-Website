@@ -157,9 +157,17 @@ const updateUser = async (
   return await getUserById(_id);
 };
 
+const getAllUsers = async () => {
+  const usersCollection = await users();
+  const usersList = await usersCollection.find({}).toArray();
+  if (!usersList) throw "Could not get all users";
+  return usersList;
+};
+
 /**Exporting Modules*/
 module.exports = {
   createUser,
   getUserById,
   updateUser,
+  getAllUsers,
 };
