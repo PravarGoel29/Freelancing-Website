@@ -36,7 +36,8 @@ const addPost = async (
   updatedTime,
   imageID,
   status,
-  jobType
+  jobType,
+  salary
 ) => {
   const postCollection = await posts();
   var currentdate = new Date();
@@ -69,7 +70,7 @@ const addPost = async (
     reviewIDs: [],
     status: status,
     jobType: jobType,
-    salary: null,
+    salary: salary,
     applicants: [],
     candidates: [],
   };
