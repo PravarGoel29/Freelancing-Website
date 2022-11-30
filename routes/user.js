@@ -5,7 +5,6 @@ const router = express.Router();
 //require data file
 const data = require("../data");
 const userData = data.users;
-
 const postData = data.posts;
 
 //require path
@@ -14,16 +13,35 @@ const path = require("path");
 //require validations file
 //const validation = require("../validations");
 
-router
-  .route("/")
-  .get(async (req, res) => {
-    //code for GET
+router.route("/").get(async (req, res) => {
+  //code for GET (index route)
 
-    //rendering the signup page
-    res.sendFile(path.resolve("static/signup.html"));
+  //checks if the session is active
+  if (req.session.user) {
+    //redirect to /protected if active
+    res.redirect("/protected");
+  } else {
+    //renders login page if not active
+    res.status(200).render("../views/login");
+  }
+});
+
+router
+  .route("/signup")
+  .get(async (req, res) => {
+    //code for GET signup
+
+    //checks if the session is active
+    if (req.session.user) {
+      //redirect to /protected if active
+      res.redirect("/protected");
+    } else {
+      //renders signup page if not active
+      res.status(200).render("../views/signup");
+    }
   })
   .post(async (req, res) => {
-    //code for POST
+    //code for POST signup
 
     //getting the post body
     const UserInfo = req.body;
@@ -60,93 +78,62 @@ router
         preferences
       );
 
-      const allPosts = await postData.getAllPosts();
-
-      context = {
-        title: "Landing Page",
-        Name: allPosts._id,
-        peopleStatus: true,
-        allPosts: allPosts,
-      };
-
-      //Displaying the success message
-      res.status(200).render("landing", context);
-      //res.status(200).json("Successfully Signed Up !");
+      //redirecting to index route
+      res.redirect("/");
     } catch (e) {
-      res.status(500).json({ error: e });
+      //in case of error, rendering signup page again with error message
+      res.status(400).render("../views/signup", { error: e });
     }
   });
 
-router
-  .route("/:_id")
-  .get(async (req, res) => {
-    //code here for GET by id
+router.route("/login").post(async (req, res) => {
+  //code here for POST login
 
-    //Validating the id
+  //getting the post body
+  const userInfo = req.body;
+
+  try {
+    const { usernameInput, passwordInput } = userInfo;
+
     // try {
-    //   validation.idValidation(req.params._id);
-    // } catch (e) {
-    //   return res.status(400).json({ error: e });
-    // }
+    //   check.userNameValidation(usernameInput);
+    //   check.userNameValidation(passwordInput);
+    // } catch (error) {}
 
-    //getting the user with the given id from the DB
-    try {
-      let thisUser = await userData.getUserById(req.params._id);
-      res.json(thisUser);
-    } catch (e) {
-      console.log(req.params._id);
-      res.status(404).json({ error: "User not found" });
-    }
-  })
+    //calling the checUser function to check if the username and password match with the ones in db
+    const thisUser = await userData.checkUser(usernameInput, passwordInput);
 
-  .put(async (req, res) => {
-    //code for PUT
+    //storing the user session
+    req.session.user = usernameInput;
 
-    //getting the put body
-    let UserInfo = req.body;
+    //redirecting to /protected
+    res.redirect("/protected");
+  } catch (e) {
+    //in case of error, rendering login page again with error message
+    res.status(400).render("../views/login", { error: e });
+  }
+});
 
-    const {
-      _id,
-      userName,
-      firstName,
-      lastName,
-      email,
-      password,
-      contactNumber,
-      gender,
-      preferences,
-    } = UserInfo;
+router.route("/protected").get(async (req, res) => {
+  //code here for GET /protected
 
-    //Validating the contents of UserInfo obj
-    // try {
-    // } catch (e) {
-    //   return res.status(400).json({ error: e });
-    // }
+  const user = req.session.user;
 
-    //checks if the user with given id is present in the database
-    try {
-      await userData.getUserById(req.params._id);
-    } catch (e) {
-      return res.status(404).json({ error: "User not found" });
-    }
+  // if authenticated user, renders landing page
+  if (user) {
+    res.status(200).render("../views/landing", {});
+  }
+});
 
-    //updating the user data
-    try {
-      const updatedUser = await userData.updateUser(
-        _id,
-        userName,
-        firstName,
-        lastName,
-        email,
-        password,
-        contactNumber,
-        gender,
-        preferences
-      );
-      res.json(updatedUser);
-    } catch (e) {
-      res.status(500).send(e);
-    }
-  });
+router.route("/logout").get(async (req, res) => {
+  //code here for GET /logout
+
+  //destroying the session
+  req.session.destroy();
+
+  //redirecting to index route which renders login page
+  res.redirect("/");
+  return;
+});
 
 module.exports = router;
