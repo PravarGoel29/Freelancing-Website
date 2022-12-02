@@ -5,14 +5,14 @@ const router = express.Router();
 //require data file
 const data = require("../data");
 const userData = data.users;
-
 const postData = data.posts;
 
 //require path
 const path = require("path");
 
 //require validations file
-//const validation = require("../validations");
+const validations = require("../validations/routeValidations");
+
 
 router
   .route("/")
@@ -63,5 +63,50 @@ router
       res.status(500).json({ error: e });
     }
   });
+router
+  .route('/:postId')
+  .get(async (req, res) => {
+    //code here for GET
+    let id = req.params.postId;
+    try {
+      //validation of id
+      validations.validateID(id)
+      id = id.trim();
+    } catch (e) {
+      console.log(e)
+      res.status(400).json({ error: e });
+      return;
+    }
+    try {
+      const postInfo = await postData.getPostById(id);
+      res.status(200).json(postInfo);
+      return;
+    } catch (e) {
+      res.status(404).json({ error: e });
+      return;
+    }
+  })
+  .delete(async (req, res) => {
+    //code here for DELETE
+    let id = req.params.postId;
+    try {
+      //validation of id
+      validations.validateID(id)
+      id = id.trim();
+    } catch (e) {
+      res.status(400).json({ error: e });
+      return;
+    }
+    try {
+      await postData.removePost(id);
+      res.status(200).json({ postId: id, deleted: true });
+      return;
+    } catch (e) {
+      console.log(e)
+      res.status(404).json({ error: e });
+      return;
+    }
+  })
+
 
 module.exports = router;

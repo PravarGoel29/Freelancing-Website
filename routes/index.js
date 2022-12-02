@@ -8,6 +8,7 @@ const constructorMethod = (app) => {
   //middleware functions
 
   app.use("/", user);
+  app.use("/createpost", createPost)
   app.use("*", (req, res) => {
     res.sendStatus(404);
   });
