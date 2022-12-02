@@ -1,21 +1,73 @@
-//Here is where you'll set up your server as shown in lecture code
-const people = require("./data/user");
-
+// Setup server, session and middleware here.
 const express = require("express");
+var exphbs = require("express-handlebars");
 const app = express();
 const static = express.static(__dirname + "/public");
-
+const session = require("express-session");
 const configRoutes = require("./routes");
-const exphbs = require("express-handlebars");
+// import exphbs;
 
+app.use;
 app.use("/public", static);
-app.use("/static", express.static(__dirname + "/static"));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
+app.engine("handlebars", require("exphbs"));
 app.set("view engine", "handlebars");
+
+app.use(
+  session({
+    name: "AuthCookie",
+    secret: "some secret string!",
+    saveUninitialized: true,
+    resave: false,
+  })
+);
+
+app.use("/protected", (req, res, next) => {
+  //console.log(req.session.user);
+  if (req.session.user) {
+    res.status(200).render("../views/landing", {});
+  } else {
+    msg = "Please log in with valid credentials.";
+    res.status(403).render("../views/forbiddenAccess", { error: msg });
+    next();
+  }
+});
+
+app.use("/login", (req, res, next) => {
+  if (req.session.user) {
+    return res.redirect("/protected");
+  } else {
+    next();
+  }
+});
+
+// app.use((req, res, next) => {
+//   //console.log(req.session.user);
+//   if (req.session.user) {
+//     const log =
+//       "[" +
+//       new Date().toUTCString() +
+//       "]: " +
+//       req.method +
+//       " " +
+//       req.originalUrl +
+//       " (Authenticated User)";
+//     console.log(log);
+//     //res.redirect("/logout");
+//   } else {
+//     const log =
+//       "[" +
+//       new Date().toUTCString() +
+//       "]: " +
+//       req.method +
+//       " " +
+//       req.originalUrl +
+//       " (Non-Authenticated User)";
+//     console.log(log);
+//   }
+//   next();
+// });
 
 configRoutes(app);
 

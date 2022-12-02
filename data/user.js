@@ -69,7 +69,7 @@ const createUser = async (
 
   //8. Create new user obj
   let newUser = {
-    userName: userName,
+    userName: userName.toLowerCase(),
     firstName: firstName,
     lastName: lastName,
     email: email.toLowerCase(),
@@ -90,6 +90,47 @@ const createUser = async (
   //10. get user id
   let user = await usersCollection.findOne({ email: email.toLowerCase() });
   return user["_id"].toString();
+};
+
+/**This function is for user login  */
+const checkUser = async (username, password) => {
+  //1. validate arguments
+  // check.userNameValidation(username);
+  // check.passwordValidation(password);
+
+  //2. establish db connection
+  const usersCollection = await users();
+
+  //3. get all the users in an array
+  const usersList = await usersCollection.find({}).toArray();
+
+  //4. checking if all the data has been fetched
+  if (!usersList) throw "Could not get all users";
+
+  //5. checks if userName and password are already present in the db or not
+  for (let index = 0; index < usersList.length; index++) {
+    let currentUser = usersList[index];
+
+    //comparing username
+    if (username.toLowerCase().trim() === currentUser.userName) {
+      compareToMatch = await bcrypt.compare(
+        password,
+        currentUser.hashedPassword
+      );
+      //comparing password with hashedPassword
+      if (compareToMatch) {
+        //return true if username and password match
+        return {
+          authenticatedUser: true,
+        };
+      } else {
+        //throw if password does not match hashedPassword
+        throw "Either the username or password is invalid";
+      }
+    }
+  }
+  //throw if username does not match
+  throw "Either the username or password is invalid";
 };
 
 const getUserById = async (_id) => {
@@ -158,8 +199,13 @@ const updateUser = async (
 };
 
 const getAllUsers = async () => {
+  //1. establish db connection
   const usersCollection = await users();
+
+  //2. get all the users in an array
   const usersList = await usersCollection.find({}).toArray();
+
+  //3. checking if all the data has been fetched
   if (!usersList) throw "Could not get all users";
   return usersList;
 };
@@ -170,4 +216,5 @@ module.exports = {
   getUserById,
   updateUser,
   getAllUsers,
+  checkUser,
 };
