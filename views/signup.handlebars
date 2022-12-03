@@ -1,67 +1,82 @@
-<a href="/">Already have an account? Click here to log-in</a>
-<form action="/signup" method="POST" id="registration-form">
+<head>
+    <link rel="stylesheet" href="../public/css/stylesheet.css">
+</head>
+<section class="form my-4 mx-5">
+    <div class="container">
+        <div class="row no-gutter">
+            <div class="col-lg-5">
+                <img src="../public/images/freelanceImg.jpg" class="img-fluid" alt="No image">
+            </div>
+            <div class="col-lg-7 px-5 pt-5">
+                <h1 class="font-weight-bold py-3">Freelance</h1>
+                <h4>Sign up</h4>
+                <form name="signupform" action="/signup" method="POST" id="registration-form">
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                            <input type="text"  name="firstName" id="firstName" placeholder="First name" class="form-control my-3 p-4">
+                        </div>
+                        <div class="col-lg-7">
+                            <input type="text" name="lastName" id="lastName" placeholder="Last name" class="form-control my-3 p-4">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                            <input type="email" name="email" id="email" placeholder="Email" class="form-control my-3 p-4">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                            <input type="text" name="userName" id="userName" placeholder="User Name" class="form-control my-3 p-4">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                            <input type="text" name="contactNumber" id="contactNumber" placeholder="Contact Number" class="form-control my-3 p-4">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                            <input type="radio" id="male" name="gender" value="male" class=" radio ">
+                            <label for="male">Male</label><br>
+                            <input type="radio" id="female" name="gender" value="female" class="radio">
+                            <label for="female">Female</label><br>
+                            <input type="radio" id="other_gender" name="gender" value="other" class=" radio">
+                            <label for="other_gender">Other</label>
+                        </div>
+                    </div>
 
-      <div class="form-row">
-                            <div class="col-lg-7">
-                                <input type="text"  name="firstName" id="firstName" placeholder="First name" class="form-control my-3 p-4">
-                            </div>
-                            <div class="col-lg-7">
-                                <input type="text" name="lastName" id="lastName" placeholder="Last name" class="form-control my-3 p-4">
-                            </div>
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                                <input type="date" name="dob" id="dob" placeholder="Date of Birth" class="form-control my-3 p-4"> 
                         </div>
-                        <div class="form-row">
-                            <div class="col-lg-7">
-                                <input type="email" name="email" id="email" placeholder="Email" class="form-control my-3 p-4">
-                            </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                            <input type="text" name="preferences" id="preferences" placeholder="Preferences" class="form-control my-3 p-4">
                         </div>
-                        <div class="form-row">
-                            <div class="col-lg-7">
-                                <input type="text" name="userName" id="userName" placeholder="User Name" class="form-control my-3 p-4">
-                            </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                            <input type="password" name="password" id="password" placeholder="Password" class="form-control my-3 p-4">
                         </div>
-                        <div class="form-row">
-                            <div class="col-lg-7">
-                                <input type="text" name="contactNumber" id="contactNumber" placeholder="Contact Number" class="form-control my-3 p-4">
-                            </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                            <input type="password" name="password" id="confirmPassword" placeholder="Confirm Password" class="form-control my-3 p-4">
                         </div>
-                        <div class="form-row">
-                            <div class="col-lg-7">
-                        <input type="radio" id="male" name="gender" value="male" class=" radio ">
-  <label for="male">Male</label><br>
-  <input type="radio" id="female" name="gender" value="female" >
-  <label for="female">Female</label><br>
-  <input type="radio" id="other_gender" name="gender" value="other">
-  <label for="other_gender">Other</label>
-</div>
-</div>
-    
-                        <div class="form-row">
-                            <div class="col-lg-7">
-                              
-                                    <input type="date" name="dob" id="dob" placeholder="Date of Birth" class="form-control my-3 p-4"/>
-                                  
-                            </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-7">
+                            <button type="submit" class="btnclass1 mt-3 mb-5">Sign up</button>
                         </div>
-                        <div class="form-row">
-                            <div class="col-lg-7">
-                                <input type="text" name="preferences" id="preferences" placeholder="Preferences" class="form-control my-3 p-4">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-lg-7">
-                                <input type="password" name="password" id="password" placeholder="Password" class="form-control my-3 p-4">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-lg-7">
-                                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control my-3 p-4">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-lg-7">
-                                <button type="submit" class="btnclass1 mt-3 mb-5">Sign up</button>
-                            </div>
-                        </div>
-</form>
-
+                    </div>
+                    <div class="form-row">
+                        <a href="/">Already have an account? Click here to log-in</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="../validations/signupClientSideValidations.js"></script>
 {{#if error}}<div class="text-goes-here">{{error}}</div>{{/if}}
