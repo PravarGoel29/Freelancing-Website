@@ -115,16 +115,16 @@ const checkUser = async (username, password) => {
 
 };
 
-const getUserById = async (UserID) => {
+const getUserById = async (UserId) => {
   //1. validate argument
-  validations.validateID(UserID);
-  UserID = UserID.trim();
+  validations.validateID(UserId);
+  UserId = UserId.trim();
 
   //2. establish db connection
   const usersCollection = await users();
 
   //3. checks if the user with the given id is already in the DB
-  const thisUser = await usersCollection.findOne({ _id: ObjectId(UserID) });
+  const thisUser = await usersCollection.findOne({ _id: ObjectId(UserId) });
   if (thisUser === null) throw "No user with that id found";
 
   //4. converts objectID to a string and returns it
@@ -132,9 +132,9 @@ const getUserById = async (UserID) => {
   return thisUser;
 };
 
-const updateUser = async (UserID,userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences) => {
+const updateUser = async (UserId,userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences) => {
   //1. get user's data with the given id and assign the previously stored values to individually update the fields
-  let user_var = await getUserById(UserID);
+  let user_var = await getUserById(UserId);
   if(firstName === undefined) firstName = user_var.firstName;
   if(lastName === undefined) lastName = user_var.lastName;
   if(email === undefined) email = user_var.email;
@@ -143,9 +143,8 @@ const updateUser = async (UserID,userName,firstName,lastName,email,password,cont
   if(gender === undefined) email = user_var.gender;
   if(preferences === undefined) preferences = user_var.preferences;
 
-
   //2. validate the input arguments
-  validations.validateID(UserID);
+  validations.validateID(UserId);
     validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences);
   //3. establish db connection
   const usersCollection = await users();
@@ -165,7 +164,7 @@ const updateUser = async (UserID,userName,firstName,lastName,email,password,cont
 
   //5. Storing the updated user in DB
   const updatedInfo = await usersCollection.updateOne(
-    { _id: ObjectId(UserID) },
+    { _id: ObjectId(UserId) },
     { $set: updatedUser }
   );
 
@@ -175,7 +174,7 @@ const updateUser = async (UserID,userName,firstName,lastName,email,password,cont
   }
 
   //7. returns the updated user's id
-  return await getUserById(UserID);
+  return await getUserById(UserId);
 };
 
 const getAllUsers = async () => {
