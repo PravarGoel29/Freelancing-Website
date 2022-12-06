@@ -7,6 +7,7 @@ const moment = require("moment");
 
 /**Database function for the Employer Collection */
 const createEmployer = async (userName) => {
+  validations.userNameValidation(userName)
   //0. establish db connection
   const employerCollection = await employers();
   //1. create a new employee obj
@@ -31,16 +32,16 @@ const createEmployer = async (userName) => {
   return employer["_id"].toString();
 };
 
-const getEmployerById = async (_id) => {
+const getEmployerById = async (employerId) => {
   //0. validate arguments
-  // check.idValidation(_id);
-  _id = _id.trim();
+  validations.validateID(employerId);
+  employerId = employerId.trim();
 
   //1. establish db connection
   const employerCollection = await employers();
 
   //2. checks if the employer with the given employerID is already in the DB
-  const thisEmployer = await employerCollection.findOne({ _id: ObjectId(_id) });
+  const thisEmployer = await employerCollection.findOne({ _id: ObjectId(employerId) });
   if (thisEmployer === null) throw "No employer with that id found";
 
   //3. converts objectID to a string and returns it
@@ -55,21 +56,17 @@ const getAllEmployers = async () => {
   return employersList;
 };
 
-const removeEmployer = async (id) => {
+const removeEmployer = async (employerId) => {
   //check.idValidation(id);
 
   const employer = await getEmployerById(id);
   const employerCollection = await employers();
   const deletionInfo = await employerCollection.deleteOne({
-    _id: ObjectId(id),
+    _id: ObjectId(employerId),
   });
 
   if (deletionInfo.deletedCount === 0) {
-    throw `Could not delete the employer with id of ${id}`;
-  }
-
-  {
-    deleted: true;
+    throw `Could not delete the employer with id of ${employerId}`;
   }
   return employer.userName + " has been successfully deleted";
 };
