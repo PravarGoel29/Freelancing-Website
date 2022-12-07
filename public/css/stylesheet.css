@@ -33,3 +33,7 @@ img{
     border: 1px solid;
     color: black;
 }
+
+.hidden {
+    display: none !important;
+}

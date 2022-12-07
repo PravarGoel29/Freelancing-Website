@@ -15,7 +15,7 @@ const errorHandling = require("../validations");
 const validations = errorHandling.userValidations;
 router.route("/").get(async (req, res) => {
   //code for GET (index route)
-  
+
   //checks if the session is active
   if (req.session.user) {
     //redirect to /protected if active
@@ -61,9 +61,19 @@ router
 
       //Validating the contents of UserInfo obj
       try {
-        validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
+        validations.UserValidation(
+          userName,
+          firstName,
+          lastName,
+          email,
+          password,
+          contactNumber,
+          gender,
+          dob,
+          preferences
+        );
       } catch (e) {
-        return res.status(400).json({ error: e });
+        return res.status(400).render("../views/signup", { error: e });
       }
 
       //calling the createUser function with post body contents as it's arguments
