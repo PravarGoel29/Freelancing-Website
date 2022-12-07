@@ -11,30 +11,10 @@ const Employer = require("./employer");
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */
 const createUser = async (
-  userName,
-  firstName,
-  lastName,
-  email,
-  password,
-  contactNumber,
-  gender,
-  dob,
-  preferences
-) => {
+  userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences) => {
   //1. validate arguments
-  if (arguments.length !== 5) throw "Incorrect number of arguments!";
-  // validations.createUserValidation(
-  //   userName,
-  //   firstName,
-  //   lastName,
-  //   email,
-  //   password,
-  //   contactNumber,
-  //   gender,
-  //   dob,
-  //   preferences
-  // );
-  // validations.stringtrim(arguments);
+  // if (arguments.length !== 5) throw "Incorrect number of arguments!";
+  validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences);
 
   //2. establish db connection
   const usersCollection = await users();
@@ -90,13 +70,14 @@ const createUser = async (
   //10. get user id
   let user = await usersCollection.findOne({ email: email.toLowerCase() });
   return user["_id"].toString();
+ 
 };
 
 /**This function is for user login  */
 const checkUser = async (username, password) => {
   //1. validate arguments
-  // check.userNameValidation(username);
-  // check.passwordValidation(password);
+  validations.userNameValidation(username);
+  validations.passwordValidation(password);
 
   //2. establish db connection
   const usersCollection = await users();
@@ -131,18 +112,19 @@ const checkUser = async (username, password) => {
   }
   //throw if username does not match
   throw "Either the username or password is invalid";
+
 };
 
-const getUserById = async (_id) => {
+const getUserById = async (UserId) => {
   //1. validate argument
-  // check.idValidation(_id);
-  _id = _id.trim();
+  validations.validateID(UserId);
+  UserId = UserId.trim();
 
   //2. establish db connection
   const usersCollection = await users();
 
   //3. checks if the user with the given id is already in the DB
-  const thisUser = await usersCollection.findOne({ _id: ObjectId(_id) });
+  const thisUser = await usersCollection.findOne({ _id: ObjectId(UserId) });
   if (thisUser === null) throw "No user with that id found";
 
   //4. converts objectID to a string and returns it
@@ -150,24 +132,20 @@ const getUserById = async (_id) => {
   return thisUser;
 };
 
-const updateUser = async (
-  _id,
-  userName,
-  firstName,
-  lastName,
-  email,
-  password,
-  contactNumber,
-  gender,
-  preferences
-) => {
-  //1. get user's data with the given id
-  let user_var = await getUserById(_id);
+const updateUser = async (UserId,userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences) => {
+  //1. get user's data with the given id and assign the previously stored values to individually update the fields
+  let user_var = await getUserById(UserId);
+  if(firstName === undefined) firstName = user_var.firstName;
+  if(lastName === undefined) lastName = user_var.lastName;
+  if(email === undefined) email = user_var.email;
+  if(password === undefined) password = user_var.password;
+  if(contactNumber === undefined) email = user_var.contactNumber;
+  if(gender === undefined) email = user_var.gender;
+  if(preferences === undefined) preferences = user_var.preferences;
 
-  //2. validate argument
-  // check.idValidation(movieId);
-  // check.titleValidation(title);
-
+  //2. validate the input arguments
+  validations.validateID(UserId);
+    validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences);
   //3. establish db connection
   const usersCollection = await users();
 
@@ -180,12 +158,13 @@ const updateUser = async (
     password: password.trim(),
     contactNumber: contactNumber.trim(),
     gender: gender,
+    dob:dob,
     preferences: preferences,
   };
 
   //5. Storing the updated user in DB
   const updatedInfo = await usersCollection.updateOne(
-    { _id: ObjectId(_id) },
+    { _id: ObjectId(UserId) },
     { $set: updatedUser }
   );
 
@@ -195,7 +174,7 @@ const updateUser = async (
   }
 
   //7. returns the updated user's id
-  return await getUserById(_id);
+  return await getUserById(UserId);
 };
 
 const getAllUsers = async () => {
@@ -208,6 +187,7 @@ const getAllUsers = async () => {
   //3. checking if all the data has been fetched
   if (!usersList) throw "Could not get all users";
   return usersList;
+  
 };
 
 /**Exporting Modules*/

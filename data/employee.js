@@ -3,7 +3,7 @@ const employers = db.employerCollection;
 const employees = db.employeeCollection;
 const bcrypt = require("bcryptjs");
 const errorHandling = require("../validations");
-const validations = errorHandling.userValidations;
+const validations = errorHandling.dataValidations;
 const { ObjectId } = require("mongodb");
 const moment = require("moment");
 
@@ -16,10 +16,10 @@ const createEmployee = async (userName, preferences) => {
   let newEmployee = {
     userName: userName,
     preferences: preferences,
-    resume: null,
+    resume: ObjectId(),
     wishList: [],
     historyOfJobs: [],
-    overallRating: [],
+    overallRating: 0,
     reported: [],
     flag: false,
     currentJobsTaken: [],
@@ -39,16 +39,16 @@ const createEmployee = async (userName, preferences) => {
   return employee["_id"].toString();
 };
 
-const getEmployeeById = async (_id) => {
+const getEmployeeById = async (employeeId) => {
   //0. validate arguments
-  // check.idValidation(_id);
-  _id = _id.trim();
+  validations.idValidation(employeeId);
+  employeeId = employeeId.trim();
 
   //1. establish db connection
   const employeeCollection = await employees();
 
   //2. checks if the employee with the given employeeID is already in the DB
-  const thisEmployee = await employeeCollection.findOne({ _id: ObjectId(_id) });
+  const thisEmployee = await employeeCollection.findOne({ _id: ObjectId(employeeId) });
   if (thisEmployee === null) throw "No employee with that id found";
 
   //3. converts objectID to a string and returns it
