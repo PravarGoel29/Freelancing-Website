@@ -33,7 +33,7 @@ const createUser = async (
   const countUserName = await usersCollection.countDocuments();
   if (countUserName !== 0) {
     //checks if the username is already in the DB
-    const findUserName = await usersCollection.findOne({ userName: userName });
+    const findUserName = await usersCollection.findOne({ userName: userName.toLowerCase() });
     if (findUserName !== null) throw "Username is already in use!";
   }
 
