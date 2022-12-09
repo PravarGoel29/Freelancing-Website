@@ -1,0 +1,32 @@
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  {{!-- <a href="/users/{{user._id}}/edit"><button class="btn btn-info btn-sm" type="button">Edit</button></a> --}}
+  <button class="btn btn-info btn-sm" type="button" onclick="location.href='/users/{{user._id}}/edit'">Edit</button>
+</div>
+{{!--<img alt="user" src="/public/images/userprofile/{{user.profileImage}}" id="profile_image">--}}
+<h1>{{user.userName}}</h1>
+<div>{{user.firstName}} {{user.lastName}}</div>
+<div class="label">{{user.email}}</div><hr />
+
+<h2>Jobs Taken</h2>
+{{!--
+{{#each subscribedCommunities}}
+  <div><a href="/communities/{{this._id}}">{{this.name}}</a></div>
+{{/each}}
+--}}
+<br />
+
+<h2>Invites</h2>
+{{!-- {{#each adminCommunities}}
+<div><a href="/communities/{{this._id}}">{{this.name}}</a></div>
+{{/each}} --}}
+<br />
+
+<h2>Jobs posted</h2>
+{{!-- {{#each answeredQuestions}}
+<div><a href="/questions/{{this._id}}">{{this.title}}</a></div>
+{{/each}} --}}
+<br />
+
+{{#if error}}
+  <p>{{error}}</p>
+{{/if}}
