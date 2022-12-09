@@ -9,82 +9,55 @@ const { ObjectId } = require("mongodb");
 
 const getPostById = async (postId) => {
   //validation of id
-  validations.validateID(postId)
-  postId = postId.trim()
+  validations.validateID(postId);
+  postId = postId.trim();
   const postCollection = await posts();
   const postInfo = await postCollection.findOne({ _id: ObjectId(postId) });
   if (postInfo === null) {
-    throw 'There is no post for the given id';
+    throw "There is no post for the given id";
   }
   postInfo._id = postInfo._id.toString();
-  console.log(postInfo)
+  console.log(postInfo);
   return postInfo;
 };
 
-const addPost = async (
-  location,
-  description,
-  postedTime,
-  updatedTime,
-  imageID,
-  status,
-  jobType,
-  salary
-) => {
+const createPost = async (location, description, domain, tags, jobtype, salary) => {
   const postCollection = await posts();
-  var currentdate = new Date();
-  var postedTime =
-    currentdate.getMonth() +
-    1 +
-    "/" +
-    currentdate.getDate() +
-    "/" +
-    currentdate.getFullYear() +
-    " / " +
-    currentdate.toLocaleTimeString();
-  var updatedTime =
-    currentdate.getDate() +
-    "/" +
-    (currentdate.getMonth() + 1) +
-    "/" +
-    currentdate.getFullYear() +
-    " / " +
-    currentdate.toLocaleTimeString();
+  var postedTime = new Date().toLocaleDateString("en-US");
 
   const newPost = {
     location: location,
     description: description,
     postedTime: postedTime,
-    updatedTime: updatedTime,
-    imageID: imageID,
-    domain: [],
-    tags: [],
+    updatedTime: null,
+    imageID: "123",
+    domain: domain,
+    tags: tags,
     reviewIDs: [],
-    status: status,
-    jobType: jobType,
+    status: "Active",
+    jobtype: jobtype,
     salary: salary,
     applicants: [],
     candidates: [],
   };
+
   let insertPostData = await postCollection.insertOne(newPost);
-  if (insertPostData.acknowldeged === 0 || !insertPostData.insertedId === 0)
-    throw "Could not add new Post!";
-  const PostId = insertPostData.insertedId.toString();
-  const post = await postCollection.findOne({ _id: ObjectId(PostId) });
+  if (!insertPostData.insertedCount === 0) throw "Job posting unsuccessful";
+  const postId = insertPostData.insertedId.toString();
+  const post = await postCollection.findOne({ _id: ObjectId(postId) });
   return post;
 };
 
 const getAllPosts = async () => {
   const postCollection = await posts();
   const PostList = await postCollection.find({}).toArray();
-  //if (!PostList) throw "Could not get all posts";
   return PostList;
 };
 
 const removePost = async (postId) => {
   //validation of id
-  validations.validateID(postId)
-  id = postId.trim()
+  validations.validateID(postId);
+  id = postId.trim();
   const postCollection = await posts();
   const postInfo = await postCollection.findOne({ _id: ObjectId(id) });
   if (!postInfo) {
@@ -99,7 +72,7 @@ const removePost = async (postId) => {
 
 module.exports = {
   getPostById,
-  addPost,
+  createPost,
   getAllPosts,
   removePost,
 };
