@@ -99,7 +99,7 @@ router.route("/login").post(async (req, res) => {
     try {
       validations.validateUsername(username);
       validations.validatePassword(password);
-    } catch (error) { }
+    } catch (error) {}
 
     //calling the checUser function to check if the username and password match with the ones in db
     const thisUser = await userData.checkUser(usernameInput, passwordInput);
