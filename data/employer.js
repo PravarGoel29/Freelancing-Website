@@ -7,7 +7,7 @@ const moment = require("moment");
 
 /**Database function for the Employer Collection */
 const createEmployer = async (userName) => {
-  validations.userNameValidation(userName)
+  validations.validateUsername(userName);
   //0. establish db connection
   const employerCollection = await employers();
   //1. create a new employee obj
@@ -21,10 +21,7 @@ const createEmployer = async (userName) => {
 
   //2. insert employee into the db
   let insertEmployerData = await employerCollection.insertOne(newEmployer);
-  if (
-    insertEmployerData.acknowldeged === 0 ||
-    !insertEmployerData.insertedId === 0
-  )
+  if (insertEmployerData.acknowldeged === 0 || !insertEmployerData.insertedId === 0)
     throw "Could not add new employer!";
 
   //3. get user id

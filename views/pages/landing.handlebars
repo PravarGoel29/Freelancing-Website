@@ -1,0 +1,26 @@
+<body>
+  <a href="/static/homepage.html">Make Another Search</a>
+  <header>
+    <h1>{{title}}</h1>
+    <h2>Jobs</h2>
+  </header>
+  <main>
+    <a href="/logout">Click Here to Log out </a>
+    <div>
+      {{#if peopleStatus}}
+        {{#each allPosts}}
+          <ul>
+            <li>
+              {{this.location}}
+            </li>
+          </ul>
+        {{/each}}
+      {{else}}
+        <p class="not-found">We're sorry, but no results were found for.</p>
+      {{/if}}
+    </div>
+    <div>
+      <a href="/user">User Profile</a>
+    </div>
+  </main>
+</body>

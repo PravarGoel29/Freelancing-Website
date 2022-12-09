@@ -12,17 +12,18 @@ const path = require("path");
 
 //require validations file
 const errorHandling = require("../validations");
+const { validateDOB } = require("../validations/dataValidations");
 const validations = errorHandling.userValidations;
 router.route("/").get(async (req, res) => {
   //code for GET (index route)
-  
+
   //checks if the session is active
   if (req.session.user) {
     //redirect to /protected if active
     res.redirect("/protected");
   } else {
     //renders login page if not active
-    res.status(200).render("../views/login");
+    res.status(200).render("../views/pages/login");
   }
 });
 
@@ -37,7 +38,7 @@ router
       res.redirect("/protected");
     } else {
       //renders signup page if not active
-      res.status(200).render("../views/signup");
+      res.status(200).render("../views/pages/signup");
     }
   })
   .post(async (req, res) => {
@@ -47,22 +48,20 @@ router
     const UserInfo = req.body;
 
     try {
-      const {
-        userName,
-        firstName,
-        lastName,
-        email,
-        password,
-        contactNumber,
-        gender,
-        dob,
-        preferences,
-      } = UserInfo;
+      const { userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences } = UserInfo;
 
       //Validating the contents of UserInfo obj
       try {
-        validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
+        //validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
+        validations.validateEmail(email);
+        validations.validateUsername(userName);
+        validations.validateName(firstName);
+        validations.validateName(lastName);
+        validations.validateDOB(dob);
+        validations.validatePassword(password);
+        validations.validatePhoneNumber(contactNumber);
       } catch (e) {
+        console.log(e);
         return res.status(400).json({ error: e });
       }
 
@@ -82,8 +81,9 @@ router
       //redirecting to index route
       res.redirect("/");
     } catch (e) {
+      console.log(e);
       //in case of error, rendering signup page again with error message
-      res.status(400).render("../views/signup", { error: e });
+      res.status(400).render("../views/pages/signup", { error: e });
     }
   });
 
@@ -97,8 +97,8 @@ router.route("/login").post(async (req, res) => {
     const { usernameInput, passwordInput } = userInfo;
 
     try {
-      validations.userNameValidation(username);
-      validations.passwordValidation(password);
+      validations.validateUsername(username);
+      validations.validatePassword(password);
     } catch (error) {}
 
     //calling the checUser function to check if the username and password match with the ones in db
@@ -111,7 +111,7 @@ router.route("/login").post(async (req, res) => {
     res.redirect("/protected");
   } catch (e) {
     //in case of error, rendering login page again with error message
-    res.status(400).render("../views/login", { error: e });
+    res.status(400).render("../views/pages/login", { error: e });
   }
 });
 
@@ -122,7 +122,18 @@ router.route("/protected").get(async (req, res) => {
 
   // if authenticated user, renders landing page
   if (user) {
-    res.status(200).render("../views/landing", {});
+    res.status(200).render("../views/pages/landing", {});
+  }
+});
+
+router.route("/user").get(async (req, res) => {
+  //code here for GET /protected
+
+  const user = req.session.user;
+
+  // if authenticated user, renders landing page
+  if (user) {
+    res.status(200).render("../views/pages/user", {});
   }
 });
 

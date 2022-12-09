@@ -10,12 +10,17 @@ const Employer = require("./employer");
 
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */
-const createUser = async (
-  userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences) => {
+const createUser = async (userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences) => {
   //1. validate arguments
   // if (arguments.length !== 5) throw "Incorrect number of arguments!";
-  validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences);
-
+  //validations.UserValidation(userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences);
+  validations.validateEmail(email);
+  validations.validateUsername(userName);
+  validations.validateName(firstName);
+  validations.validateName(lastName);
+  validations.validateDOB(dob);
+  validations.validatePassword(password);
+  validations.validatePhoneNumber(contactNumber);
   //2. establish db connection
   const usersCollection = await users();
 
@@ -54,7 +59,7 @@ const createUser = async (
     lastName: lastName,
     email: email.toLowerCase(),
     hashedPassword: hashedPw,
-    dob: new Date(dob),
+    dob: dob,
     contactNumber: contactNumber,
     gender: gender,
     createdAt: new Date().toLocaleDateString(),
@@ -64,20 +69,18 @@ const createUser = async (
 
   //9. insert user into the db
   let insertData = await usersCollection.insertOne(newUser);
-  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0)
-    throw "Could not add new user!";
+  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0) throw "Could not add new user!";
 
   //10. get user id
   let user = await usersCollection.findOne({ email: email.toLowerCase() });
   return user["_id"].toString();
- 
 };
 
 /**This function is for user login  */
 const checkUser = async (username, password) => {
   //1. validate arguments
-  validations.userNameValidation(username);
-  validations.passwordValidation(password);
+  validations.validateUsername(username);
+  validations.validatePassword(password);
 
   //2. establish db connection
   const usersCollection = await users();
@@ -94,10 +97,7 @@ const checkUser = async (username, password) => {
 
     //comparing username
     if (username.toLowerCase().trim() === currentUser.userName) {
-      compareToMatch = await bcrypt.compare(
-        password,
-        currentUser.hashedPassword
-      );
+      compareToMatch = await bcrypt.compare(password, currentUser.hashedPassword);
       //comparing password with hashedPassword
       if (compareToMatch) {
         //return true if username and password match
@@ -112,7 +112,6 @@ const checkUser = async (username, password) => {
   }
   //throw if username does not match
   throw "Either the username or password is invalid";
-
 };
 
 const getUserById = async (UserId) => {
@@ -132,20 +131,39 @@ const getUserById = async (UserId) => {
   return thisUser;
 };
 
-const updateUser = async (UserId,userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences) => {
+const updateUser = async (
+  UserId,
+  userName,
+  firstName,
+  lastName,
+  email,
+  password,
+  contactNumber,
+  gender,
+  dob,
+  preferences
+) => {
   //1. get user's data with the given id and assign the previously stored values to individually update the fields
   let user_var = await getUserById(UserId);
-  if(firstName === undefined) firstName = user_var.firstName;
-  if(lastName === undefined) lastName = user_var.lastName;
-  if(email === undefined) email = user_var.email;
-  if(password === undefined) password = user_var.password;
-  if(contactNumber === undefined) email = user_var.contactNumber;
-  if(gender === undefined) email = user_var.gender;
-  if(preferences === undefined) preferences = user_var.preferences;
+  if (firstName === undefined) firstName = user_var.firstName;
+  if (lastName === undefined) lastName = user_var.lastName;
+  if (email === undefined) email = user_var.email;
+  if (password === undefined) password = user_var.password;
+  if (contactNumber === undefined) email = user_var.contactNumber;
+  if (gender === undefined) email = user_var.gender;
+  if (preferences === undefined) preferences = user_var.preferences;
 
   //2. validate the input arguments
   validations.validateID(UserId);
-    validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences);
+  //validations.UserValidation(userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences);
+
+  validations.validateEmail(email);
+  validations.validateUsername(userName);
+  validations.validateName(firstName);
+  validations.validateName(lastName);
+  validations.validateDOB(dob);
+  validations.validatePassword(password);
+  validations.validatePhoneNumber(contactNumber);
   //3. establish db connection
   const usersCollection = await users();
 
@@ -158,15 +176,12 @@ const updateUser = async (UserId,userName,firstName,lastName,email,password,cont
     password: password.trim(),
     contactNumber: contactNumber.trim(),
     gender: gender,
-    dob:dob,
+    dob: dob,
     preferences: preferences,
   };
 
   //5. Storing the updated user in DB
-  const updatedInfo = await usersCollection.updateOne(
-    { _id: ObjectId(UserId) },
-    { $set: updatedUser }
-  );
+  const updatedInfo = await usersCollection.updateOne({ _id: ObjectId(UserId) }, { $set: updatedUser });
 
   //6. checks if the user was successfully updated and stored in the DB
   if (updatedInfo.modifiedCount === 0) {
@@ -187,7 +202,6 @@ const getAllUsers = async () => {
   //3. checking if all the data has been fetched
   if (!usersList) throw "Could not get all users";
   return usersList;
-  
 };
 
 /**Exporting Modules*/

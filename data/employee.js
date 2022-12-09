@@ -28,10 +28,7 @@ const createEmployee = async (userName, preferences) => {
 
   //2. insert employee into the db
   let insertEmployeeData = await employeeCollection.insertOne(newEmployee);
-  if (
-    insertEmployeeData.acknowldeged === 0 ||
-    !insertEmployeeData.insertedId === 0
-  )
+  if (insertEmployeeData.acknowldeged === 0 || !insertEmployeeData.insertedId === 0)
     throw "Could not add new employee!";
 
   //3. get user id
@@ -41,7 +38,7 @@ const createEmployee = async (userName, preferences) => {
 
 const getEmployeeById = async (employeeId) => {
   //0. validate arguments
-  validations.idValidation(employeeId);
+  validations.validateID(employeeId);
   employeeId = employeeId.trim();
 
   //1. establish db connection
