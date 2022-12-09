@@ -1,10 +1,12 @@
 // Setup server, session and middleware here.
+//Update by Pravar after revert
 const express = require("express");
 var exphbs = require("express-handlebars");
 const app = express();
 const static = express.static(__dirname + "/public");
 const session = require("express-session");
 const configRoutes = require("./routes");
+const a = 10;
 // import exphbs;
 
 app.use;

@@ -11,11 +11,11 @@ const postData = data.posts;
 const path = require("path");
 
 //require validations file
-//const validation = require("../validations");
-
+const errorHandling = require("../validations");
+const validations = errorHandling.userValidations;
 router.route("/").get(async (req, res) => {
   //code for GET (index route)
-
+  
   //checks if the session is active
   if (req.session.user) {
     //redirect to /protected if active
@@ -60,10 +60,11 @@ router
       } = UserInfo;
 
       //Validating the contents of UserInfo obj
-      // try {
-      // } catch (e) {
-      //   return res.status(400).json({ error: e });
-      // }
+      try {
+        validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
+      } catch (e) {
+        return res.status(400).json({ error: e });
+      }
 
       //calling the createUser function with post body contents as it's arguments
       const newUser = await userData.createUser(
@@ -95,10 +96,10 @@ router.route("/login").post(async (req, res) => {
   try {
     const { usernameInput, passwordInput } = userInfo;
 
-    // try {
-    //   check.userNameValidation(usernameInput);
-    //   check.userNameValidation(passwordInput);
-    // } catch (error) {}
+    try {
+      validations.userNameValidation(username);
+      validations.passwordValidation(password);
+    } catch (error) {}
 
     //calling the checUser function to check if the username and password match with the ones in db
     const thisUser = await userData.checkUser(usernameInput, passwordInput);
