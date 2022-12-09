@@ -133,7 +133,7 @@ router.route("/user").get(async (req, res) => {
 
   // if authenticated user, renders landing page
   if (user) {
-    res.status(200).render("../views/pages/user", {});
+    res.status(200).render("../views/pages/user", { user: user });
   }
 });
 
