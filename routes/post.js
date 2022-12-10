@@ -9,7 +9,7 @@ const xss = require("xss");
 
 router.route("/").get(async (req, res) => {
   //console.log("inside post / get");
-  res.status(200).render("../views/pages/user");
+  res.status(200).render("../views/pages/profile");
 });
 
 router.route("/").post(async (req, res) => {
@@ -37,9 +37,34 @@ router.route("/:postId").get(async (req, res) => {
     //validation of id
     validations.validateID(id);
     id = id.trim();
+    const user = req.session.user;
     const post = await postData.getPostById(id);
+
+    let thisUserPostFlag = false;
+    if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
+      thisUserPostFlag = true;
+    }
     //console.log(post);
-    res.status(200).render("../views/pages/viewpost", { user: req.session.user, post: post });
+    res.status(200).render("../views/pages/viewpost", { user: user, post: post, thisUserPostFlag: thisUserPostFlag });
+    return;
+  } catch (e) {
+    console.log(e);
+    res.status(404).json({ error: e });
+    return;
+  }
+});
+
+router.route("/:postId/applied").get(async (req, res) => {
+  //code here for GET
+  let id = req.params.postId;
+  try {
+    //validation of id
+    validations.validateID(id);
+    id = id.trim();
+    const user = req.session.user;
+    const post = await postData.addApplicants(user.userName, id);
+    console.log(post);
+    res.status(200).render("../views/pages/jobapplied");
     return;
   } catch (e) {
     console.log(e);
