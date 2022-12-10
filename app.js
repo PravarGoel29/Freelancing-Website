@@ -11,7 +11,7 @@ app.use;
 app.use("/public", static);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.engine("handlebars", require("exphbs"));
+app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 app.use(
@@ -23,7 +23,7 @@ app.use(
   })
 );
 
-app.use("/protected", (req, res, next) => {
+app.use("/home", (req, res, next) => {
   //console.log(req.session.user);
   if (req.session.user) {
     res.status(200).render("../views/pages/landing", {});
@@ -36,7 +36,7 @@ app.use("/protected", (req, res, next) => {
 
 app.use("/login", (req, res, next) => {
   if (req.session.user) {
-    return res.redirect("/protected");
+    return res.redirect("/home");
   } else {
     next();
   }

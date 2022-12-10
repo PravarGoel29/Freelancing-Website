@@ -47,10 +47,10 @@ const createUser = async (userName, firstName, lastName, email, password, contac
   const hashedPw = await bcrypt.hash(password, saltRounds);
 
   //6. Create employee
-  let employeeId = Employee.createEmployee(userName, preferences);
+  let employeeId = await Employee.createEmployee(userName, preferences);
 
   //7. Create employee
-  let employerId = Employer.createEmployer(userName);
+  let employerId = await Employer.createEmployer(userName);
 
   //8. Create new user obj
   let newUser = {
@@ -72,46 +72,29 @@ const createUser = async (userName, firstName, lastName, email, password, contac
   if (insertData.acknowldeged === 0 || !insertData.insertedId === 0) throw "Could not add new user!";
 
   //10. get user id
-  let user = await usersCollection.findOne({ email: email.toLowerCase() });
+  let user = await usersCollection.findOne({ userName: userName.toLowerCase() });
   return user["_id"].toString();
 };
 
 /**This function is for user login  */
-const checkUser = async (username, password) => {
+const checkUser = async (userName, password) => {
   //1. validate arguments
-  validations.validateUsername(username);
+  validations.validateUsername(userName);
   validations.validatePassword(password);
 
   //2. establish db connection
   const usersCollection = await users();
 
-  //3. get all the users in an array
-  const usersList = await usersCollection.find({}).toArray();
+  //3. check if username exists
+  const user = await usersCollection.findOne({ userName: userName.toLowerCase() });
+  if (user === null) throw "Either the username or password is invalid";
 
-  //4. checking if all the data has been fetched
-  if (!usersList) throw "Could not get all users";
+  //4. check if password is same
+  const passwordCheck = await bcrypt.compare(password, user["hashedPassword"]);
+  if (passwordCheck === false) throw "Either the username or password is invalid";
 
-  //5. checks if userName and password are already present in the db or not
-  for (let index = 0; index < usersList.length; index++) {
-    let currentUser = usersList[index];
-
-    //comparing username
-    if (username.toLowerCase().trim() === currentUser.userName) {
-      compareToMatch = await bcrypt.compare(password, currentUser.hashedPassword);
-      //comparing password with hashedPassword
-      if (compareToMatch) {
-        //return true if username and password match
-        return {
-          authenticatedUser: true,
-        };
-      } else {
-        //throw if password does not match hashedPassword
-        throw "Either the username or password is invalid";
-      }
-    }
-  }
-  //throw if username does not match
-  throw "Either the username or password is invalid";
+  let authUser = { authenticated: true, user: user };
+  return authUser;
 };
 
 const getUserById = async (UserId) => {
@@ -124,6 +107,23 @@ const getUserById = async (UserId) => {
 
   //3. checks if the user with the given id is already in the DB
   const thisUser = await usersCollection.findOne({ _id: ObjectId(UserId) });
+  if (thisUser === null) throw "No user with that id found";
+
+  //4. converts objectID to a string and returns it
+  thisUser._id = thisUser._id.toString();
+  return thisUser;
+};
+
+const getUserByUserName = async (userName) => {
+  //1. validate argument
+  //validations.validateID(userName);
+  userName = userName.trim();
+
+  //2. establish db connection
+  const usersCollection = await users();
+
+  //3. checks if the user with the given id is already in the DB
+  const thisUser = await usersCollection.findOne({ userName: userName.toLowerCase() });
   if (thisUser === null) throw "No user with that id found";
 
   //4. converts objectID to a string and returns it
@@ -211,4 +211,5 @@ module.exports = {
   updateUser,
   getAllUsers,
   checkUser,
+  getUserByUserName,
 };

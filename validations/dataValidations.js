@@ -71,6 +71,7 @@ const validateNumber = (inputNum) => {
   if (inputNum % 1 !== 0) throw "Date cannot be a decimal ID!";
   return inputNum;
 };
+
 const validateDOB = (inputdate) => {
   if (!inputdate) {
     throw "Input date of birth is empty";
@@ -111,13 +112,19 @@ const validateLocation = (inputLocation) => {
   if (!inputLocation) throw "Location not provided.";
   if (typeof inputLocation !== "string") throw "Location is not of valid input type.";
   if (inputLocation.trim().length === 0) throw "Location is empty.";
-  if (inputName.trim().length < 2) throw "Location must contain at least 2 characters.";
+  if (inputLocation.trim().length < 2) throw "Location must contain at least 2 characters.";
 };
 
 const validateDescription = (inputDescription) => {
   if (!inputDescription) throw "Description not provided.";
   if (typeof inputDescription !== "string") throw "Description is not of valid input type.";
   if (inputDescription.trim().length === 0) throw "Description is empty.";
+};
+
+const validateTitle = (inputTitle) => {
+  if (!inputTitle) throw "Title not provided.";
+  if (typeof inputTitle !== "string") throw "Title is not of valid input type.";
+  if (inputTitle.trim().length === 0) throw "Title is empty.";
 };
 
 const validateDomain = (inputDomain) => {
@@ -130,7 +137,7 @@ const validateJobType = (inputJobType) => {
   if (!inputJobType) throw "Job Type not provided.";
   if (typeof inputJobType !== "string") throw "Job Type is not of valid input type.";
   if (inputJobType.trim().length === 0) throw "Job Type is empty.";
-  if (inputJobType !== "Remote" || inputJobType !== "In-Person" || inputJobType !== "Hybrid") {
+  if (!(inputJobType === "Remote" || inputJobType === "In-Person" || inputJobType === "Hybrid")) {
     throw "Invalid Job Type";
   }
 };
@@ -144,7 +151,7 @@ const validateSalary = (inputSalary) => {
   if (typeof inputSalary !== "string") throw "Salary is not of valid input type.";
   if (inputSalary.trim().length === 0) throw "Salary is empty.";
   const regex = new RegExp("^[0-9]*$");
-  if (!regex.test(inputUsername)) throw "Salary field must only have digits.";
+  if (!regex.test(inputSalary)) throw "Salary field must only have digits.";
 };
 
 module.exports = {
@@ -157,6 +164,7 @@ module.exports = {
   validatePhoneNumber,
   validateLocation,
   validateDescription,
+  validateTitle,
   validateDomain,
   validateJobType,
   validateTags,

@@ -1,26 +1,18 @@
-<body>
-  <a href="/static/homepage.html">Make Another Search</a>
-  <header>
-    <h1>{{title}}</h1>
-    <h2>Jobs</h2>
-  </header>
-  <main>
-    <a href="/logout">Click Here to Log out </a>
-    <div>
-      {{#if peopleStatus}}
-        {{#each allPosts}}
-          <ul>
-            <li>
-              {{this.location}}
-            </li>
-          </ul>
-        {{/each}}
-      {{else}}
-        <p class="not-found">We're sorry, but no results were found for.</p>
-      {{/if}}
-    </div>
-    <div>
-      <a href="/user">User Profile</a>
-    </div>
-  </main>
-</body>
+{{#if user}}
+  <h2>Home Page</h2>
+  <div>
+    {{!-- {{#if allPosts}} --}}
+    {{#each allPosts}}
+      <div><p><a href="/post/{{this._id}}">{{this._id}} {{this.title}}</a></p></div>
+    {{/each}}
+    {{!-- {{else}}
+      <p class="not-found">We're sorry, but no results were found for.</p>
+    {{/if}} --}}
+  </div>
+  <div>
+    <button class="btn" type="button" onclick="location.href='/user'">User Profile</button>
+  </div>
+  <a href="/logout">Logout </a>
+{{/if}}
+
+{{#if error}}<div id="viewpost-error" class="error">{{error}}</div>{{/if}}
