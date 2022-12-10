@@ -8,13 +8,14 @@ const moment = require("moment");
 /**Database function for the Employer Collection */
 const createEmployer = async (userName) => {
   validations.validateUsername(userName);
+  userName = userName.toLowerCase();
   //0. establish db connection
   const employerCollection = await employers();
   //1. create a new employee obj
   let newEmployer = {
     userName: userName,
     historyOfJobs: [],
-    overallRating: [],
+    overallRating: 0,
     reported: [],
     flag: false,
   };
@@ -68,10 +69,43 @@ const removeEmployer = async (employerId) => {
   return employer.userName + " has been successfully deleted";
 };
 
+const addPost = async (userName, employerId, postID) => {
+  validations.validateUsername(userName);
+
+  const employerCollection = await employers();
+
+  //2. checks if the employer with the given employerID is already in the DB
+  const thisEmployer = await employerCollection.findOne({ _id: ObjectId(employerId) });
+  if (thisEmployer === null) throw "No employer with that id found";
+
+  console.log(thisEmployer);
+  let historyOfJobs_ = thisEmployer.historyOfJobs;
+  historyOfJobs_.push(postID);
+  const updatedEmployer = await employerCollection.updateOne(
+    { _id: ObjectId(employerId) },
+    {
+      $set: {
+        userName: userName,
+        historyOfJobs: historyOfJobs_,
+        overallRating: thisEmployer.overallRating,
+        reported: thisEmployer.reported,
+        flag: thisEmployer.flag,
+      },
+    }
+  );
+
+  if (updatedEmployer.modifiedCount === 0) {
+    throw "Employer not modified!";
+  }
+
+  return await getEmployerById(employerId);
+};
+
 /**Exporting Modules*/
 module.exports = {
   createEmployer,
   getEmployerById,
   getAllEmployers,
   removeEmployer,
+  addPost,
 };

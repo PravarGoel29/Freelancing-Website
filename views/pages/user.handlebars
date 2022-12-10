@@ -1,31 +1,31 @@
-<div class="user-class">
-  <button class="btn" type="button" onclick="location.href='/addPost'">Create Post</button>
-</div>
-{{!--<img alt="user" src="/public/images/userprofile/{{user.profileImage}}" id="profile_image">--}}
-<h1>{{user.userName}}</h1>
-<div>{{user.firstName}} {{user.lastName}}</div>
-<div class="label">{{user.email}}</div><hr />
+{{#if user}}
+  <div class="user-class">
+    <button class="btn" type="button" onclick="location.href='/user/{{user.userName}}/addPost'">Create Post</button>
+  </div>
 
-<h2>Jobs Taken</h2>
-{{!--
-{{#each subscribedCommunities}}
-  <div><a href="/communities/{{this._id}}">{{this.name}}</a></div>
-{{/each}}
---}}
-<br />
+  {{!--<img alt="user" src="/public/images/userprofile/{{user.profileImage}}" id="profile_image">--}}
+  <h1>{{user.userName}}</h1>
+  <div>{{user.firstName}} {{user.lastName}}</div>
+  <div class="label">{{user.email}}</div><hr />
 
-<h2>Invites</h2>
-{{!-- {{#each adminCommunities}}
-<div><a href="/communities/{{this._id}}">{{this.name}}</a></div>
+  <h2>Jobs Taken</h2>
+  {{!-- {{#each jobsTaken}}
+<div><a href="/jobsTaken/{{this._id}}">{{this.name}}</a></div>
 {{/each}} --}}
-<br />
+  <br />
 
-<h2>Jobs posted</h2>
-{{!-- {{#each answeredQuestions}}
-<div><a href="/questions/{{this._id}}">{{this.title}}</a></div>
+  <h2>Invites</h2>
+  {{!-- {{#each invites}}
+<div><a href="/invite/{{this._id}}">{{this.name}}</a></div>
 {{/each}} --}}
-<br />
+  <br />
 
-{{#if error}}
-  <p>{{error}}</p>
+  <h2>Jobs posted</h2>
+  {{#each posts}}
+    <div><p><a href="/post/{{this._id}}">{{this._id}} {{this.title}}</a></p></div>
+  {{/each}}
+
+  <br />
 {{/if}}
+
+{{#if error}}<div id="viewpost-error" class="error">{{error}}</div>{{/if}}

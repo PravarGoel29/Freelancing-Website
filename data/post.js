@@ -1,8 +1,8 @@
 const db = require("../config");
-
 const posts = db.postsCollection;
 const validations = require("../validations/dataValidations");
-//const validations = errorHandling.userValidations;
+const Employer = require("./employer");
+const User = require("./user");
 const { ObjectId } = require("mongodb");
 
 /**Database function for the Post Collection */
@@ -21,13 +21,24 @@ const getPostById = async (postId) => {
   return postInfo;
 };
 
-const createPost = async (location, description, domain, tags, jobtype, salary) => {
+const createPost = async (location, description, title, domain, tags, jobtype, salary, userName) => {
   const postCollection = await posts();
   var postedTime = new Date().toLocaleDateString("en-US");
 
+  validations.validateLocation(location);
+  validations.validateDescription(description);
+  validations.validateTitle(title);
+  validations.validateDomain(domain);
+  validations.validateTags(tags);
+  validations.validateJobType(jobtype);
+  validations.validateSalary(salary);
+  validations.validateUsername(userName);
+
   const newPost = {
+    userName: userName.toLowerCase(),
     location: location,
     description: description,
+    title: title,
     postedTime: postedTime,
     updatedTime: null,
     imageID: "123",
@@ -45,12 +56,26 @@ const createPost = async (location, description, domain, tags, jobtype, salary) 
   if (!insertPostData.insertedCount === 0) throw "Job posting unsuccessful";
   const postId = insertPostData.insertedId.toString();
   const post = await postCollection.findOne({ _id: ObjectId(postId) });
+
+  const user = await User.getUserByUserName(userName.toLowerCase());
+  const changedEmployer = await Employer.addPost(user.userName, user.employerId, postId);
   return post;
 };
 
 const getAllPosts = async () => {
   const postCollection = await posts();
   const PostList = await postCollection.find({}).toArray();
+  if (PostList.length === 0) {
+    PostList = null;
+  }
+  //console.log("inside data get all post", PostList);
+  return PostList;
+};
+
+const getAllPostsbyUserName = async (userName) => {
+  userName = userName.toLowerCase();
+  const postCollection = await posts();
+  const PostList = await postCollection.find({ userName: userName }).toArray();
   return PostList;
 };
 
@@ -75,4 +100,5 @@ module.exports = {
   createPost,
   getAllPosts,
   removePost,
+  getAllPostsbyUserName,
 };
