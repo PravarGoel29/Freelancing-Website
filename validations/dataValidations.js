@@ -67,33 +67,32 @@ const validateEmail = (inputEmail) => {
 };
 
 const validateNumber = (inputNum) => {
-  if (isNaN(inputNum)) throw "Date is not a valid number!";
-  if (inputNum % 1 !== 0) throw "Date cannot be a decimal ID!";
+  if (isNaN(inputNum)) throw "The given data is not a valid number";
+  if (inputNum % 1 !== 0) throw "The values in the date cannot be decimal";
   return inputNum;
 };
 
 const validateDOB = (inputdate) => {
   if (!inputdate) {
-    throw "Input date of birth is empty";
+    throw "All fields need to have valid values";
   }
   date = inputdate.trim();
-  if (date.length !== 10) throw "Incorrect date format";
-  if (date.charAt(4) !== "-" || date.charAt(7) !== "-") throw "Incorrect date format";
+  if (date.length !== 10) throw "The date format is incorrect";
+  if (date.charAt(4) !== "-" || date.charAt(7) !== "-") throw "The date format is incorrect";
   const currentYear = new Date().getFullYear();
-  const monthKey = { 1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31 };
+  const monthObj = { 1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31 };
+  let year = parseInt(validateNumber(date.slice(0, 4)));
   let month = parseInt(validateNumber(date.slice(5, 7)));
   let day = parseInt(validateNumber(date.slice(8)));
-  let year = parseInt(validateNumber(date.slice(0, 4)));
-  if (month < 1 || month > 12) throw "Invalid month";
-  if (year < 1900 || year > currentYear) throw "Invalid year";
-  if (day > monthKey[month] || day < 1) {
-    throw "Invalid day";
+  if (day > monthObj[month] || day < 1) {
+    throw "Please enter a valid day, The given day is not valid";
   }
-
+  if (month < 1 || month > 12) throw "Please enter a valid month, The given month is not valid";
+  if (year < 1900 || year > currentYear) throw "Please enter a valid year, The given year is not valid";
   let currentDay = new Date();
   let birth = new Date(date);
   let years = Math.abs(currentDay.getTime() - birth.getTime()) / 1000 / 60 / 60 / 24 / 365;
-  if (years < 16) throw "Must be at least 16 years old to signup!";
+  if (years < 16) throw "The user must be atleast 16 years old";
 };
 
 const validatePhoneNumber = (inputPhoneNumber) => {
