@@ -64,12 +64,12 @@ const createPost = async (location, description, title, domain, tags, jobtype, s
 
 const getAllPosts = async () => {
   const postCollection = await posts();
-  const PostList = await postCollection.find({}).toArray();
-  if (PostList.length === 0) {
-    PostList = null;
+  const allPostList = await postCollection.find({}).toArray();
+  if (allPostList.length === 0) {
+    allPostList = null;
   }
   //console.log("inside data get all post", PostList);
-  return PostList;
+  return allPostList;
 };
 
 const getAllPostsbyUserName = async (userName) => {
