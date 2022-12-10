@@ -1,14 +1,11 @@
 const user = require("./user");
-//const login = require("./login");
-const createPost = require("./createPost");
-// const employee = require("./employee");
-// const employer = require("./employer");
+const post = require("./post");
 
 const constructorMethod = (app) => {
   //middleware functions
 
   app.use("/", user);
-  app.use("/createpost", createPost)
+  app.use("/post", post);
   app.use("*", (req, res) => {
     res.sendStatus(404);
   });

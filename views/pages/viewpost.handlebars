@@ -1,0 +1,11 @@
+<h1>{{post.title}}</h1>
+<p>Location : {{post.location}}</p>
+<p>Description: {{post.description}}</p>
+<p>Domain: {{post.domain}} </p>
+<p>jobtype: {{post.jobtype}} </p>
+<p> Salary : {{post.salary}} </p>
+<p> tags: {{post.tags}} </p>
+</br>
+</br>
+<a href="/user">User Profile</a>
+{{#if error}}<div id = "viewpost-error" class="error">{{error}}</div>{{/if}}
