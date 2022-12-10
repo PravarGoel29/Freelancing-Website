@@ -86,7 +86,7 @@ router.route("/login").post(async (req, res) => {
     //calling the checUser function to check if the username and password match with the ones in db
     const thisUser = await userData.checkUser(usernameInput, passwordInput);
     const thisUserPosts = await postData.getAllPostsbyUserName(thisUser.user.userName);
-    //const allUsersPosts = await postData.getAllPosts();
+    const allPosts = await postData.getAllPosts();
 
     //storing the user session
     req.session.user = thisUser.user;
@@ -94,10 +94,11 @@ router.route("/login").post(async (req, res) => {
     //req.session.allPosts = allUsersPosts;
 
     //const allPosts = req.session.allPosts;
-
-    res.status(200).render("../views/pages/landing", { user: thisUser.user });
+    res.redirect("/home");
+    //res.status(200).render("../views/pages/landing", { user: thisUser.user, allPosts: allPosts });
     return;
   } catch (e) {
+    console.log(e);
     //in case of error, rendering login page again with error message
     res.status(400).render("../views/pages/login", { error: e });
     return;
@@ -105,17 +106,26 @@ router.route("/login").post(async (req, res) => {
 });
 
 router.route("/home").get(async (req, res) => {
-  const user = req.session.user;
-  //const allUsersPosts = await postData.getAllPosts();
-  //req.session.allPosts = allUsersPosts;
-  //const allPosts = req.session.allPosts;
+  try {
+    console.log("Inside Home");
+    const user = req.session.user;
 
-  // if authenticated user, renders landing page
-  if (user) {
-    res.status(200).render("../views/pages/landing", { user: user });
-    return;
-  } else {
-    res.status(400).render("../views/pages/forbiddenAccess");
+    const allPosts = await postData.getAllPosts();
+    //req.session.allPosts = allUsersPosts;
+    //const allPosts = req.session.allPosts;
+
+    // if authenticated user, renders landing page
+    if (user) {
+      res.status(200).render("../views/pages/landing", { user: user, allPosts: allPosts });
+      return;
+    } else {
+      res.status(400).render("../views/pages/forbiddenAccess");
+      return;
+    }
+  } catch (e) {
+    //in case of error, rendering login page again with error message
+    //console.log(e);
+    res.status(400).render("../views/errors/error", { error: e });
     return;
   }
 });
@@ -126,9 +136,10 @@ router.route("/user").get(async (req, res) => {
   req.session.posts = thisUserPosts;
   const posts = req.session.posts;
   // if authenticated user, renders landing page
+
   if (user) {
     //console.log("user passed to user page", req.session.user);
-    res.status(200).render("../views/pages/user", { user: user, posts: posts });
+    res.status(200).render("../views/pages/profile", { user: user, posts: posts });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");

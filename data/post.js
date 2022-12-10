@@ -62,12 +62,48 @@ const createPost = async (location, description, title, domain, tags, jobtype, s
   return post;
 };
 
+const addApplicants = async (userName, postId) => {
+  validations.validateID(postId);
+  postId = postId.trim();
+  const post = await getPostById(postId);
+
+  let applicants_ = post.applicants;
+  applicants_.push(userName);
+
+  const postCollection = await posts();
+  const updatedPost = await postCollection.updateOne(
+    { _id: ObjectId(postId) },
+    {
+      $set: {
+        userName: post.userName.toLowerCase(),
+        location: post.location,
+        description: post.description,
+        title: post.title,
+        postedTime: post.postedTime,
+        updatedTime: null,
+        imageID: "123",
+        domain: post.domain,
+        tags: post.tags,
+        reviewIDs: [],
+        status: "Active",
+        jobtype: post.jobtype,
+        salary: post.salary,
+        applicants: applicants_,
+        candidates: [],
+      },
+    }
+  );
+
+  if (updatedPost.modifiedCount === 0) {
+    throw "Applicant " + userName + " not added to this job " + postId;
+  }
+
+  return await getPostById(postId);
+};
+
 const getAllPosts = async () => {
   const postCollection = await posts();
   const allPostList = await postCollection.find({}).toArray();
-  if (allPostList.length === 0) {
-    allPostList = null;
-  }
   //console.log("inside data get all post", PostList);
   return allPostList;
 };
@@ -101,4 +137,5 @@ module.exports = {
   getAllPosts,
   removePost,
   getAllPostsbyUserName,
+  addApplicants,
 };

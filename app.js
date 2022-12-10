@@ -23,16 +23,16 @@ app.use(
   })
 );
 
-app.use("/home", (req, res, next) => {
-  //console.log(req.session.user);
-  if (req.session.user) {
-    res.status(200).render("../views/pages/landing", {});
-  } else {
-    msg = "Please log in with valid credentials.";
-    res.status(403).render("../views/pages/forbiddenAccess", { error: msg });
-    next();
-  }
-});
+// app.use("/home", (req, res, next) => {
+//   //console.log(req.session.user);
+//   if (req.session.user) {
+//     res.status(200).render("../views/pages/landing", {});
+//   } else {
+//     msg = "Please log in with valid credentials.";
+//     res.status(403).render("../views/pages/forbiddenAccess", { error: msg });
+//     next();
+//   }
+// });
 
 app.use("/login", (req, res, next) => {
   if (req.session.user) {
