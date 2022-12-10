@@ -86,16 +86,16 @@ router.route("/login").post(async (req, res) => {
     //calling the checUser function to check if the username and password match with the ones in db
     const thisUser = await userData.checkUser(usernameInput, passwordInput);
     const thisUserPosts = await postData.getAllPostsbyUserName(thisUser.user.userName);
-    const allUsersPosts = await postData.getAllPosts();
+    //const allUsersPosts = await postData.getAllPosts();
 
     //storing the user session
     req.session.user = thisUser.user;
     req.session.posts = thisUserPosts;
-    req.session.allPosts = allUsersPosts;
+    //req.session.allPosts = allUsersPosts;
 
-    const allPosts = req.session.allPosts;
+    //const allPosts = req.session.allPosts;
 
-    res.status(200).render("../views/pages/landing", { user: thisUser.user, allPosts: allPosts });
+    res.status(200).render("../views/pages/landing", { user: thisUser.user });
     return;
   } catch (e) {
     //in case of error, rendering login page again with error message
@@ -106,13 +106,13 @@ router.route("/login").post(async (req, res) => {
 
 router.route("/home").get(async (req, res) => {
   const user = req.session.user;
-  const allUsersPosts = await postData.getAllPosts();
-  req.session.allPosts = allUsersPosts;
-  const allPosts = req.session.allPosts;
+  //const allUsersPosts = await postData.getAllPosts();
+  //req.session.allPosts = allUsersPosts;
+  //const allPosts = req.session.allPosts;
 
   // if authenticated user, renders landing page
   if (user) {
-    res.status(200).render("../views/pages/landing", { user: user, allPosts: allPosts });
+    res.status(200).render("../views/pages/landing", { user: user });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
