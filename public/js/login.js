@@ -2,14 +2,14 @@ const loginSuccess = document.getElementById("login-success");
 const loginError = document.getElementById("login-failure");
 loginSuccess.hidden = true;
 loginError.hidden = true;
-$("#registration-form").submit(function (event) {
+$("#login-form").submit(function (event) {
     event.preventDefault();
     $("login-error").hide()
     try {
         let username = $('#usernameInput').val()
         let password = $('#passwordInput').val()
-        validateUsername(username)
-        validatePassword(password)
+        validateUsername(username);
+        validatePassword(password);
         validateTags([username, password])
         console.log(username)
         if (username && password) {
@@ -31,12 +31,14 @@ $("#registration-form").submit(function (event) {
                 console.log(responseMessage)
                 loginSuccess.hidden = true
                 loginError.hidden = false;
+                loginError.show()
             });
         }
     }
     catch (e) {
         console.log(e)
         event.preventDefault()
+        loginError.hidden = false
         $('#login-error').show()
         $('#login-error').empty()
         $('#login-error').append(e)
