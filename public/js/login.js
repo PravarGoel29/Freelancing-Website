@@ -1,5 +1,5 @@
 const loginSuccess = document.getElementById("login-success");
-const loginError = document.getElementById("login-error");
+const loginError = document.getElementById("login-failure");
 loginSuccess.hidden = true;
 loginError.hidden = true;
 $("#registration-form").submit(function (event) {
@@ -18,16 +18,17 @@ $("#registration-form").submit(function (event) {
                 url: '/login',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    name: username,
-                    password: password
+                    usernameInput: username,
+                    passwordInput: password
                 })
             };
             $.ajax(requestConfig).then(function (responseMessage) {
+                console.log(responseMessage)
                 window.location.href = "/home";
                 loginSuccess.hidden = false
                 loginError.hidden = true;
-            }).then(function (responseMessage) {
-                window.location.href = "/login";
+            }, function (responseMessage) {
+                console.log(responseMessage)
                 loginSuccess.hidden = true
                 loginError.hidden = false;
             });
