@@ -1,12 +1,12 @@
 {{#if user}}
   <div class="user-class">
-    <button class="btn" type="button" onclick="location.href='/user/{{user.userName}}/addPost'">Create Post</button>
+    <button class="btn" type="button" onclick="location.href='/profile/{{user.userName}}/addPost'">Create Post</button>
   </div>
 
   {{!--<img alt="user" src="/public/images/userprofile/{{user.profileImage}}" id="profile_image">--}}
   <h1>{{user.userName}}</h1>
   <div>{{user.firstName}} {{user.lastName}}</div>
-  <div class="label">{{user.email}}</div><hr />
+  <div class="label">{{user.email}}</div>
 
   <h2>Jobs Taken</h2>
   {{!-- {{#each jobsTaken}}
