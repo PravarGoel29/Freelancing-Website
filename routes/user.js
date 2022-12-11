@@ -68,11 +68,13 @@ router.route("/signup").post(async (req, res) => {
       dob,
       preferences
     );
-    res.redirect("/");
+    //res.redirect("/");
+    res.status(200).json({ message: "Succefully signed in", success: true });
     return;
   } catch (e) {
     console.log(e);
-    res.status(400).render("../views/pages/signup", { error: e });
+    //res.status(400).render("../views/pages/signup", { error: e });
+    res.status(400).json({ message: "Unable to Signin", success: false });
     return;
   }
 });

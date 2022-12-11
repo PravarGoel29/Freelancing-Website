@@ -8,7 +8,7 @@
   </div>
 
   <button type="button" id="profile" onclick="location.href='/profile/{{user.userName}}'">Profile</button>
-  <form class="col-lg-9 offset-lg-3" name="job_post" action="/post" method="post">
+  <form class="col-lg-9 offset-lg-3" name="job_post" action="/post" method="post" id = "createpost-form">
     <h1>{{user.userName}}</h1>
     <div class="row justify-content-center">
       <div class="form-row">
@@ -51,6 +51,9 @@
         </div>
       </div>
 
+      <div class = "createpost-success" id="createpost-success" hidden>Succesfully Posted</div>
+      <div class = "createpost-error" id = "createpost-failure" hidden>All fields needs to have values</div>
+
       <div class="form-row">
         <div class="col-lg-7">
           <button type="submit" class="btnclass1 mt-3 mb-5">Post</button>
@@ -64,3 +67,5 @@
   integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
   crossorigin="anonymous"
 ></script>
+<script src="/public/js/createPost.js"></script>
+{{#if error}}<div id = "createpost-error" class="error">{{error}}</div>{{/if}}
