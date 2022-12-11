@@ -77,6 +77,8 @@ router.route("/login").post(async (req, res) => {
   //getting the post body
   const userInfo = req.body;
 
+  console.log(userInfo)
+
   try {
     const { usernameInput, passwordInput } = userInfo;
 
@@ -94,13 +96,14 @@ router.route("/login").post(async (req, res) => {
     //req.session.allPosts = allUsersPosts;
 
     //const allPosts = req.session.allPosts;
-    res.redirect("/home");
+    res.status(200).json({ message: "Succefully logged in", success: true })
     //res.status(200).render("../views/pages/landing", { user: thisUser.user, allPosts: allPosts });
     return;
   } catch (e) {
     console.log(e);
     //in case of error, rendering login page again with error message
-    res.status(400).render("../views/pages/login", { error: e });
+    // res.status(400).render("../views/pages/login", { error: e });
+    res.status(400).json({ message: "Unable to login", success: false })
     return;
   }
 });
