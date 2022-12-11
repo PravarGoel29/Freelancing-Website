@@ -47,7 +47,7 @@ router.route("/:postId").get(async (req, res) => {
     if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
       thisUserPostFlag = true;
     }
-    //console.log(post);
+    console.log(post);
     res.status(200).render("../views/pages/viewpost", {
       user: user,
       post: post,
@@ -58,6 +58,83 @@ router.route("/:postId").get(async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(404).json({ error: e });
+    return;
+  }
+});
+
+// router.route("/:postId").post(async (req, res) => {
+//   //code here for GET
+//   let id = req.params.postId;
+//   let applicant = req.body
+//   try {
+//     //validation of id
+//     validations.validateID(id);
+//     id = id.trim();
+//     const user = req.session.user;
+//     const post = await postData.getPostById(id);
+//     const applicants = await postData.getApplicantsByPostId(id);
+//     let thisUserPostFlag = false;
+//     if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
+//       thisUserPostFlag = true;
+//     }
+//     //console.log(post);
+//     res.status(200).render("../views/pages/viewpost", {
+//       user: user,
+//       post: post,
+//       thisUserPostFlag: thisUserPostFlag,
+//       applicants: applicants,
+//     });
+//     return;
+//   } catch (e) {
+//     console.log(e);
+//     res.status(404).json({ error: e });
+//     return;
+//   }
+// });
+
+router.route("/:postId/:userName/invite").get(async (req, res) => {
+  //Here the userName is the applicant userName
+  let id = req.params.postId;
+
+  const user = req.session.user;
+  const post = await postData.getPostById(id);
+  const applicants = await postData.getApplicantsByPostId(id);
+  let thisUserPostFlag = false;
+  if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
+    thisUserPostFlag = true;
+  }
+  let messageFlag = false;
+  try {
+    //validation of id
+    validations.validateID(id);
+    id = id.trim();
+
+    if (user) {
+      const applicantName = req.params.userName.toLowerCase();
+      const applicantEmployeeId = await userData.getEmployeeIdByUserName(applicantName);
+      const invitedApplicant = await employeeData.getInvite(applicantEmployeeId, id);
+      //const updatedPost = await postData.addApplicants(user.userName, id);
+      console.log(invitedApplicant);
+      if (invitedApplicant) {
+        messageFlag = true;
+        console.log("Invite sent successfully to " + invitedApplicant.userName);
+      }
+      res.status(200).redirect("/post/" + id);
+      return;
+    } else {
+      res.status(400).render("../views/pages/forbiddenAccess");
+      return;
+    }
+  } catch (e) {
+    console.log(e);
+
+    res.status(400).render("../views/pages/viewpost", {
+      user: user,
+      post: post,
+      thisUserPostFlag: thisUserPostFlag,
+      applicants: applicants,
+      error: e,
+    });
     return;
   }
 });

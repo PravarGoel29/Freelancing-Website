@@ -142,15 +142,17 @@ router.route("/profile/:userName").get(async (req, res) => {
   const thisUserPosts = await postData.getAllPostsbyUserName(user.userName);
   const employeeId = await userData.getEmployeeIdByUserName(user.userName);
   const wishList = await employeeData.getAllJobsinWishList(employeeId);
-
+  const invites = await employeeData.getAllinvites(employeeId);
   req.session.posts = thisUserPosts;
   const posts = req.session.posts;
   // if authenticated user, renders landing page
 
-  console.log(wishList);
+  console.log(invites);
   if (user) {
     //console.log("user passed to user page", req.session.user);
-    res.status(200).render("../views/pages/profile", { user: user, posts: posts, wishList: wishList });
+    res
+      .status(200)
+      .render("../views/pages/profile", { user: user, posts: posts, wishList: wishList, invites: invites });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
