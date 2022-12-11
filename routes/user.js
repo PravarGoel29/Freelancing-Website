@@ -38,7 +38,17 @@ router.route("/signup").post(async (req, res) => {
   //getting the post body
   const UserInfo = req.body;
   try {
-    const { userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences } = UserInfo;
+    const {
+      userName,
+      firstName,
+      lastName,
+      email,
+      password,
+      contactNumber,
+      gender,
+      dob,
+      preferences,
+    } = UserInfo;
     //console.log(UserInfo);
     //Validating the contents of UserInfo obj
     try {
@@ -91,7 +101,9 @@ router.route("/login").post(async (req, res) => {
 
     //calling the checUser function to check if the username and password match with the ones in db
     const thisUser = await userData.checkUser(usernameInput, passwordInput);
-    const thisUserPosts = await postData.getAllPostsbyUserName(thisUser.user.userName);
+    const thisUserPosts = await postData.getAllPostsbyUserName(
+      thisUser.user.userName
+    );
     const allPosts = await postData.getAllPosts();
 
     //storing the user session
@@ -123,7 +135,9 @@ router.route("/home").get(async (req, res) => {
 
     // if authenticated user, renders landing page
     if (user) {
-      res.status(200).render("../views/pages/landing", { user: user, allPosts: allPosts });
+      res
+        .status(200)
+        .render("../views/pages/landing", { user: user, allPosts: allPosts });
       return;
     } else {
       res.status(400).render("../views/pages/forbiddenAccess");
@@ -150,9 +164,12 @@ router.route("/profile/:userName").get(async (req, res) => {
   console.log(invites);
   if (user) {
     //console.log("user passed to user page", req.session.user);
-    res
-      .status(200)
-      .render("../views/pages/profile", { user: user, posts: posts, wishList: wishList, invites: invites });
+    res.status(200).render("../views/pages/profile", {
+      user: user,
+      posts: posts,
+      wishList: wishList,
+      invites: invites,
+    });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
@@ -183,6 +200,35 @@ router.route("/profile/:userName/addPost").get(async (req, res) => {
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
+    return;
+  }
+});
+
+router.route("/otherUserProfile/:userName").post(async (req, res) => {
+  //res.json("yes");
+  try {
+    //console.log("Inside Home");
+    const user = req.session.user;
+
+    const username = req.body.username;
+
+    const otherUser = await userData.getUserByUserName(username);
+    const otherUserPosts = await postData.getAllPostsbyUserName(username);
+
+    // // if authenticated user, renders landing page
+    if (user) {
+      res.status(200).render("../views/pages/otherUserView", {
+        user: otherUser,
+      });
+      return;
+    } else {
+      res.status(400).render("../views/pages/login");
+      return;
+    }
+  } catch (e) {
+    //in case of error, rendering login page again with error message
+    //console.log(e);
+    res.status(400).render("../views/errors/error", { error: e });
     return;
   }
 });
