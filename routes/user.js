@@ -4,6 +4,8 @@ const router = express.Router();
 const data = require("../data");
 const userData = data.users;
 const postData = data.posts;
+const employerData = data.employers;
+const employeeData = data.employees;
 const validations = require("../validations/dataValidations");
 const xss = require("xss");
 
@@ -37,7 +39,7 @@ router.route("/signup").post(async (req, res) => {
   const UserInfo = req.body;
   try {
     const { userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences } = UserInfo;
-    console.log(UserInfo);
+    //console.log(UserInfo);
     //Validating the contents of UserInfo obj
     try {
       //validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
@@ -112,7 +114,7 @@ router.route("/login").post(async (req, res) => {
 
 router.route("/home").get(async (req, res) => {
   try {
-    console.log("Inside Home");
+    //console.log("Inside Home");
     const user = req.session.user;
 
     const allPosts = await postData.getAllPosts();
@@ -138,13 +140,17 @@ router.route("/home").get(async (req, res) => {
 router.route("/profile/:userName").get(async (req, res) => {
   const user = req.session.user;
   const thisUserPosts = await postData.getAllPostsbyUserName(user.userName);
+  const employeeId = await userData.getEmployeeIdByUserName(user.userName);
+  const wishList = await employeeData.getAllJobsinWishList(employeeId);
+
   req.session.posts = thisUserPosts;
   const posts = req.session.posts;
   // if authenticated user, renders landing page
 
+  console.log(wishList);
   if (user) {
     //console.log("user passed to user page", req.session.user);
-    res.status(200).render("../views/pages/profile", { user: user, posts: posts });
+    res.status(200).render("../views/pages/profile", { user: user, posts: posts, wishList: wishList });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
