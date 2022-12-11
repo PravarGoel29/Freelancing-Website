@@ -93,11 +93,59 @@ const savePosttoWishList = async (employeeId, postID) => {
   return await getEmployeeById(employeeId);
 };
 
+const getInvite = async (employeeId, postID) => {
+  validations.validateID(employeeId);
+  const employeeCollection = await employees();
+
+  //2. checks if the employer with the given employerID is already in the DB
+  const thisEmployee = await employeeCollection.findOne({ _id: ObjectId(employeeId) });
+  if (thisEmployee === null) throw "No employer with that id found";
+
+  console.log(thisEmployee);
+  let invites_ = thisEmployee.invites;
+  if (invites_.includes(postID)) {
+    throw "Already Invited";
+  }
+
+  invites_.push(postID);
+
+  const updatedEmployee = await employeeCollection.updateOne(
+    { _id: ObjectId(employeeId) },
+    {
+      $set: {
+        userName: thisEmployee.userName,
+        preferences: thisEmployee.preferences,
+        resume: thisEmployee.resume,
+        wishList: thisEmployee.wishList,
+        historyOfJobs: thisEmployee.historyOfJobs,
+        overallRating: thisEmployee.overallRating,
+        reported: thisEmployee.reported,
+        flag: thisEmployee.flag,
+        currentJobsTaken: thisEmployee.flag,
+        invites: invites_,
+      },
+    }
+  );
+
+  if (updatedEmployee.modifiedCount === 0) {
+    throw "Employee not modified!";
+  }
+
+  return await getEmployeeById(employeeId);
+};
+
 const getAllJobsinWishList = async (employeeId) => {
   validations.validateID(employeeId);
   const employee = await getEmployeeById(employeeId);
 
   return employee.wishList;
+};
+
+const getAllinvites = async (employeeId) => {
+  validations.validateID(employeeId);
+  const employee = await getEmployeeById(employeeId);
+
+  return employee.invites;
 };
 
 /**Exporting Modules*/
@@ -106,4 +154,6 @@ module.exports = {
   getEmployeeById,
   savePosttoWishList,
   getAllJobsinWishList,
+  getInvite,
+  getAllinvites,
 };

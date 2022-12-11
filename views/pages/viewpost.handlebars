@@ -12,7 +12,9 @@
 {{#if thisUserPostFlag}}
 <h2>Applicants</h2>
   {{#each applicants}}
-    <div><p><a href="/user/{{this}}">{{this}}</a></p></div>
+    <div><p><a href="/user/{{this}}">{{this}}</a></p>
+    <button type="button" id = "invite" onclick="location.href='/post/{{../post._id}}/{{this}}/invite'">Invite</button>
+    </div>
   {{/each}}
 
 {{else}}
