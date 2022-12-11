@@ -37,9 +37,11 @@ router.route("/signup").post(async (req, res) => {
   const UserInfo = req.body;
   try {
     const { userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences } = UserInfo;
+    console.log(UserInfo);
     //Validating the contents of UserInfo obj
     try {
       //validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
+      validations.validateConfirmPassword(password, UserInfo.confirmPassword);
       validations.validateEmail(email);
       validations.validateUsername(userName);
       validations.validateName(firstName);
@@ -77,7 +79,7 @@ router.route("/login").post(async (req, res) => {
   //getting the post body
   const userInfo = req.body;
 
-  console.log(userInfo)
+  console.log(userInfo);
 
   try {
     const { usernameInput, passwordInput } = userInfo;
@@ -96,14 +98,14 @@ router.route("/login").post(async (req, res) => {
     //req.session.allPosts = allUsersPosts;
 
     //const allPosts = req.session.allPosts;
-    res.status(200).json({ message: "Succefully logged in", success: true })
+    res.status(200).json({ message: "Succefully logged in", success: true });
     //res.status(200).render("../views/pages/landing", { user: thisUser.user, allPosts: allPosts });
     return;
   } catch (e) {
     console.log(e);
     //in case of error, rendering login page again with error message
     // res.status(400).render("../views/pages/login", { error: e });
-    res.status(400).json({ message: "Unable to login", success: false })
+    res.status(400).json({ message: "Unable to login", success: false });
     return;
   }
 });
@@ -133,7 +135,7 @@ router.route("/home").get(async (req, res) => {
   }
 });
 
-router.route("/user").get(async (req, res) => {
+router.route("/profile/:userName").get(async (req, res) => {
   const user = req.session.user;
   const thisUserPosts = await postData.getAllPostsbyUserName(user.userName);
   req.session.posts = thisUserPosts;
@@ -150,7 +152,22 @@ router.route("/user").get(async (req, res) => {
   }
 });
 
-router.route("/user/:userName/addPost").get(async (req, res) => {
+router.route("/user/:userName").get(async (req, res) => {
+  const user = req.session.user;
+  const userName = req.params.userName;
+  const thatUser = await userData.getUserByUserName(userName);
+
+  if (user) {
+    //console.log("user passed to user page", req.session.user);
+    res.status(200).render("../views/pages/user", { user: thatUser });
+    return;
+  } else {
+    res.status(400).render("../views/pages/forbiddenAccess");
+    return;
+  }
+});
+
+router.route("/profile/:userName/addPost").get(async (req, res) => {
   const user = req.session.user;
   // if authenticated user, renders landing page
   if (user) {

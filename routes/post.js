@@ -22,7 +22,7 @@ router.route("/").post(async (req, res) => {
     const newPost = await postData.createPost(location, description, title, domain, tags, jobtype, salary, userName);
     //Displaying the success message
     //res.status(200).json("Job post successful");
-    res.redirect("/user");
+    res.redirect("/profile/" + userName);
     return;
   } catch (e) {
     console.log(e);
@@ -39,13 +39,18 @@ router.route("/:postId").get(async (req, res) => {
     id = id.trim();
     const user = req.session.user;
     const post = await postData.getPostById(id);
-
+    const applicants = await postData.getApplicantsByPostId(id);
     let thisUserPostFlag = false;
     if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
       thisUserPostFlag = true;
     }
     //console.log(post);
-    res.status(200).render("../views/pages/viewpost", { user: user, post: post, thisUserPostFlag: thisUserPostFlag });
+    res.status(200).render("../views/pages/viewpost", {
+      user: user,
+      post: post,
+      thisUserPostFlag: thisUserPostFlag,
+      applicants: applicants,
+    });
     return;
   } catch (e) {
     console.log(e);

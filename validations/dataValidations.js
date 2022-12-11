@@ -50,6 +50,16 @@ const validatePassword = (inputPassword) => {
   }
 };
 
+const validateConfirmPassword = (inputPassword, inputConfirmPassword) => {
+  if (!inputConfirmPassword) throw "Confirm Password not provided.";
+  if (typeof inputConfirmPassword !== "string") throw "Confirm Password is not of valid input type.";
+  if (inputConfirmPassword.trim().length === 0) throw "Confirm Password contains only whitespaces.";
+
+  if (inputPassword !== inputConfirmPassword) {
+    throw "Password and Confirm Password doesnt match";
+  }
+};
+
 const validateName = (inputName) => {
   if (!inputName) throw "Name not provided.";
   if (typeof inputName !== "string") throw "Name is not of valid input type.";
@@ -157,6 +167,7 @@ module.exports = {
   validateID,
   validateUsername,
   validatePassword,
+  validateConfirmPassword,
   validateName,
   validateEmail,
   validateDOB,

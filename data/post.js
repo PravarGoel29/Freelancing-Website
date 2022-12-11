@@ -21,6 +21,17 @@ const getPostById = async (postId) => {
   return postInfo;
 };
 
+const getApplicantsByPostId = async (postId) => {
+  validations.validateID(postId);
+  postId = postId.trim();
+  const postCollection = await posts();
+  const postInfo = await postCollection.findOne({ _id: ObjectId(postId) });
+  if (postInfo === null) {
+    throw "There is no post for the given id";
+  }
+  return postInfo.applicants;
+};
+
 const createPost = async (location, description, title, domain, tags, jobtype, salary, userName) => {
   const postCollection = await posts();
   var postedTime = new Date().toLocaleDateString("en-US");
@@ -138,4 +149,5 @@ module.exports = {
   removePost,
   getAllPostsbyUserName,
   addApplicants,
+  getApplicantsByPostId,
 };

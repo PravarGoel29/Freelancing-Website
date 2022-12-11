@@ -11,14 +11,17 @@
  {{!-- only user who posted can view --}}
 {{#if thisUserPostFlag}}
 <h2>Applicants</h2>
-  {{!-- {{#each posts}}
-    <div><p><a href="/post/{{this._id}}">{{this._id}} {{this.title}}</a></p></div>
-  {{/each}} --}}
+  {{#each applicants}}
+    <div><p><a href="/user/{{this}}">{{this}}</a></p></div>
+  {{/each}}
 
 {{else}}
 <button type="button" id = "apply" onclick="location.href='/post/{{post._id}}/applied'">Apply</button>
 
 {{/if}}
+
+</br>
+</br>
 
 <a href="/home">Home</a>
 {{#if error}}<div id = "viewpost-error" class="error">{{error}}</div>{{/if}}

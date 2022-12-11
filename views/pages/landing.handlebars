@@ -9,8 +9,11 @@
     {{/if}} --}}
 </div>
 <div>
-  <button class="btn" type="button" onclick="location.href='/user'">Profile</button>
+  <button class="btn" type="button" onclick="location.href='/profile/{{user.userName}}'">Profile</button>
 </div>
+</br>
+</br>
+
 <a href="/logout">Logout </a>
 
 {{#if error}}<div id="viewpost-error" class="error">{{error}}</div>{{/if}}
