@@ -17,10 +17,12 @@
 
 {{else}}
 <button type="button" id = "apply" onclick="location.href='/post/{{post._id}}/applied'">Apply</button>
-
+<button type="button" id = "save" onclick="location.href='/post/{{post._id}}/saved'">SaveThisJob</button>
 {{/if}}
-
 </br>
+</br>
+</br>
+<button type="button" id = "profile" onclick="location.href='/profile/{{user.userName}}'">Profile</button>
 </br>
 
 <a href="/home">Home</a>

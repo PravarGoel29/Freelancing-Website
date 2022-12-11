@@ -1,6 +1,6 @@
 {{#if user}}
   <div class="user-class">
-    <button class="btn" type="button" onclick="location.href='/profile/{{user.userName}}/addPost'">Create Post</button>
+    <button type="button" onclick="location.href='/profile/{{user.userName}}/addPost'">Create Post</button>
   </div>
 
   {{!--<img alt="user" src="/public/images/userprofile/{{user.profileImage}}" id="profile_image">--}}
@@ -20,12 +20,21 @@
 {{/each}} --}}
   <br />
 
+  <h2>Saved Jobs</h2>
+  {{#each wishList}}
+    <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+  {{/each}}
+  <br />
+
   <h2>Jobs posted</h2>
   {{#each posts}}
     <div><p><a href="/post/{{this._id}}">{{this._id}} {{this.title}}</a></p></div>
   {{/each}}
 
   <br />
+  </br>
+</br>
+<a href="/home">Home</a>
 {{/if}}
 
 {{#if error}}<div id="viewpost-error" class="error">{{error}}</div>{{/if}}

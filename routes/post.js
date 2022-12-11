@@ -4,7 +4,10 @@ const router = express.Router();
 const data = require("../data");
 const userData = data.users;
 const postData = data.posts;
+const employerData = data.employers;
+const employeeData = data.employees;
 const validations = require("../validations/routeValidations");
+//let alert = require("alert");
 const xss = require("xss");
 
 router.route("/").get(async (req, res) => {
@@ -62,18 +65,81 @@ router.route("/:postId").get(async (req, res) => {
 router.route("/:postId/applied").get(async (req, res) => {
   //code here for GET
   let id = req.params.postId;
+  const user = req.session.user;
+  const post = await postData.getPostById(id);
+  const applicants = await postData.getApplicantsByPostId(id);
+  let thisUserPostFlag = false;
+  if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
+    thisUserPostFlag = true;
+  }
   try {
     //validation of id
     validations.validateID(id);
     id = id.trim();
-    const user = req.session.user;
-    const post = await postData.addApplicants(user.userName, id);
-    console.log(post);
-    res.status(200).render("../views/pages/jobapplied");
-    return;
+    const updatedPost = await postData.addApplicants(user.userName, id);
+    console.log(updatedPost);
+
+    if (user) {
+      res.status(200).render("../views/pages/jobapplied", { user: user });
+      return;
+    } else {
+      res.status(400).render("../views/pages/forbiddenAccess");
+      return;
+    }
   } catch (e) {
     console.log(e);
-    res.status(404).json({ error: e });
+    //alert(e);
+    //res.redirect("/post/" + id);
+    //res.status(400).json({ error: e });
+    res.status(400).render("../views/pages/viewpost", {
+      user: user,
+      post: post,
+      thisUserPostFlag: thisUserPostFlag,
+      applicants: applicants,
+      error: e,
+    });
+    return;
+  }
+});
+
+router.route("/:postId/saved").get(async (req, res) => {
+  //code here for GET
+  let id = req.params.postId;
+  const user = req.session.user;
+  const post = await postData.getPostById(id);
+  const applicants = await postData.getApplicantsByPostId(id);
+
+  let thisUserPostFlag = false;
+  if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
+    thisUserPostFlag = true;
+  }
+  try {
+    //validation of id
+    validations.validateID(id);
+    id = id.trim();
+
+    const employeeId = await userData.getEmployeeIdByUserName(user.userName);
+    const updatedPost = await employeeData.savePosttoWishList(employeeId, id);
+
+    if (user) {
+      res.status(200).render("../views/pages/jobsaved", { user: user, post: post });
+      return;
+    } else {
+      res.status(400).render("../views/pages/forbiddenAccess");
+      return;
+    }
+  } catch (e) {
+    console.log(e);
+    //alert(e);
+    //res.redirect("/post/" + id);
+    //res.status(400).json({ error: e });
+    res.status(400).render("../views/pages/viewpost", {
+      user: user,
+      post: post,
+      thisUserPostFlag: thisUserPostFlag,
+      applicants: applicants,
+      error: e,
+    });
     return;
   }
 });

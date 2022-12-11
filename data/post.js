@@ -75,10 +75,14 @@ const createPost = async (location, description, title, domain, tags, jobtype, s
 
 const addApplicants = async (userName, postId) => {
   validations.validateID(postId);
+  userName = userName.toLowerCase();
   postId = postId.trim();
   const post = await getPostById(postId);
 
   let applicants_ = post.applicants;
+  if (applicants_.includes(userName)) {
+    throw "You have already applied to this job";
+  }
   applicants_.push(userName);
 
   const postCollection = await posts();
