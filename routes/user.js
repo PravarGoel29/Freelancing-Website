@@ -204,7 +204,7 @@ router.route("/profile/:userName/addPost").get(async (req, res) => {
   }
 });
 
-router.route("/otherUserProfile/:userName").post(async (req, res) => {
+router.route("/employerDetails/:userName").post(async (req, res) => {
   //res.json("yes");
   try {
     //console.log("Inside Home");
@@ -215,13 +215,12 @@ router.route("/otherUserProfile/:userName").post(async (req, res) => {
     const otherUser = await userData.getUserByUserName(username);
     const otherUserPosts = await postData.getAllPostsbyUserName(username);
 
-   
-
     // // if authenticated user, renders landing page
     if (user) {
-      res.status(200).render("../views/pages/otherUserView", {
+      res.status(200).render("../views/pages/user", {
         user: otherUser,
-        post: otherUserPosts
+        post: otherUserPosts,
+        JobHistoryflag: true,
       });
       return;
     } else {

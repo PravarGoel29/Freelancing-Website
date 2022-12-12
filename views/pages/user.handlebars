@@ -6,4 +6,22 @@
 </br>
 </br>
 <a href="/home">Home</a>
+{{#if JobHistoryflag}}
+<div>
+    <h2>Job Posts History</h2>
+</div>
 
+  {{#each post}}
+<p>title : {{this.title}}</p>
+<p>Location : {{this.location}}</p>
+<p>description : {{this.description}}</p>
+<p>postedTime : {{this.postedTime}}</p>
+<p>domain : {{this.domain}}</p>
+<p>tags : {{this.tags}}</p>
+<p>status : {{this.status}}</p>
+<p>jobtype : {{this.jobtype}}</p>
+         <hr>
+    </br>
+</br>
+  {{/each}}
+  {{/if}}
