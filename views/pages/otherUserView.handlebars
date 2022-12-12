@@ -7,22 +7,22 @@
 <p> tags: {{user.gender}} </p>
 </br>
 </br>
-{{!-- <div>
-    <h2>Post History</h2>
+
+
+<div>
+    <h2>Job Posts History</h2>
 </div>
-{{#if thisUserPostFlag}}
- {{#each post}}
-<p>Title : {{post}}</p>
-<p>Location: {{post.location}}</p>
-<p>Description: {{post.description}} </p>
-<p>Posted Time: {{post.postedTime}} </p>
-<p> Domain : {{post.domain}} </p>
-<p> Tags: {{post.tags}} </p>
-<p> Status : {{post.status}} </p>
-<p> Jobtype : {{post.jobtype}} </p>
 
+  {{#each post}}
+<p>title : {{this.title}}</p>
+<p>Location : {{this.location}}</p>
+<p>description : {{this.description}}</p>
+<p>postedTime : {{this.postedTime}}</p>
+<p>domain : {{this.domain}}</p>
+<p>tags : {{this.tags}}</p>
+<p>status : {{this.status}}</p>
+<p>jobtype : {{this.jobtype}}</p>
+         <hr>
+    </br>
+</br>
   {{/each}}
-  {{else}}
-  No Jobs Posted
-{{/if}} --}}
-

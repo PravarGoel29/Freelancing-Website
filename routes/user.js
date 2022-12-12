@@ -215,10 +215,13 @@ router.route("/otherUserProfile/:userName").post(async (req, res) => {
     const otherUser = await userData.getUserByUserName(username);
     const otherUserPosts = await postData.getAllPostsbyUserName(username);
 
+   
+
     // // if authenticated user, renders landing page
     if (user) {
       res.status(200).render("../views/pages/otherUserView", {
         user: otherUser,
+        post: otherUserPosts
       });
       return;
     } else {
