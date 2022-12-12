@@ -1,23 +1,16 @@
-const postSuccess = document.getElementById("createpost-success");
-const postError = document.getElementById("createpost-failure");
-postSuccess.hidden = true;
-postError.hidden = true;
-$("createpost-error").hide()
 $("#createpost-form").submit(function (event) {
     event.preventDefault();
     let url = window.location.href
     userName = url.split('/')
     userName = userName[4]
-    console.log(userName)
+    let location = $('#location').val()
+    let description = $('#description').val()
+    let title = $('#title').val()
+    let domain = $('#domain').val()
+    let tags = $('#tags').val()
+    let jobtype = $('#jobtype').val()
+    let salary = $('#salary').val()
     try {
-
-        let location = $('#location').val()
-        let description = $('#description').val()
-        let title = $('#title').val()
-        let domain = $('#domain').val()
-        let tags = $('#tags').val()
-        let jobtype = $('#jobtype').val()
-        let salary = $('#salary').val()
         validateLocation(location)
         validateDescription(description)
         validateTitle(title)
@@ -25,42 +18,39 @@ $("#createpost-form").submit(function (event) {
         validateTags(tags)
         validateJobType(jobtype)
         validateSalary(salary)
-
-        if (location && description && title && domain && tags && jobtype && salary) {
-            var requestConfig = {
-                method: 'POST',
-                url: `/post`,
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    location: location,
-                    description: description,
-                    title: title,
-                    domain: domain,
-                    tags: tags,
-                    jobtype: jobtype,
-                    salary: salary
-                })
-            };
-            console.log(url)
-            $.ajax(requestConfig).then(function (responseMessage) {
-                console.log(responseMessage)
-                window.location.href = `/profile/${userName}`;
-                postSuccess.hidden = false
-                postErrorr.hidden = true;
-            }, function (responseMessage) {
-                console.log(responseMessage)
-                postSuccess.hidden = true
-                postError.hidden = false;
-            });
-        }
     }
     catch (e) {
-        console.log(e)
         event.preventDefault()
-        postError.hidden = false
-        $('#createpost-error').show()
-        $('#createpost-error').empty()
-        $('#createpost-error').append(e)
+        alert(e)
+        return;
+    }
+
+    if (location && description && title && domain && tags && jobtype && salary) {
+        var requestConfig = {
+            method: 'POST',
+            url: `/post`,
+            contentType: 'application/json',
+            data: JSON.stringify({
+                location: location,
+                description: description,
+                title: title,
+                domain: domain,
+                tags: tags,
+                jobtype: jobtype,
+                salary: salary
+            })
+        };
+        $.ajax(requestConfig).then(function (responseMessage) {
+            console.log(responseMessage)
+            window.location.href = `/profile/${userName}`;
+            postSuccess.hidden = false
+            postError.hidden = true;
+        }, function (responseMessage) {
+            console.log(responseMessage)
+            data = JSON.parse(responseMessage.responseText)
+            alert(data.error)
+            return
+        });
     }
 });
 
@@ -92,9 +82,6 @@ const validateJobType = (inputJobType) => {
     if (!inputJobType) throw "Job Type not provided.";
     if (typeof inputJobType !== "string") throw "Job Type is not of valid input type.";
     if (inputJobType.trim().length === 0) throw "Job Type is empty.";
-    if (!(inputJobType === "Remote" || inputJobType === "In-Person" || inputJobType === "Hybrid")) {
-        throw "Invalid Job Type";
-    }
 };
 const validateTags = (inputTags) => {
     if (!inputTags) throw "Tags not provided.";

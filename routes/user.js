@@ -74,7 +74,7 @@ router.route("/signup").post(async (req, res) => {
   } catch (e) {
     console.log(e);
     //res.status(400).render("../views/pages/signup", { error: e });
-    res.status(400).json({ message: "Unable to Signin", success: false });
+    res.status(400).json({ error: e, success: false });
     return;
   }
 });
@@ -109,7 +109,7 @@ router.route("/login").post(async (req, res) => {
     console.log(e);
     //in case of error, rendering login page again with error message
     // res.status(400).render("../views/pages/login", { error: e });
-    res.status(400).json({ message: "Unable to login", success: false });
+    res.status(400).json({ error: "Either userName or Password is incorrect!", success: false });
     return;
   }
 });

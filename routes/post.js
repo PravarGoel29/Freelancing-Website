@@ -25,11 +25,12 @@ router.route("/").post(async (req, res) => {
     const newPost = await postData.createPost(location, description, title, domain, tags, jobtype, salary, userName);
     //Displaying the success message
     //res.status(200).json("Job post successful");
-    res.redirect("/profile/" + userName);
+    //res.redirect("/profile/" + userName);
+    res.status(200).json({ message: "Succefully Posted", success: true });
     return;
   } catch (e) {
-    console.log(e);
-    res.status(500).json({ error: e });
+    res.status(400).json({ error: e, success: false });
+    //res.status(500).json({ error: e });
   }
 });
 

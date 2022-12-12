@@ -1,21 +1,16 @@
-const signupSuccess = document.getElementById("signup-success");
-const signupError = document.getElementById("signup-failure");
-signupSuccess.hidden = true;
-signupError.hidden = true;
-$("signup-error").hide()
 $("#registration-form").submit(function (event) {
     event.preventDefault();
+    let username = $('#userName').val()
+    let firstName = $('#firstName').val()
+    let lastName = $('#lastName').val()
+    let contactNumber = $('#contactNumber').val()
+    let preferences = $('#preferences').val()
+    let email = $('#email').val()
+    let dob = $('#dob').val()
+    let password = $('#password').val()
+    let confirmPassword = $('#confirmPassword').val()
+    let gender = document.querySelector('input[name="gender"]:checked').value;
     try {
-        let username = $('#userName').val()
-        let firstName = $('#firstName').val()
-        let lastName = $('#lastName').val()
-        let contactNumber = $('#contactNumber').val()
-        let preferences = $('#preferences').val()
-        let email = $('#email').val()
-        let dob = $('#dob').val()
-        let password = $('#password').val()
-        let confirmPassword = $('#confirmPassword').val()
-        let gender = document.querySelector('input[name="gender"]:checked').value;
         if (gender === null) {
             throw 'Please select gender'
         }
@@ -29,47 +24,41 @@ $("#registration-form").submit(function (event) {
         validateEmail(email)
         validateConfirmPassword(password, confirmPassword)
         validatePreferences(preferences)
-        console.log(username)
-        if (username && password && firstName && lastName && contactNumber && dob && confirmPassword && email && preferences && gender) {
-            var requestConfig = {
-                method: 'POST',
-                url: '/signup',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    userName: username,
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    password: password,
-                    confirmPassword: confirmPassword,
-                    contactNumber: contactNumber,
-                    gender: gender,
-                    dob: dob,
-                    preferences: preferences
-                })
-            };
-            console.log(requestConfig)
-            $.ajax(requestConfig).then(function (responseMessage) {
-                console.log(responseMessage)
-                window.location.href = "/";
-                signupSuccess.hidden = false
-                signupError.hidden = true;
-            }, function (responseMessage) {
-                console.log(responseMessage)
-                signupSuccess.hidden = true
-                signupError.hidden = false;
-            });
-        }
     }
     catch (e) {
-        console.log(e)
         event.preventDefault()
-        signupError.hidden = false
-        $('#signup-error').show()
-        $('#signup-error').empty()
-        $('#signup-error').append(e)
+        alert(e)
+        return
     }
-});
+
+    if (username && password && firstName && lastName && contactNumber && dob && confirmPassword && email && preferences && gender) {
+        var requestConfig = {
+            method: 'POST',
+            url: '/signup',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                userName: username,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword,
+                contactNumber: contactNumber,
+                gender: gender,
+                dob: dob,
+                preferences: preferences
+            })
+        };
+    }
+    $.ajax(requestConfig).then(function (responseMessage) {
+        window.location.href = "/";
+    }, function (responseMessage) {
+        data = JSON.parse(responseMessage.responseText)
+        alert(data.error)
+        return
+    });
+}
+);
 
 const validateUserName = (inputName) => {
     if (!inputName) throw "Username not provided.";
