@@ -1,8 +1,12 @@
 <h2>Home Page</h2>
+<div id="search">
+           <label for="searchTerm" class='headerLink marginLeft12'>Search:</label>
+             <input type="text" name="searchTerm" id="searchTerm">
+        </div>
 <div>
   {{!-- {{#if allPosts}} --}}
   {{#each allPosts}}
-    <div><p><a href="/post/{{this._id}}">{{this._id}} {{this.title}}</a></p></div>
+    <div><p><a class="name" href="/post/{{this._id}}">{{this._id}} {{this.title}}  {{this.location}}</a></p></div>
   {{/each}}
   {{!-- {{else}}
       <p class="not-found">We're sorry, but no results were found for.</p>
@@ -17,3 +21,4 @@
 <a href="/logout">Logout </a>
 
 {{#if error}}<div id="viewpost-error" class="error">{{error}}</div>{{/if}}
+<script src="/public/js/viewPost.js"></script>
