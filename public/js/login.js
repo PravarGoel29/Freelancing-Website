@@ -1,47 +1,35 @@
-const loginSuccess = document.getElementById("login-success");
-const loginError = document.getElementById("login-failure");
-loginSuccess.hidden = true;
-loginError.hidden = true;
 $("#login-form").submit(function (event) {
     event.preventDefault();
-    $("login-error").hide()
+    let username = $('#usernameInput').val()
+    let password = $('#passwordInput').val()
     try {
-        let username = $('#usernameInput').val()
-        let password = $('#passwordInput').val()
         validateUsername(username);
         validatePassword(password);
         validateTags([username, password])
-        console.log(username)
-        if (username && password) {
-            var requestConfig = {
-                method: 'POST',
-                url: '/login',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    usernameInput: username,
-                    passwordInput: password
-                })
-            };
-            $.ajax(requestConfig).then(function (responseMessage) {
-                console.log(responseMessage)
-                window.location.href = "/home";
-                loginSuccess.hidden = false
-                loginError.hidden = true;
-            }, function (responseMessage) {
-                console.log(responseMessage)
-                loginSuccess.hidden = true
-                loginError.hidden = false;
-                loginError.show()
-            });
-        }
     }
     catch (e) {
-        console.log(e)
         event.preventDefault()
-        loginError.hidden = false
-        $('#login-error').show()
-        $('#login-error').empty()
-        $('#login-error').append(e)
+        alert(e)
+        return
+    }
+    if (username && password) {
+        var requestConfig = {
+            method: 'POST',
+            url: '/login',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                usernameInput: username,
+                passwordInput: password
+            })
+        };
+        $.ajax(requestConfig).then(function (responseMessage) {
+            console.log(responseMessage)
+            window.location.href = "/home";
+        }, function (responseMessage) {
+            data = JSON.parse(responseMessage.responseText)
+            alert(data.error)
+            return
+        });
     }
 });
 
