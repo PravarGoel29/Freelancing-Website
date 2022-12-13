@@ -132,8 +132,6 @@ router.route("/home").get(async (req, res) => {
       return;
     }
   } catch (e) {
-    //in case of error, rendering login page again with error message
-    //console.log(e);
     res.status(400).render("../views/errors/error", { error: e });
     return;
   }
@@ -147,11 +145,7 @@ router.route("/profile/:userName").get(async (req, res) => {
   const invites = await employeeData.getAllinvites(employeeId);
   req.session.posts = thisUserPosts;
   const posts = req.session.posts;
-  // if authenticated user, renders landing page
-
-  console.log(invites);
   if (user) {
-    //console.log("user passed to user page", req.session.user);
     res
       .status(200)
       .render("../views/pages/profile", { user: user, posts: posts, wishList: wishList, invites: invites });
@@ -177,9 +171,40 @@ router.route("/user/:userName").get(async (req, res) => {
   }
 });
 
+router.route("/user/:userName/employee").get(async (req, res) => {
+  const user = req.session.user;
+  const userName = req.params.userName;
+  const thatUser = await userData.getUserByUserName(userName);
+  const thatUserAsEmployee = await employeeData.getEmployeeByUserName(userName);
+
+  if (user) {
+    res.status(200).render("../views/pages/employeeprofile", { user: thatUser, employee: thatUserAsEmployee });
+    return;
+  } else {
+    res.status(400).render("../views/pages/forbiddenAccess");
+    return;
+  }
+});
+
+router.route("/user/:userName/employer").get(async (req, res) => {
+  const user = req.session.user;
+  const userName = req.params.userName;
+  const thatUser = await userData.getUserByUserName(userName);
+  const thatUserAsEmployer = await employerData.getEmployerByUserName(userName);
+  if (user) {
+    res.status(200).render("../views/pages/employerprofile", {
+      user: thatUser,
+      employer: thatUserAsEmployer,
+    });
+    return;
+  } else {
+    res.status(400).render("../views/pages/forbiddenAccess");
+    return;
+  }
+});
+
 router.route("/profile/:userName/addPost").get(async (req, res) => {
   const user = req.session.user;
-  // if authenticated user, renders landing page
   if (user) {
     res.status(200).render("../views/pages/createPost", { user: user });
     return;

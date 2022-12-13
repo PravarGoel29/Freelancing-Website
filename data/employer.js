@@ -101,6 +101,22 @@ const addPost = async (userName, employerId, postID) => {
   return await getEmployerById(employerId);
 };
 
+const getEmployerByUserName = async (userName) => {
+  //0. validate arguments
+  userName = userName.toLowerCase();
+  validations.validateUsername(userName);
+  //1. establish db connection
+  const employerCollection = await employers();
+
+  //2. checks if the employee with the given employeeID is already in the DB
+  const thisEmployer = await employerCollection.findOne({ userName: userName });
+  if (thisEmployer === null) throw "No employee with that username found";
+
+  //3. converts objectID to a string and returns it
+  thisEmployer._id = thisEmployer._id.toString();
+  return thisEmployer;
+};
+
 /**Exporting Modules*/
 module.exports = {
   createEmployer,
@@ -108,4 +124,5 @@ module.exports = {
   getAllEmployers,
   removeEmployer,
   addPost,
+  getEmployerByUserName,
 };

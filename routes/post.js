@@ -35,10 +35,8 @@ router.route("/").post(async (req, res) => {
 });
 
 router.route("/:postId").get(async (req, res) => {
-  //code here for GET
   let id = req.params.postId;
   try {
-    //validation of id
     validations.validateID(id);
     id = id.trim();
     const user = req.session.user;
@@ -48,12 +46,16 @@ router.route("/:postId").get(async (req, res) => {
     if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
       thisUserPostFlag = true;
     }
+
+    let savedFlag = await employeeData.checkIfWishlisted(user.userName, id);
+
     console.log(post);
     res.status(200).render("../views/pages/viewpost", {
       user: user,
       post: post,
       thisUserPostFlag: thisUserPostFlag,
       applicants: applicants,
+      savedFlag: savedFlag,
     });
     return;
   } catch (e) {
@@ -63,40 +65,9 @@ router.route("/:postId").get(async (req, res) => {
   }
 });
 
-// router.route("/:postId").post(async (req, res) => {
-//   //code here for GET
-//   let id = req.params.postId;
-//   let applicant = req.body
-//   try {
-//     //validation of id
-//     validations.validateID(id);
-//     id = id.trim();
-//     const user = req.session.user;
-//     const post = await postData.getPostById(id);
-//     const applicants = await postData.getApplicantsByPostId(id);
-//     let thisUserPostFlag = false;
-//     if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
-//       thisUserPostFlag = true;
-//     }
-//     //console.log(post);
-//     res.status(200).render("../views/pages/viewpost", {
-//       user: user,
-//       post: post,
-//       thisUserPostFlag: thisUserPostFlag,
-//       applicants: applicants,
-//     });
-//     return;
-//   } catch (e) {
-//     console.log(e);
-//     res.status(404).json({ error: e });
-//     return;
-//   }
-// });
-
 router.route("/:postId/:userName/invite").get(async (req, res) => {
   //Here the userName is the applicant userName
   let id = req.params.postId;
-
   const user = req.session.user;
   const post = await postData.getPostById(id);
   const applicants = await postData.getApplicantsByPostId(id);
@@ -104,17 +75,15 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
   if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
     thisUserPostFlag = true;
   }
+  let savedFlag = await employeeData.checkIfWishlisted(user.userName, id);
   let messageFlag = false;
   try {
-    //validation of id
     validations.validateID(id);
     id = id.trim();
-
     if (user) {
       const applicantName = req.params.userName.toLowerCase();
       const applicantEmployeeId = await userData.getEmployeeIdByUserName(applicantName);
       const invitedApplicant = await employeeData.getInvite(applicantEmployeeId, id);
-      //const updatedPost = await postData.addApplicants(user.userName, id);
       console.log(invitedApplicant);
       if (invitedApplicant) {
         messageFlag = true;
@@ -128,12 +97,12 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
     }
   } catch (e) {
     console.log(e);
-
     res.status(400).render("../views/pages/viewpost", {
       user: user,
       post: post,
       thisUserPostFlag: thisUserPostFlag,
       applicants: applicants,
+      savedFlag: savedFlag,
       error: e,
     });
     return;
@@ -141,7 +110,6 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
 });
 
 router.route("/:postId/applied").get(async (req, res) => {
-  //code here for GET
   let id = req.params.postId;
   const user = req.session.user;
   const post = await postData.getPostById(id);
@@ -150,8 +118,8 @@ router.route("/:postId/applied").get(async (req, res) => {
   if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
     thisUserPostFlag = true;
   }
+  let savedFlag = await employeeData.checkIfWishlisted(user.userName, id);
   try {
-    //validation of id
     validations.validateID(id);
     id = id.trim();
     const updatedPost = await postData.addApplicants(user.userName, id);
@@ -166,14 +134,13 @@ router.route("/:postId/applied").get(async (req, res) => {
     }
   } catch (e) {
     console.log(e);
-    //alert(e);
-    //res.redirect("/post/" + id);
     //res.status(400).json({ error: e });
     res.status(400).render("../views/pages/viewpost", {
       user: user,
       post: post,
       thisUserPostFlag: thisUserPostFlag,
       applicants: applicants,
+      savedFlag: savedFlag,
       error: e,
     });
     return;
@@ -181,7 +148,6 @@ router.route("/:postId/applied").get(async (req, res) => {
 });
 
 router.route("/:postId/saved").get(async (req, res) => {
-  //code here for GET
   let id = req.params.postId;
   const user = req.session.user;
   const post = await postData.getPostById(id);
@@ -191,8 +157,8 @@ router.route("/:postId/saved").get(async (req, res) => {
   if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
     thisUserPostFlag = true;
   }
+  let savedFlag = await employeeData.checkIfWishlisted(user.userName, id);
   try {
-    //validation of id
     validations.validateID(id);
     id = id.trim();
 
@@ -208,14 +174,52 @@ router.route("/:postId/saved").get(async (req, res) => {
     }
   } catch (e) {
     console.log(e);
-    //alert(e);
-    //res.redirect("/post/" + id);
     //res.status(400).json({ error: e });
     res.status(400).render("../views/pages/viewpost", {
       user: user,
       post: post,
       thisUserPostFlag: thisUserPostFlag,
       applicants: applicants,
+      savedFlag: savedFlag,
+      error: e,
+    });
+    return;
+  }
+});
+
+router.route("/:postId/unsaved").get(async (req, res) => {
+  let id = req.params.postId;
+  const user = req.session.user;
+  const post = await postData.getPostById(id);
+  const applicants = await postData.getApplicantsByPostId(id);
+  let thisUserPostFlag = false;
+  if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
+    thisUserPostFlag = true;
+  }
+  let savedFlag = await employeeData.checkIfWishlisted(user.userName, id);
+  try {
+    validations.validateID(id);
+    id = id.trim();
+
+    const employeeId = await userData.getEmployeeIdByUserName(user.userName);
+    const updatedPost = await employeeData.unsavePosttoWishList(employeeId, id);
+
+    if (user) {
+      res.status(200).redirect("/post/" + id);
+      return;
+    } else {
+      res.status(400).render("../views/pages/forbiddenAccess");
+      return;
+    }
+  } catch (e) {
+    console.log(e);
+    //res.status(400).json({ error: e });
+    res.status(400).render("../views/pages/viewpost", {
+      user: user,
+      post: post,
+      thisUserPostFlag: thisUserPostFlag,
+      applicants: applicants,
+      savedFlag: savedFlag,
       error: e,
     });
     return;
