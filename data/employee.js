@@ -8,6 +8,8 @@ const moment = require("moment");
 
 /**Database function for the Employees Collection */
 const createEmployee = async (userName, preferences) => {
+  userName = userName.toLowerCase();
+  validations.validateUsername(userName);
   //0. establish db connection
   const employeeCollection = await employees();
 
@@ -60,13 +62,55 @@ const savePosttoWishList = async (employeeId, postID) => {
   const thisEmployee = await employeeCollection.findOne({ _id: ObjectId(employeeId) });
   if (thisEmployee === null) throw "No employer with that id found";
 
-  console.log(thisEmployee);
+  //console.log(thisEmployee);
   let wishList_ = thisEmployee.wishList;
   if (wishList_.includes(postID)) {
     throw "You have already saved to this job to your wishlist";
   }
 
   wishList_.push(postID);
+
+  const updatedEmployee = await employeeCollection.updateOne(
+    { _id: ObjectId(employeeId) },
+    {
+      $set: {
+        userName: thisEmployee.userName,
+        preferences: thisEmployee.preferences,
+        resume: thisEmployee.resume,
+        wishList: wishList_,
+        historyOfJobs: thisEmployee.historyOfJobs,
+        overallRating: thisEmployee.overallRating,
+        reported: thisEmployee.reported,
+        flag: thisEmployee.flag,
+        currentJobsTaken: thisEmployee.flag,
+        invites: thisEmployee.invites,
+      },
+    }
+  );
+
+  if (updatedEmployee.modifiedCount === 0) {
+    throw "Employee not modified!";
+  }
+
+  return await getEmployeeById(employeeId);
+};
+const unsavePosttoWishList = async (employeeId, postID) => {
+  validations.validateID(employeeId);
+  const employeeCollection = await employees();
+
+  //2. checks if the employer with the given employerID is already in the DB
+  const thisEmployee = await employeeCollection.findOne({ _id: ObjectId(employeeId) });
+  if (thisEmployee === null) throw "No employer with that id found";
+
+  //console.log(thisEmployee);
+  let wishList_ = thisEmployee.wishList.filter(function (ele) {
+    return ele != postID;
+  });
+  // if (wishList_.includes(postID)) {
+  //   throw "You have already saved to this job to your wishlist";
+  // }
+
+  // wishList_.push(postID);
 
   const updatedEmployee = await employeeCollection.updateOne(
     { _id: ObjectId(employeeId) },
@@ -148,12 +192,44 @@ const getAllinvites = async (employeeId) => {
   return employee.invites;
 };
 
+const getEmployeeByUserName = async (userName) => {
+  //0. validate arguments
+  userName = userName.toLowerCase();
+  validations.validateUsername(userName);
+  //1. establish db connection
+  const employeeCollection = await employees();
+
+  //2. checks if the employee with the given employeeID is already in the DB
+  const thisEmployee = await employeeCollection.findOne({ userName: userName });
+  if (thisEmployee === null) throw "No employee with that username found";
+
+  //3. converts objectID to a string and returns it
+  thisEmployee._id = thisEmployee._id.toString();
+  return thisEmployee;
+};
+
+const checkIfWishlisted = async (userName, postId) => {
+  //validation of id
+  validations.validateID(postId);
+  id = postId.trim();
+
+  validations.validateUsername(userName);
+  userName = userName.toLowerCase();
+
+  const employee = await getEmployeeByUserName(userName);
+
+  return employee.wishList.includes(postId);
+};
+
 /**Exporting Modules*/
 module.exports = {
   createEmployee,
   getEmployeeById,
   savePosttoWishList,
+  unsavePosttoWishList,
   getAllJobsinWishList,
   getInvite,
   getAllinvites,
+  getEmployeeByUserName,
+  checkIfWishlisted,
 };

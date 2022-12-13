@@ -1,0 +1,20 @@
+<h2>{{employee.userName}}</h2>
+<p>Contact Details</p>
+<p>{{user.email}}</p>
+<p>Employee Preferences</p>
+<p>{{employee.preferences}}</p>
+<p>Employee Rating</p>
+<p>{{employee.overallRating}}</p>
+
+<h2>Job History</h2>
+  {{#each employee.historyOfJobs}}
+    <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+  {{/each}}
+
+
+</br>
+<button type="button" id = "backtouser" onclick="location.href='/user/{{user.userName}}'">Back</button>
+</br>
+
+
+<a href="/home">Home</a>

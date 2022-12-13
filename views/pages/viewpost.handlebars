@@ -19,7 +19,11 @@
 
 {{else}}
 <button type="button" id = "apply" onclick="location.href='/post/{{post._id}}/applied'">Apply</button>
+{{#if savedFlag}}
+<button type="button" id = "save" onclick="location.href='/post/{{post._id}}/unsaved'">UnsaveThisJob</button>
+{{else}}
 <button type="button" id = "save" onclick="location.href='/post/{{post._id}}/saved'">SaveThisJob</button>
+{{/if}}
 {{/if}}
 </br>
 </br>
