@@ -17,7 +17,7 @@ router.route("/").get(async (req, res) => {
     return;
   } else {
     //renders login page if not active
-    res.status(200).render("../views/pages/login");
+    res.status(200).render("../views/pages/login", {style: "stylesheet.css"});
     return;
   }
 });
@@ -29,7 +29,7 @@ router.route("/signup").get(async (req, res) => {
     return;
   } else {
     //renders signup page if not active
-    res.status(200).render("../views/pages/signup");
+    res.status(200).render("../views/pages/signup", {style: "stylesheet.css"});
     return;
   }
 });
