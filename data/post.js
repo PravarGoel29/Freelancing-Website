@@ -1,9 +1,11 @@
 const db = require("../config");
 const posts = db.postsCollection;
 const validations = require("../validations/dataValidations");
+const Employee = require("./employee");
 const Employer = require("./employer");
 const User = require("./user");
 const { ObjectId } = require("mongodb");
+//const { post } = require("../routes/user");
 
 /**Database function for the Post Collection */
 
@@ -17,7 +19,7 @@ const getPostById = async (postId) => {
     throw "There is no post for the given id";
   }
   postInfo._id = postInfo._id.toString();
-  console.log(postInfo);
+  //console.log(postInfo);
   return postInfo;
 };
 
@@ -34,7 +36,7 @@ const getApplicantsByPostId = async (postId) => {
 
 const createPost = async (location, description, title, domain, tags, jobtype, salary, userName) => {
   const postCollection = await posts();
-  var postedTime = new Date().toLocaleDateString("en-US");
+  let postedTime = new Date().toLocaleDateString("en-US");
 
   validations.validateLocation(location);
   validations.validateDescription(description);
@@ -95,16 +97,16 @@ const addApplicants = async (userName, postId) => {
         description: post.description,
         title: post.title,
         postedTime: post.postedTime,
-        updatedTime: null,
+        updatedTime: post.updatedTime,
         imageID: "123",
         domain: post.domain,
         tags: post.tags,
-        reviewIDs: [],
-        status: "Active",
+        reviewIDs: post.reviewIDs,
+        status: post.status,
         jobtype: post.jobtype,
         salary: post.salary,
         applicants: applicants_,
-        candidates: [],
+        candidates: post.candidates,
       },
     }
   );
@@ -116,10 +118,146 @@ const addApplicants = async (userName, postId) => {
   return await getPostById(postId);
 };
 
+const addCandidates = async (userName, postId) => {
+  validations.validateID(postId);
+  userName = userName.toLowerCase();
+  postId = postId.trim();
+  const post = await getPostById(postId);
+
+  let candidates_ = post.candidates;
+  if (candidates_.includes(userName)) {
+    throw userName + " have already taken this job";
+  }
+  candidates_.push(userName);
+
+  let applicants_ = post.applicants.filter(function (ele) {
+    return ele != userName;
+  });
+
+  const postCollection = await posts();
+  const updatedPost = await postCollection.updateOne(
+    { _id: ObjectId(postId) },
+    {
+      $set: {
+        userName: post.userName.toLowerCase(),
+        location: post.location,
+        description: post.description,
+        title: post.title,
+        postedTime: post.postedTime,
+        updatedTime: post.updatedTime,
+        imageID: "123",
+        domain: post.domain,
+        tags: post.tags,
+        reviewIDs: post.reviewIDs,
+        status: post.status,
+        jobtype: post.jobtype,
+        salary: post.salary,
+        applicants: applicants_,
+        candidates: candidates_,
+      },
+    }
+  );
+
+  if (updatedPost.modifiedCount === 0) {
+    throw "Applicant " + userName + " not added to this job " + postId;
+  }
+
+  return await getPostById(postId);
+};
+
+const addReview = async (reviewId, postId) => {
+  validations.validateID(postId);
+  validations.validateID(reviewId);
+
+  postId = postId.trim();
+  reviewId = reviewId.trim();
+
+  const post = await getPostById(postId);
+
+  let reviewIDs_ = post.reviewIDs;
+  if (reviewIDs_.includes(reviewId)) {
+    throw reviewId + " have already been added";
+  }
+  reviewIDs_.push(reviewId);
+
+  const postCollection = await posts();
+  const updatedPost = await postCollection.updateOne(
+    { _id: ObjectId(postId) },
+    {
+      $set: {
+        userName: post.userName.toLowerCase(),
+        location: post.location,
+        description: post.description,
+        title: post.title,
+        postedTime: post.postedTime,
+        updatedTime: post.updatedTime,
+        imageID: "123",
+        domain: post.domain,
+        tags: post.tags,
+        reviewIDs: reviewIDs_,
+        status: post.status,
+        jobtype: post.jobtype,
+        salary: post.salary,
+        applicants: post.applicants,
+        candidates: post.candidates,
+      },
+    }
+  );
+
+  if (updatedPost.modifiedCount === 0) {
+    throw "Review " + reviewId + " not added to this job " + postId;
+  }
+
+  return await getPostById(postId);
+};
+
+const markCompleted = async (postId) => {
+  validations.validateID(postId);
+  postId = postId.trim();
+  const post = await getPostById(postId);
+  let updatedTime_ = new Date().toLocaleDateString("en-US");
+  const postCollection = await posts();
+  const updatedPost = await postCollection.updateOne(
+    { _id: ObjectId(postId) },
+    {
+      $set: {
+        userName: post.userName,
+        location: post.location,
+        description: post.description,
+        title: post.title,
+        postedTime: post.postedTime,
+        updatedTime: updatedTime_,
+        imageID: "123",
+        domain: post.domain,
+        tags: post.tags,
+        reviewIDs: post.reviewIDs,
+        status: "Completed",
+        jobtype: post.jobtype,
+        salary: post.salary,
+        applicants: post.applicants,
+        candidates: post.candidates,
+      },
+    }
+  );
+
+  if (updatedPost.modifiedCount === 0) {
+    throw "Could not mark this job as completed";
+  }
+
+  for (const employee of post.candidates) {
+    const employeeId = await User.getEmployeeIdByUserName(employee);
+    let updatedFlag = await Employee.markJobAsCompleted(employeeId, postId);
+    if (!updatedFlag) {
+      throw "Could not mark this job completed for the employee " + employee;
+    }
+  }
+
+  return await getPostById(postId);
+};
+
 const getAllPosts = async () => {
   const postCollection = await posts();
   const allPostList = await postCollection.find({}).toArray();
-  //console.log("inside data get all post", PostList);
   return allPostList;
 };
 
@@ -129,6 +267,36 @@ const getAllPostsbyUserName = async (userName) => {
   const PostList = await postCollection.find({ userName: userName }).toArray();
   return PostList;
 };
+
+// const getReviewObjectList = async (postId) => {
+//   validations.validateID(postId);
+//   postId = postId.trim();
+
+//   const post = await getPostById(postId);
+//   let reviewObjectList = [];
+
+//   for (reviewID in post.reviewIDs) {
+//     const review = await ReviewRate.getReviewById(reviewID);
+//     if (review.employeeToEmployerFlag) {
+//       reviewedBy_ = await Employee.getEmployeeById(review.employeeId);
+//       reviewedAs_ = "Employee";
+//     } else {
+//       reviewedBy_ = await Employer.getEmployerById(review.employerId);
+//       reviewedAs_ = "Employer";
+//     }
+//     const reviewObject = {
+//       reviewId: review._id,
+//       postId: postId,
+//       postTitle: post.title,
+//       reviewedBy: reviewedBy_,
+//       reviewedAs: reviewedAs_,
+//       rating: review.rating,
+//     };
+//     reviewObjectList.push(reviewObject);
+//   }
+
+//   return reviewObjectList;
+// };
 
 const removePost = async (postId) => {
   //validation of id
@@ -154,4 +322,7 @@ module.exports = {
   getAllPostsbyUserName,
   addApplicants,
   getApplicantsByPostId,
+  addCandidates,
+  markCompleted,
+  addReview,
 };

@@ -3,20 +3,20 @@
     <button type="button" onclick="location.href='/profile/{{user.userName}}/addPost'">Create Post</button>
   </div>
 
-  {{!--<img alt="user" src="/public/images/userprofile/{{user.profileImage}}" id="profile_image">--}}
   <h1>{{user.userName}}</h1>
   <div>{{user.firstName}} {{user.lastName}}</div>
   <div class="label">{{user.email}}</div>
 
   <h2>Jobs Taken</h2>
-  {{!-- {{#each jobsTaken}}
-<div><a href="/jobsTaken/{{this._id}}">{{this.name}}</a></div>
-{{/each}} --}}
+  {{#each currentJobs}}
+    <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+{{/each}}
   <br />
 
   <h2>Invites</h2>
   {{#each invites}}
-    <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+    <div><p><a href="/post/{{this}}">{{this}}</a>
+    <button type="button" id = "acceptinvite" onclick="location.href='/post/{{this}}/acceptinvite'">Accept Invite</button></p></div>
 {{/each}}
   <br />
 
