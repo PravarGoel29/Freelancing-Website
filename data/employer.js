@@ -16,6 +16,7 @@ const createEmployer = async (userName) => {
     userName: userName,
     historyOfJobs: [],
     overallRating: 0,
+    numberOfRatingsRecieved: 0,
     reported: [],
     flag: false,
   };
@@ -88,6 +89,47 @@ const addPost = async (userName, employerId, postID) => {
         userName: userName,
         historyOfJobs: historyOfJobs_,
         overallRating: thisEmployer.overallRating,
+        numberOfRatingsRecieved: thisEmployer.numberOfRatingsRecieved,
+        reported: thisEmployer.reported,
+        flag: thisEmployer.flag,
+      },
+    }
+  );
+
+  if (updatedEmployer.modifiedCount === 0) {
+    throw "Employer not modified!";
+  }
+
+  return await getEmployerById(employerId);
+};
+
+const addRating = async (employerId, rating, addFlag, oldRating) => {
+  validations.validateID(employerId);
+  const employerCollection = await employers();
+
+  //2. checks if the employer with the given employerID is already in the DB
+  const thisEmployer = await employerCollection.findOne({ _id: ObjectId(employerId) });
+  if (thisEmployer === null) throw "No employer with that id found";
+
+  //console.log(thisEmployer);
+  let overallRating_ = thisEmployer.overallRating;
+  let numberOfRatingsRecieved_ = thisEmployer.numberOfRatingsRecieved;
+
+  if (addFlag) {
+    overallRating_ = (overallRating_ * numberOfRatingsRecieved_ + rating) / (numberOfRatingsRecieved_ + 1);
+    numberOfRatingsRecieved_ = numberOfRatingsRecieved_ + 1;
+  } else {
+    overallRating_ = (overallRating_ * numberOfRatingsRecieved_ - oldRating + rating) / numberOfRatingsRecieved_;
+  }
+
+  const updatedEmployer = await employerCollection.updateOne(
+    { _id: ObjectId(employerId) },
+    {
+      $set: {
+        userName: thisEmployer.userName,
+        historyOfJobs: thisEmployer.historyOfJobs,
+        overallRating: overallRating_,
+        numberOfRatingsRecieved: numberOfRatingsRecieved_,
         reported: thisEmployer.reported,
         flag: thisEmployer.flag,
       },
@@ -125,4 +167,5 @@ module.exports = {
   removeEmployer,
   addPost,
   getEmployerByUserName,
+  addRating,
 };

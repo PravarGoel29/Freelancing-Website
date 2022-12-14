@@ -143,12 +143,17 @@ router.route("/profile/:userName").get(async (req, res) => {
   const employeeId = await userData.getEmployeeIdByUserName(user.userName);
   const wishList = await employeeData.getAllJobsinWishList(employeeId);
   const invites = await employeeData.getAllinvites(employeeId);
+  const currentJobs = await employeeData.getAllCurrentJobs(employeeId);
   req.session.posts = thisUserPosts;
   const posts = req.session.posts;
   if (user) {
-    res
-      .status(200)
-      .render("../views/pages/profile", { user: user, posts: posts, wishList: wishList, invites: invites });
+    res.status(200).render("../views/pages/profile", {
+      user: user,
+      posts: posts,
+      wishList: wishList,
+      invites: invites,
+      currentJobs: currentJobs,
+    });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
@@ -162,6 +167,10 @@ router.route("/user/:userName").get(async (req, res) => {
   const thatUser = await userData.getUserByUserName(userName);
 
   if (user) {
+    if (user.userName == thatUser.userName) {
+      res.status(200).redirect("/profile/" + user.userName);
+      return;
+    }
     //console.log("user passed to user page", req.session.user);
     res.status(200).render("../views/pages/user", { user: thatUser });
     return;

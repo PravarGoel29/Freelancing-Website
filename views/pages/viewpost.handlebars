@@ -1,6 +1,7 @@
 <h1>{{post.title}}</h1>
 <p>Location : {{post.location}}</p>
 <p>Description: {{post.description}}</p>
+<p>Status: {{post.status}}</p>
 <p>Domain: {{post.domain}} </p>
 <p>jobtype: {{post.jobtype}} </p>
 <p> Salary : {{post.salary}} </p>
@@ -8,22 +9,67 @@
 </br>
 </br>
 
- {{!-- only user who posted can view --}}
-{{#if thisUserPostFlag}}
-<h2>Applicants</h2>
-  {{#each applicants}}
-    <div><p><a href="/user/{{this}}">{{this}}</a></p>
-    <button type="button" id = "invite" onclick="location.href='/post/{{../post._id}}/{{this}}/invite'">Invite</button>
-    </div>
-  {{/each}}
 
+{{#if thisUserPostFlag}}
+  {{#if activeFlag}}
+  <button type="button" id = "markcompleted" onclick="location.href='/post/{{post._id}}/completed'">Mark this job completed</button>
+  {{/if}}
+  </br>
+  </br>
+
+  <h2>Applicants</h2>
+    {{#each applicants}}
+      <div><p><a href="/user/{{this}}">{{this}}</a>
+      {{#if activeFlag}}
+        <button type="button" id = "invite" onclick="location.href='/post/{{../post._id}}/{{this}}/invite'">Invite</button>
+      {{/if}}
+      </p>
+      </div>
+    {{/each}}
+  </br>
+  </br>
+
+  <h2>Candidates</h2>
+    {{#each post.candidates}}
+      {{#if activeFlag}}
+        <div><p><a href="/user/{{this}}">{{this}}</a></p>
+        </div>
+      {{else}}
+        <div><p><a href="/user/{{this}}">{{this}}</a></p>
+        </div>
+        <button type="button" id = "reviewrateemployee" onclick="location.href='/post/{{../post._id}}/reviewrate/{{this}}'">Write a Review and Rate the Employee</button>
+      {{/if}}
+    {{/each}}
+  </br>
+  </br>
 {{else}}
-<button type="button" id = "apply" onclick="location.href='/post/{{post._id}}/applied'">Apply</button>
-{{#if savedFlag}}
-<button type="button" id = "save" onclick="location.href='/post/{{post._id}}/unsaved'">UnsaveThisJob</button>
-{{else}}
-<button type="button" id = "save" onclick="location.href='/post/{{post._id}}/saved'">SaveThisJob</button>
-{{/if}}
+  {{#if activeFlag}}
+  </br>
+  </br>
+    <button type="button" id = "apply" onclick="location.href='/post/{{post._id}}/applied'">Apply</button>
+  {{else}}
+    {{#if candidateFlag}}
+    </br>
+    </br>
+    <button type="button" id = "reviewrateemployer" onclick="location.href='/post/{{post._id}}/reviewrate/{{post.userName}}'">Write a Review and Rate the Employer</button>
+    {{/if}}
+    {{#each post.reviewIDs}}
+      <div><p><a href="/post/{{../post._id}}/reviewedandrated/{{this}}">{{this}}</button>
+    {{/each}}
+    
+  {{/if}}
+  </br>
+  </br>
+  <button type="button" id = "employer" onclick="location.href='/user/{{post.userName}}/employer'">Know Your Employer</button>
+  {{#if savedFlag}}
+  </br>
+  </br>
+    <button type="button" id = "save" onclick="location.href='/post/{{post._id}}/unsaved'">UnsaveThisJob</button>
+  {{else}}
+    </br>
+    </br>
+    <button type="button" id = "save" onclick="location.href='/post/{{post._id}}/saved'">SaveThisJob</button>
+  {{/if}}
 {{/if}}
 </br>
 </br>

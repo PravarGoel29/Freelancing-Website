@@ -21,6 +21,7 @@ const createEmployee = async (userName, preferences) => {
     wishList: [],
     historyOfJobs: [],
     overallRating: 0,
+    numberOfRatingsRecieved: 0,
     reported: [],
     flag: false,
     currentJobsTaken: [],
@@ -80,9 +81,10 @@ const savePosttoWishList = async (employeeId, postID) => {
         wishList: wishList_,
         historyOfJobs: thisEmployee.historyOfJobs,
         overallRating: thisEmployee.overallRating,
+        numberOfRatingsRecieved: thisEmployee.numberOfRatingsRecieved,
         reported: thisEmployee.reported,
         flag: thisEmployee.flag,
-        currentJobsTaken: thisEmployee.flag,
+        currentJobsTaken: thisEmployee.currentJobsTaken,
         invites: thisEmployee.invites,
       },
     }
@@ -94,6 +96,54 @@ const savePosttoWishList = async (employeeId, postID) => {
 
   return await getEmployeeById(employeeId);
 };
+
+const takeAJob = async (employeeId, postID) => {
+  validations.validateID(employeeId);
+  const employeeCollection = await employees();
+
+  //2. checks if the employer with the given employerID is already in the DB
+  const thisEmployee = await employeeCollection.findOne({ _id: ObjectId(employeeId) });
+  if (thisEmployee === null) throw "No employer with that id found";
+
+  //console.log(thisEmployee);
+  let currentJobsTaken_ = thisEmployee.currentJobsTaken;
+  if (currentJobsTaken_.includes(postID)) {
+    throw "You have already taken this job";
+  }
+
+  currentJobsTaken_.push(postID);
+
+  //Remove job from invites
+  let invites_ = thisEmployee.invites.filter(function (ele) {
+    return ele != postID;
+  });
+
+  const updatedEmployee = await employeeCollection.updateOne(
+    { _id: ObjectId(employeeId) },
+    {
+      $set: {
+        userName: thisEmployee.userName,
+        preferences: thisEmployee.preferences,
+        resume: thisEmployee.resume,
+        wishList: thisEmployee.wishList,
+        historyOfJobs: thisEmployee.historyOfJobs,
+        overallRating: thisEmployee.overallRating,
+        numberOfRatingsRecieved: thisEmployee.numberOfRatingsRecieved,
+        reported: thisEmployee.reported,
+        flag: thisEmployee.flag,
+        currentJobsTaken: currentJobsTaken_,
+        invites: invites_,
+      },
+    }
+  );
+
+  if (updatedEmployee.modifiedCount === 0) {
+    throw "Accepting Invite Unsuccessful!";
+  }
+
+  return await getEmployeeById(employeeId);
+};
+
 const unsavePosttoWishList = async (employeeId, postID) => {
   validations.validateID(employeeId);
   const employeeCollection = await employees();
@@ -122,9 +172,10 @@ const unsavePosttoWishList = async (employeeId, postID) => {
         wishList: wishList_,
         historyOfJobs: thisEmployee.historyOfJobs,
         overallRating: thisEmployee.overallRating,
+        numberOfRatingsRecieved: thisEmployee.numberOfRatingsRecieved,
         reported: thisEmployee.reported,
         flag: thisEmployee.flag,
-        currentJobsTaken: thisEmployee.flag,
+        currentJobsTaken: thisEmployee.currentJobsTaken,
         invites: thisEmployee.invites,
       },
     }
@@ -163,9 +214,10 @@ const getInvite = async (employeeId, postID) => {
         wishList: thisEmployee.wishList,
         historyOfJobs: thisEmployee.historyOfJobs,
         overallRating: thisEmployee.overallRating,
+        numberOfRatingsRecieved: thisEmployee.numberOfRatingsRecieved,
         reported: thisEmployee.reported,
         flag: thisEmployee.flag,
-        currentJobsTaken: thisEmployee.flag,
+        currentJobsTaken: thisEmployee.currentJobsTaken,
         invites: invites_,
       },
     }
@@ -176,6 +228,52 @@ const getInvite = async (employeeId, postID) => {
   }
 
   return await getEmployeeById(employeeId);
+};
+
+const markJobAsCompleted = async (employeeId, postID) => {
+  validations.validateID(employeeId);
+  const employeeCollection = await employees();
+
+  //2. checks if the employer with the given employerID is already in the DB
+  const thisEmployee = await employeeCollection.findOne({ _id: ObjectId(employeeId) });
+  if (thisEmployee === null) throw "No employer with that id found";
+
+  //console.log(thisEmployee);
+  let historyOfJobs_ = thisEmployee.historyOfJobs;
+  if (historyOfJobs_.includes(postID)) {
+    throw "Already Completed";
+  }
+
+  historyOfJobs_.push(postID);
+
+  let currentJobsTaken_ = thisEmployee.currentJobsTaken.filter(function (ele) {
+    return ele != postID;
+  });
+
+  const updatedEmployee = await employeeCollection.updateOne(
+    { _id: ObjectId(employeeId) },
+    {
+      $set: {
+        userName: thisEmployee.userName,
+        preferences: thisEmployee.preferences,
+        resume: thisEmployee.resume,
+        wishList: thisEmployee.wishList,
+        historyOfJobs: historyOfJobs_,
+        overallRating: thisEmployee.overallRating,
+        numberOfRatingsRecieved: thisEmployee.numberOfRatingsRecieved,
+        reported: thisEmployee.reported,
+        flag: thisEmployee.flag,
+        currentJobsTaken: currentJobsTaken_,
+        invites: thisEmployee.invites,
+      },
+    }
+  );
+
+  if (updatedEmployee.modifiedCount === 0) {
+    throw "Employee not modified!";
+  }
+
+  return true;
 };
 
 const getAllJobsinWishList = async (employeeId) => {
@@ -190,6 +288,13 @@ const getAllinvites = async (employeeId) => {
   const employee = await getEmployeeById(employeeId);
 
   return employee.invites;
+};
+
+const getAllCurrentJobs = async (employeeId) => {
+  validations.validateID(employeeId);
+  const employee = await getEmployeeById(employeeId);
+
+  return employee.currentJobsTaken;
 };
 
 const getEmployeeByUserName = async (userName) => {
@@ -221,6 +326,51 @@ const checkIfWishlisted = async (userName, postId) => {
   return employee.wishList.includes(postId);
 };
 
+const addRating = async (employeeId, rating, addFlag, oldRating) => {
+  validations.validateID(employeeId);
+  const employeeCollection = await employees();
+
+  //2. checks if the employer with the given employerID is already in the DB
+  const thisEmployee = await employeeCollection.findOne({ _id: ObjectId(employeeId) });
+  if (thisEmployee === null) throw "No employer with that id found";
+
+  //console.log(thisEmployee);
+  let overallRating_ = thisEmployee.overallRating;
+  let numberOfRatingsRecieved_ = thisEmployee.numberOfRatingsRecieved;
+
+  if (addFlag) {
+    overallRating_ = (overallRating_ * numberOfRatingsRecieved_ + rating) / (numberOfRatingsRecieved_ + 1);
+    numberOfRatingsRecieved_ = numberOfRatingsRecieved_ + 1;
+  } else {
+    overallRating_ = (overallRating_ * numberOfRatingsRecieved_ - oldRating + rating) / numberOfRatingsRecieved_;
+  }
+
+  const updatedEmployee = await employeeCollection.updateOne(
+    { _id: ObjectId(employeeId) },
+    {
+      $set: {
+        userName: thisEmployee.userName,
+        preferences: thisEmployee.preferences,
+        resume: thisEmployee.resume,
+        wishList: thisEmployee.wishList,
+        historyOfJobs: thisEmployee.historyOfJobs,
+        overallRating: overallRating_,
+        numberOfRatingsRecieved: numberOfRatingsRecieved_,
+        reported: thisEmployee.reported,
+        flag: thisEmployee.flag,
+        currentJobsTaken: thisEmployee.currentJobsTaken,
+        invites: thisEmployee.invites,
+      },
+    }
+  );
+
+  if (updatedEmployee.modifiedCount === 0) {
+    throw "Employee not modified!";
+  }
+
+  return await getEmployeeById(employeeId);
+};
+
 /**Exporting Modules*/
 module.exports = {
   createEmployee,
@@ -232,4 +382,8 @@ module.exports = {
   getAllinvites,
   getEmployeeByUserName,
   checkIfWishlisted,
+  getAllCurrentJobs,
+  takeAJob,
+  markJobAsCompleted,
+  addRating,
 };
