@@ -1,6 +1,7 @@
 const db = require("../config");
 const users = db.usersCollection;
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
 const errorHandling = require("../validations");
 const validations = errorHandling.userValidations;
 const { ObjectId } = require("mongodb");
@@ -76,6 +77,7 @@ const createUser = async (
     createdAt: new Date().toLocaleDateString(),
     employeeId: employeeId,
     employerId: employerId,
+    emailVerified: false,
   };
 
   //9. insert user into the db
@@ -84,7 +86,38 @@ const createUser = async (
 
   //10. get user id
   let user = await usersCollection.findOne({ userName: userName.toLowerCase() });
+
+  let verificationSent = await sendEmailVerification(user);
+  if (!verificationSent) {
+    throw "Could not send email verfication mail!";
+  }
   return user["_id"].toString();
+};
+
+const sendEmailVerification = async (user) => {
+  const userId = user._id;
+  const emailToken = "http://localhost:3000/confirmation/" + userId;
+  const adminMailID = "t@gmail.com";
+  let verificationSent = true;
+  let mailTransporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: adminMailID, pass: "pass" },
+  });
+  let details = {
+    from: adminMailID,
+    to: user.email,
+    subject: "Welcome to Freelance " + user.userName,
+    text: "Click here to verify " + emailToken,
+  };
+
+  mailTransporter.sendMail(details, (e) => {
+    if (e) {
+      verificationSent = false;
+    } else {
+      console.log("Verification  mail sent successfully!");
+    }
+  });
+  return verificationSent;
 };
 
 /**This function is for user login  */
@@ -219,6 +252,7 @@ const updateUser = async (
     gender: gender,
     dob: dob,
     preferences: preferences,
+    emailVerified: user_var.emailVerified,
   };
 
   //5. Storing the updated user in DB
@@ -231,6 +265,37 @@ const updateUser = async (
 
   //7. returns the updated user's id
   return await getUserById(UserId);
+};
+
+const updateEmailVerificationStatus = async (userId) => {
+  //1. get user's data with the given id and assign the previously stored values to individually update the fields
+  const user = await getUserById(userId);
+  const usersCollection = await users();
+  //4. Updating user obj
+  const updatedUser = {
+    userName: user.userName.toLowerCase(),
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email.toLowerCase(),
+    hashedPassword: user.hashedPassword,
+    dob: user.dob,
+    contactNumber: user.contactNumber,
+    gender: user.gender,
+    createdAt: user.createdAt,
+    employeeId: user.employeeId,
+    employerId: user.employerId,
+    emailVerified: true,
+  };
+
+  //5. Storing the updated user in DB
+  const updatedInfo = await usersCollection.updateOne({ _id: ObjectId(userId) }, { $set: updatedUser });
+
+  //6. checks if the user was successfully updated and stored in the DB
+  if (updatedInfo.modifiedCount === 0) {
+    throw "Could not update the user successfully";
+  }
+
+  return await getUserById(userId);
 };
 
 const getAllUsers = async () => {
@@ -255,4 +320,5 @@ module.exports = {
   getUserByUserName,
   getEmployeeIdByUserName,
   getEmployerIdByUserName,
+  updateEmailVerificationStatus,
 };

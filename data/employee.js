@@ -293,8 +293,13 @@ const getAllinvites = async (employeeId) => {
 const getAllCurrentJobs = async (employeeId) => {
   validations.validateID(employeeId);
   const employee = await getEmployeeById(employeeId);
-
   return employee.currentJobsTaken;
+};
+
+const getAllJobsCompleted = async (employeeId) => {
+  validations.validateID(employeeId);
+  const employee = await getEmployeeById(employeeId);
+  return employee.historyOfJobs;
 };
 
 const getEmployeeByUserName = async (userName) => {
@@ -386,6 +391,7 @@ module.exports = {
   getEmployeeByUserName,
   checkIfWishlisted,
   getAllCurrentJobs,
+  getAllJobsCompleted,
   takeAJob,
   markJobAsCompleted,
   addRating,

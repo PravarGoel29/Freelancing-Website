@@ -595,7 +595,7 @@ router.route("/:postId/completed").get(async (req, res) => {
     // const employeeId = await userData.getEmployeeIdByUserName(user.userName);
     // const updatedPost = await employeeData.unsavePosttoWishList(employeeId, id);
 
-    if (user) {
+    if (user && thisUserPostFlag) {
       if (activeFlag) {
         const updatedPost = await postData.markCompleted(id);
         res.status(200).redirect("/post/" + id);
