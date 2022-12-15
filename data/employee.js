@@ -7,7 +7,7 @@ const { ObjectId } = require("mongodb");
 const moment = require("moment");
 
 /**Database function for the Employees Collection */
-const createEmployee = async (userName, preferences) => {
+const createEmployee = async (userName, preferences, resume) => {
   userName = userName.toLowerCase();
   validations.validateUsername(userName);
   //0. establish db connection
@@ -17,7 +17,7 @@ const createEmployee = async (userName, preferences) => {
   let newEmployee = {
     userName: userName,
     preferences: preferences,
-    resume: ObjectId(),
+    resume: resume,
     wishList: [],
     historyOfJobs: [],
     overallRating: 0,

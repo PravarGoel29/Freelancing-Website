@@ -7,7 +7,23 @@ const postData = data.posts;
 const employerData = data.employers;
 const employeeData = data.employees;
 const validations = require("../validations/dataValidations");
+const path = require("path");
+const multer = require("multer");
 const xss = require("xss");
+
+//Using multer to upload and store resume
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../public/images/resumes"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname);
+  },
+});
+
+let upload = multer({
+  storage: storage,
+}).single("resumeInput");
 
 router.route("/").get(async (req, res) => {
   //checks if the session is active
@@ -34,12 +50,13 @@ router.route("/signup").get(async (req, res) => {
   }
 });
 
-router.route("/signup").post(async (req, res) => {
+//router.route("/signup").post(upload, async (req, res) => {
+router.post("/signup", upload, async (req, res) => {
   //getting the post body
   const UserInfo = req.body;
   try {
     const { userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences } = UserInfo;
-    //console.log(UserInfo);
+    //console.log(req);
     //Validating the contents of UserInfo obj
     try {
       //validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
@@ -56,6 +73,21 @@ router.route("/signup").post(async (req, res) => {
       res.status(400).json({ error: e });
       return;
     }
+
+    let resumeInput;
+    if (!req.file) {
+      resumeInput = "noResume.pdf";
+    } else {
+      // check file suffix
+      if (!/\.(pdf)$/.test(req.file.filename)) {
+        res.status(400).json({ error: "Please provide valid pdf document." });
+        return;
+      } else {
+        resumeInput = xss(req.file.filename);
+        resumeInput = resumeInput.split(" ").join("");
+      }
+    }
+
     //calling the createUser function with post body contents as it's arguments
     const newUser = await userData.createUser(
       userName,
@@ -66,7 +98,8 @@ router.route("/signup").post(async (req, res) => {
       contactNumber,
       gender,
       dob,
-      preferences
+      preferences,
+      resumeInput
     );
     //res.redirect("/");
     res.status(200).json({ message: "Succefully signed in", success: true });
