@@ -248,27 +248,33 @@ router.route("/:postId/reviewrate/:userName").post(async (req, res) => {
   const rateUser = req.params.userName.toLowerCase();
   const user = req.session.user;
   const post = await postData.getPostById(id);
-  const employeeId = await userData.getEmployeeIdByUserName(rateUser);
-  let employeeToEmployerFlag = true;
-  if (post.userName === user.userName.toLowerCase()) {
-    employeeToEmployerFlag = false;
-  }
-  //getting the post body
   const { reviewInput, rateInput } = req.body;
   try {
     validations.validateReview(reviewInput);
     validations.validateRating(rateInput);
-
-    //const thisUser = await userData.checkUser(usernameInput, passwordInput);
-    const addedReview = await reviewData.createReview(
-      id,
-      employeeId,
-      user.employerId,
-      reviewInput,
-      rateInput,
-      employeeToEmployerFlag
-    );
-
+    let employeeToEmployerFlag = true;
+    if (post.userName === user.userName.toLowerCase()) {
+      employeeToEmployerFlag = false;
+      const employeeId = await userData.getEmployeeIdByUserName(rateUser);
+      const addedReview = await reviewData.createReview(
+        id,
+        employeeId,
+        user.employerId,
+        reviewInput,
+        rateInput,
+        employeeToEmployerFlag
+      );
+    } else {
+      const employerId = await userData.getEmployerIdByUserName(post.userName);
+      const addedReview = await reviewData.createReview(
+        id,
+        user.employeeId,
+        employerId,
+        reviewInput,
+        rateInput,
+        employeeToEmployerFlag
+      );
+    }
     res.status(200).redirect("/post/" + id);
     return;
   } catch (e) {

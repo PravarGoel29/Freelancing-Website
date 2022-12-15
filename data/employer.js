@@ -111,15 +111,18 @@ const addRating = async (employerId, rating, addFlag, oldRating) => {
   const thisEmployer = await employerCollection.findOne({ _id: ObjectId(employerId) });
   if (thisEmployer === null) throw "No employer with that id found";
 
-  //console.log(thisEmployer);
-  let overallRating_ = thisEmployer.overallRating;
-  let numberOfRatingsRecieved_ = thisEmployer.numberOfRatingsRecieved;
-
-  if (addFlag) {
-    overallRating_ = (overallRating_ * numberOfRatingsRecieved_ + rating) / (numberOfRatingsRecieved_ + 1);
-    numberOfRatingsRecieved_ = numberOfRatingsRecieved_ + 1;
+  let overallRating_ = thisEmployee.overallRating;
+  let numberOfRatingsRecieved_ = thisEmployee.numberOfRatingsRecieved;
+  if (!(numberOfRatingsRecieved_ === 0)) {
+    if (addFlag) {
+      overallRating_ = (overallRating_ * numberOfRatingsRecieved_ + rating) / (numberOfRatingsRecieved_ + 1);
+      numberOfRatingsRecieved_ = numberOfRatingsRecieved_ + 1;
+    } else {
+      overallRating_ = (overallRating_ * numberOfRatingsRecieved_ - oldRating + rating) / numberOfRatingsRecieved_;
+    }
   } else {
-    overallRating_ = (overallRating_ * numberOfRatingsRecieved_ - oldRating + rating) / numberOfRatingsRecieved_;
+    overallRating_ = rating;
+    numberOfRatingsRecieved_ = 1;
   }
 
   const updatedEmployer = await employerCollection.updateOne(

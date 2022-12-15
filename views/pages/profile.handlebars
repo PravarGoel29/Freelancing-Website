@@ -10,14 +10,14 @@
   <h2>Jobs Taken</h2>
   {{#each currentJobs}}
     <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
-{{/each}}
+  {{/each}}
   <br />
 
   <h2>Invites</h2>
   {{#each invites}}
     <div><p><a href="/post/{{this}}">{{this}}</a>
     <button type="button" id = "acceptinvite" onclick="location.href='/post/{{this}}/acceptinvite'">Accept Invite</button></p></div>
-{{/each}}
+  {{/each}}
   <br />
 
   <h2>Saved Jobs</h2>
