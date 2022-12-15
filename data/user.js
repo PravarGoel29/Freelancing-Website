@@ -10,7 +10,18 @@ const Employer = require("./employer");
 
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */
-const createUser = async (userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences) => {
+const createUser = async (
+  userName,
+  firstName,
+  lastName,
+  email,
+  password,
+  contactNumber,
+  gender,
+  dob,
+  preferences,
+  resume
+) => {
   //1. validate arguments
   // if (arguments.length !== 5) throw "Incorrect number of arguments!";
   //validations.UserValidation(userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences);
@@ -47,7 +58,7 @@ const createUser = async (userName, firstName, lastName, email, password, contac
   const hashedPw = await bcrypt.hash(password, saltRounds);
 
   //6. Create employee
-  let employeeId = await Employee.createEmployee(userName, preferences);
+  let employeeId = await Employee.createEmployee(userName, preferences, resume);
 
   //7. Create employee
   let employerId = await Employer.createEmployer(userName);

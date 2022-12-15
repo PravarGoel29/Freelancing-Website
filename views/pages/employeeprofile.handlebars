@@ -6,10 +6,15 @@
 <p>Employee Rating</p>
 <p>{{employee.overallRating}}</p>
 
+<p>Resume</p>
+<embed src="/public/images/resumes/{{employee.resume}}" width="500" height="700">
+
 <h2>Job History</h2>
   {{#each employee.historyOfJobs}}
     <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
   {{/each}}
+
+
 
 
 </br>
