@@ -181,6 +181,11 @@ const validateRating = (inputRating) => {
   }
 };
 
+const validateEmployeeToEmployerFlag = (inputEmployeeToEmployerFlag) => {
+  if (!inputEmployeeToEmployerFlag) throw "EmployeeToEmployerFlag not provided.";
+  if (typeof inputEmployeeToEmployerFlag !== "boolean") throw "EmployeeToEmployerFlag should be a boolean.";
+};
+
 module.exports = {
   validateID,
   validateUsername,
@@ -199,4 +204,5 @@ module.exports = {
   validateSalary,
   validateReview,
   validateRating,
+  validateEmployeeToEmployerFlag,
 };

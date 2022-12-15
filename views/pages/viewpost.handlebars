@@ -9,73 +9,84 @@
 </br>
 </br>
 
-
+<div>
 {{#if thisUserPostFlag}}
+  <div>
   {{#if activeFlag}}
   <button type="button" id = "markcompleted" onclick="location.href='/post/{{post._id}}/completed'">Mark this job completed</button>
   {{/if}}
-  </br>
-  </br>
+  </div>
 
+  <div>
   <h2>Applicants</h2>
-    {{#each applicants}}
-      <div><p><a href="/user/{{this}}">{{this}}</a>
       {{#if activeFlag}}
-        <button type="button" id = "invite" onclick="location.href='/post/{{../post._id}}/{{this}}/invite'">Invite</button>
-      {{/if}}
-      </p>
-      </div>
-    {{/each}}
-  </br>
-  </br>
-
-  <h2>Candidates</h2>
-    {{#each post.candidates}}
-      {{#if activeFlag}}
-        <div><p><a href="/user/{{this}}">{{this}}</a></p>
-        </div>
+        {{#each applicants}}
+          <div><p><a href="/user/{{this}}">{{this}}</a>
+          <button type="button" id = "invite" onclick="location.href='/post/{{../post._id}}/{{this}}/invite'">Invite</button>
+          </p>
+          </div>
+        {{/each}}
       {{else}}
-        <div><p><a href="/user/{{this}}">{{this}}</a></p>
-        </div>
-        <button type="button" id = "reviewrateemployee" onclick="location.href='/post/{{../post._id}}/reviewrate/{{this}}'">Write a Review and Rate the Employee</button>
+        {{#each applicants}}
+          <div><p><a href="/user/{{this}}">{{this}}</a></p></div>
+        {{/each}}
       {{/if}}
-    {{/each}}
-  </br>
-  </br>
+  </div>
+
+  <div>
+  <h2>Candidates</h2>
+      {{#if activeFlag}}
+        {{#each post.candidates}}
+          <div><p><a href="/user/{{this}}">{{this}}</a></p></div>
+        {{/each}}
+      {{else}}
+        {{#each post.candidates}}
+          <div><p><a href="/user/{{this}}">{{this}}</a>
+          <button type="button" id = "reviewrateemployee" onclick="location.href='/post/{{../post._id}}/reviewrate/{{this}}'">Write a Review and Rate the Employee</button></p></div>
+        {{/each}}
+      {{/if}}
+  </div>
+
+
 {{else}}
+  <div>
   {{#if activeFlag}}
-  </br>
-  </br>
-    <button type="button" id = "apply" onclick="location.href='/post/{{post._id}}/applied'">Apply</button>
+        <button type="button" id = "apply" onclick="location.href='/post/{{post._id}}/applied'">Apply</button>
   {{else}}
-    {{#if candidateFlag}}
-    </br>
-    </br>
-    <button type="button" id = "reviewrateemployer" onclick="location.href='/post/{{post._id}}/reviewrate/{{post.userName}}'">Write a Review and Rate the Employer</button>
-    {{/if}}
+      <div>
+      {{#if candidateFlag}}
+      <button type="button" id = "reviewrateemployer" onclick="location.href='/post/{{post._id}}/reviewrate/{{post.userName}}'">Write a Review and Rate the Employer</button>
+      {{/if}}
+      </div>
+
     {{#each post.reviewIDs}}
       <div><p><a href="/post/{{../post._id}}/reviewedandrated/{{this}}">{{this}}</button>
     {{/each}}
-    
-  {{/if}}
-  </br>
-  </br>
-  <button type="button" id = "employer" onclick="location.href='/user/{{post.userName}}/employer'">Know Your Employer</button>
-  {{#if savedFlag}}
-  </br>
-  </br>
-    <button type="button" id = "save" onclick="location.href='/post/{{post._id}}/unsaved'">UnsaveThisJob</button>
-  {{else}}
-    </br>
-    </br>
-    <button type="button" id = "save" onclick="location.href='/post/{{post._id}}/saved'">SaveThisJob</button>
-  {{/if}}
-{{/if}}
-</br>
-</br>
-</br>
-<button type="button" id = "profile" onclick="location.href='/profile/{{user.userName}}'">Profile</button>
-</br>
 
-<a href="/home">Home</a>
+  {{/if}}
+  </div>
+
+  <div>
+  <button type="button" id = "employer" onclick="location.href='/user/{{post.userName}}/employer'">Know Your Employer</button>
+  </div>
+
+  <div>
+  {{#if savedFlag}}
+    <div>
+    <button type="button" id = "save" onclick="location.href='/post/{{post._id}}/unsaved'">UnsaveThisJob</button>
+    </div>
+  {{else}}
+    <div>
+    <button type="button" id = "save" onclick="location.href='/post/{{post._id}}/saved'">SaveThisJob</button>
+    </div>
+  {{/if}}
+  </div>
+
+{{/if}}
+</div>
+
+<div><button type="button" id = "profile" onclick="location.href='/profile/{{user.userName}}'">Profile</button></div>
+
+<div><a href="/home">Home</a></div>
+
 {{#if error}}<div id = "viewpost-error" class="error">{{error}}</div>{{/if}}

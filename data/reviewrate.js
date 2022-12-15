@@ -16,7 +16,7 @@ const createReview = async (postId, employeeId, employerId, review, rating, empl
   validations.validateID(postId);
   validations.validateID(employeeId);
   validations.validateID(employerId);
-  //validations.validateEmployeeToEmployerFlag(employeeToEmployerFlag);
+  validations.validateEmployeeToEmployerFlag(employeeToEmployerFlag);
 
   const post = await Post.getPostById(postId);
   if (post.status === "Active") {
@@ -45,9 +45,9 @@ const createReview = async (postId, employeeId, employerId, review, rating, empl
 
   for (const review_ of allReview) {
     if (
-      review_.postId === postId &&
-      review_.employeeId === employeeId &&
-      review_.employerId === employeeId &&
+      review_.postId.toString() === postId.toString() &&
+      review_.employeeId.toString() === employeeId.toString() &&
+      review_.employerId.toString() === employeeId.toString() &&
       review_.employeeToEmployerFlag === employeeToEmployerFlag
     ) {
       const updatedReview = await updateReview(review_._id, review, rating);
@@ -155,6 +155,7 @@ const getReviewDetailsByReviewId = async (reviewId) => {
 
   const reviewDetails = {
     reviewId: reviewId,
+    postId: post._id,
     postTitle: post.title,
     reviewedBy: reviewedBy_,
     reviewedAs: reviewedAs_,

@@ -146,6 +146,21 @@ const getEmployeeIdByUserName = async (userName) => {
   return thisUser.employeeId;
 };
 
+const getEmployerIdByUserName = async (userName) => {
+  //1. validate argument
+  //validations.validateID(userName);
+  userName = userName.trim();
+
+  //2. establish db connection
+  const usersCollection = await users();
+
+  //3. checks if the user with the given id is already in the DB
+  const thisUser = await usersCollection.findOne({ userName: userName.toLowerCase() });
+  if (thisUser === null) throw "No user with that id found";
+
+  return thisUser.employerId;
+};
+
 const updateUser = async (
   UserId,
   userName,
@@ -228,4 +243,5 @@ module.exports = {
   checkUser,
   getUserByUserName,
   getEmployeeIdByUserName,
+  getEmployerIdByUserName,
 };
