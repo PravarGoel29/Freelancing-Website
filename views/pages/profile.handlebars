@@ -7,6 +7,12 @@
   <div>{{user.firstName}} {{user.lastName}}</div>
   <div class="label">{{user.email}}</div>
 
+   <h2>Jobs Completed</h2>
+  {{#each historyOfJobs}}
+    <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+  {{/each}}
+  <br />
+
   <h2>Jobs Taken</h2>
   {{#each currentJobs}}
     <div><p><a href="/post/{{this}}">{{this}}</a></p></div>

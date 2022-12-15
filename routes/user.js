@@ -50,8 +50,8 @@ router.route("/signup").get(async (req, res) => {
   }
 });
 
-//router.route("/signup").post(upload, async (req, res) => {
-router.post("/signup", upload, async (req, res) => {
+router.route("/signup").post(upload, async (req, res) => {
+  //router.post("/signup", upload, async (req, res) => {
   //getting the post body
   const UserInfo = req.body;
   try {
@@ -132,17 +132,34 @@ router.route("/login").post(async (req, res) => {
     //storing the user session
     req.session.user = thisUser.user;
     req.session.posts = thisUserPosts;
-    //req.session.allPosts = allUsersPosts;
-
-    //const allPosts = req.session.allPosts;
-    res.status(200).json({ message: "Succefully logged in", success: true });
-    //res.status(200).render("../views/pages/landing", { user: thisUser.user, allPosts: allPosts });
-    return;
+    if (req.session.user.emailVerified) {
+      //req.session.allPosts = allUsersPosts;
+      //const allPosts = req.session.allPosts;
+      res.status(200).json({ message: "Succefully logged in", success: true });
+      //res.status(200).render("../views/pages/landing", { user: thisUser.user, allPosts: allPosts });
+      return;
+    } else {
+      res.status(400).json({ error: "Please verify your account", success: false });
+      return;
+    }
   } catch (e) {
     console.log(e);
     //in case of error, rendering login page again with error message
     // res.status(400).render("../views/pages/login", { error: e });
     res.status(400).json({ error: "Either userName or Password is incorrect!", success: false });
+    return;
+  }
+});
+
+router.route("/confirmation/:userId").get(async (req, res) => {
+  let userId = req.params.userId;
+
+  try {
+    const updatedUser = await userData.updateEmailVerificationStatus(userId);
+    res.status(200).render("../views/pages/emailverified");
+    return;
+  } catch (e) {
+    res.status(400).render("../views/errors/error", { error: e });
     return;
   }
 });
@@ -177,6 +194,7 @@ router.route("/profile/:userName").get(async (req, res) => {
   const wishList = await employeeData.getAllJobsinWishList(employeeId);
   const invites = await employeeData.getAllinvites(employeeId);
   const currentJobs = await employeeData.getAllCurrentJobs(employeeId);
+  const historyOfJobs = await employeeData.getAllJobsCompleted(employeeId);
   req.session.posts = thisUserPosts;
   const posts = req.session.posts;
   if (user) {
@@ -186,6 +204,7 @@ router.route("/profile/:userName").get(async (req, res) => {
       wishList: wishList,
       invites: invites,
       currentJobs: currentJobs,
+      historyOfJobs: historyOfJobs,
     });
     return;
   } else {
