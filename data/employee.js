@@ -329,7 +329,7 @@ const checkIfWishlisted = async (userName, postId) => {
 const addRating = async (employeeId, rating, addFlag, oldRating) => {
   validations.validateID(employeeId);
   const employeeCollection = await employees();
-
+  rating = parseInt(rating);
   //2. checks if the employer with the given employerID is already in the DB
   const thisEmployee = await employeeCollection.findOne({ _id: ObjectId(employeeId) });
   if (thisEmployee === null) throw "No employer with that id found";

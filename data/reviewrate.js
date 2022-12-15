@@ -28,9 +28,20 @@ const createReview = async (postId, employeeId, employerId, review, rating, empl
   const employer = await Employer.getEmployerById(employerId);
   const employerName = employer.userName;
 
-  //   if (employeeToEmployerFlag && post.userName === employeeName) {
-  //     throw " You cant add review to your post";
-  //   }
+  rating = parseInt(rating);
+
+  const allReview = await getAllReviews();
+  for (let review_ of allReview) {
+    if (
+      review_.postId.toString() === postId.toString() &&
+      review_.employeeId.toString() === employeeId.toString() &&
+      review_.employerId.toString() === employerId.toString() &&
+      review_.employeeToEmployerFlag === employeeToEmployerFlag
+    ) {
+      const updatedReview = await updateReview(review_._id.toString(), review, rating);
+      return updatedReview;
+    }
+  }
 
   const newReviewRating = {
     postId: postId,
@@ -40,20 +51,6 @@ const createReview = async (postId, employeeId, employerId, review, rating, empl
     rating: rating,
     employeeToEmployerFlag: employeeToEmployerFlag,
   };
-
-  const allReview = await getAllReviews();
-
-  for (const review_ of allReview) {
-    if (
-      review_.postId.toString() === postId.toString() &&
-      review_.employeeId.toString() === employeeId.toString() &&
-      review_.employerId.toString() === employeeId.toString() &&
-      review_.employeeToEmployerFlag === employeeToEmployerFlag
-    ) {
-      const updatedReview = await updateReview(review_._id, review, rating);
-      return updatedReview;
-    }
-  }
 
   let insertReviewData = await reviewCollection.insertOne(newReviewRating);
   if (!insertReviewData.insertedCount === 0) throw "Review and Rating unsuccessful";
@@ -102,11 +99,13 @@ const getReviewById = async (reviewId) => {
 };
 
 const updateReview = async (reviewId, review, rating) => {
+  //console.log(reviewId, typeof reviewId);
   validations.validateID(reviewId);
   reviewId = reviewId.trim();
   const reviewObject = await getReviewById(reviewId);
 
   const reviewCollection = await reviews();
+  rating = parseInt(rating);
   const updatedReview = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
     {
@@ -127,10 +126,10 @@ const updateReview = async (reviewId, review, rating) => {
 
   const addFlag = false;
   const oldRating = reviewObject.rating;
-  if (employeeToEmployerFlag) {
-    const updatedEmployer = await Employer.addRating(employerId, rating, addFlag, oldRating);
+  if (reviewObject.employeeToEmployerFlag) {
+    const updatedEmployer = await Employer.addRating(reviewObject.employerId, rating, addFlag, oldRating);
   } else {
-    const updatedEmployee = await Employee.addRating(employeeId, rating, addFlag, oldRating);
+    const updatedEmployee = await Employee.addRating(reviewObject.employeeId, rating, addFlag, oldRating);
   }
 
   return await getReviewById(reviewId);
