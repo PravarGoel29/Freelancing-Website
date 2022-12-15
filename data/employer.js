@@ -106,13 +106,13 @@ const addPost = async (userName, employerId, postID) => {
 const addRating = async (employerId, rating, addFlag, oldRating) => {
   validations.validateID(employerId);
   const employerCollection = await employers();
-
+  rating = parseInt(rating);
   //2. checks if the employer with the given employerID is already in the DB
   const thisEmployer = await employerCollection.findOne({ _id: ObjectId(employerId) });
   if (thisEmployer === null) throw "No employer with that id found";
 
-  let overallRating_ = thisEmployee.overallRating;
-  let numberOfRatingsRecieved_ = thisEmployee.numberOfRatingsRecieved;
+  let overallRating_ = thisEmployer.overallRating;
+  let numberOfRatingsRecieved_ = thisEmployer.numberOfRatingsRecieved;
   if (!(numberOfRatingsRecieved_ === 0)) {
     if (addFlag) {
       overallRating_ = (overallRating_ * numberOfRatingsRecieved_ + rating) / (numberOfRatingsRecieved_ + 1);
