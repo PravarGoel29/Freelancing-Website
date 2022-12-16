@@ -1,0 +1,105 @@
+<section class="form my-4 mx-5">
+  <div class="container">
+    <div class="row no-gutter">
+      <div class="col-lg-5">
+        <img src="../public/images/freelanceImg.jpg" class="img-fluid" alt="No image" />
+      </div>
+      <div class="col-lg-7 px-5 pt-5">
+        <h1 class="font-weight-bold py-3">Freelance</h1>
+        <h4>Edit {{username}}'s Profile</h4>
+        <form action="/profile/{{username}}/edit" method="POST" id="profileEdit-form" enctype="multipart/form-data">
+{{!-- <input type="hidden" name="_method" value="PUT"> --}}
+     
+
+          <div class="form-row">
+            <div class="col-lg-7">
+              <label for="firstName">FirstName</label>
+              <input
+                required
+                type="text"
+                name="firstName"
+                id="firstName"
+                placeholder="Firstname"
+                class="form-control my-3 p-4"
+              />
+            </div>
+            <div class="col-lg-7">
+              <label for="lastName">Lastname</label>
+              <input
+                required
+                type="text"
+                name="lastName"
+                id="lastName"
+                placeholder="Lastname"
+                class="form-control my-3 p-4"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+
+           
+            <div class="col-lg-7">
+              <label for="contactNumber">Contact Number</label>
+              <input
+                required
+                type="text"
+                name="contactNumber"
+                id="contactNumber"
+                placeholder="Contact Number"
+                class="form-control my-3 p-4"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-lg-7">
+              <label for="gender">Gender</label><br />
+              <input required type="radio" id="male" name="gender" value="male" class="radio" />
+              <label for="male">Male</label><br />
+              <input type="radio" id="female" name="gender" value="female" />
+              <label for="female">Female</label><br />
+              <input type="radio" id="other_gender" name="gender" value="other" />
+              <label for="other_gender">Other</label>
+            </div>
+          </div>
+
+          <br />
+          <br />
+        
+          <div class="form-row">
+            <div class="col-lg-7">
+              <label for="preferences">Preferences</label>
+              <input
+                required
+                type="text"
+                name="preferences"
+                id="preferences"
+                placeholder="Preferences"
+                class="form-control my-3 p-4"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-lg-7">
+              <label for="resumeInput">Upload your resume</label>
+              <br />
+              Only .pdf format accepted
+              <input required type="file" id="resumeInput" class="form-control my-3 p-4" name="resumeInput" />
+            </div>
+          </div>
+
+          <div class="signup-success" id="signup-success" hidden>Succesfully Logged in</div>
+          <div class="signup-error" id="signup-failure" hidden>All fields needs to have valid values!</div>
+          <div class="form-row">
+            <div class="col-lg-7">
+              <button type="submit" class="btnclass1 mt-3 mb-5">Edit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{#if error}}<div id="signup-error" class="text-goes-here">{{error}}</div>{{/if}}
+<script src="/public/js/editProfile.js"></script>
