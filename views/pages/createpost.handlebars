@@ -42,9 +42,13 @@
       </div>
       <div class="form-row">
         <div class="col-lg-7">
-          <input type="text" name="jobtype" id="jobtype" placeholder="Job Type" class="form-control my-3 p-4" />
-        </div>
-      </div>
+                <label for="jobType" class="form-label">JobType</label>
+                <select id="jobType" type="text"name="jobType"class="form-control my-3 p-4" required/>
+                <option value="">--JobType--</option>
+                    <option value="In-Person">In-Person</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Remote">Remote</option>
+        </select></div>
       <div class="form-row">
         <div class="col-lg-7">
           <input type="text" name="salary" id="salary" placeholder="Salary" class="form-control my-3 p-4" />
