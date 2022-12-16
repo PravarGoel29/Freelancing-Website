@@ -45,9 +45,13 @@ router.route("/:postId/applied").post(async (req, res) => {
 
   const postID = req.params.postId;
   
-
   try {
+    
     const { education, workExpYrs, address, ex_salary } = applicationInfo;
+
+    validations.validateID(postID)
+    validations.validateUsername(userName);
+    validations.validateSalary(ex_salary);
 
     //calling the createUser function with post body contents as it's arguments
     const newApplication = await applicationData.createApplication(
