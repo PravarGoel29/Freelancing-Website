@@ -50,7 +50,9 @@ const createUser = async (
   const countUserName = await usersCollection.countDocuments();
   if (countUserName !== 0) {
     //checks if the username is already in the DB
-    const findUserName = await usersCollection.findOne({ userName: userName.toLowerCase() });
+    const findUserName = await usersCollection.findOne({
+      userName: userName.toLowerCase(),
+    });
     if (findUserName !== null) throw "Username is already in use!";
   }
 
@@ -82,10 +84,13 @@ const createUser = async (
 
   //9. insert user into the db
   let insertData = await usersCollection.insertOne(newUser);
-  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0) throw "Could not add new user!";
+  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0)
+    throw "Could not add new user!";
 
   //10. get user id
-  let user = await usersCollection.findOne({ userName: userName.toLowerCase() });
+  let user = await usersCollection.findOne({
+    userName: userName.toLowerCase(),
+  });
 
   let verificationSent = await sendEmailVerification(user);
   if (!verificationSent) {
@@ -130,12 +135,15 @@ const checkUser = async (userName, password) => {
   const usersCollection = await users();
 
   //3. check if username exists
-  const user = await usersCollection.findOne({ userName: userName.toLowerCase() });
+  const user = await usersCollection.findOne({
+    userName: userName.toLowerCase(),
+  });
   if (user === null) throw "Either the username or password is invalid";
 
   //4. check if password is same
   const passwordCheck = await bcrypt.compare(password, user["hashedPassword"]);
-  if (passwordCheck === false) throw "Either the username or password is invalid";
+  if (passwordCheck === false)
+    throw "Either the username or password is invalid";
 
   let authUser = { authenticated: true, user: user };
   return authUser;
@@ -167,7 +175,9 @@ const getUserByUserName = async (userName) => {
   const usersCollection = await users();
 
   //3. checks if the user with the given id is already in the DB
-  const thisUser = await usersCollection.findOne({ userName: userName.toLowerCase() });
+  const thisUser = await usersCollection.findOne({
+    userName: userName.toLowerCase(),
+  });
   if (thisUser === null) throw "No user with that id found";
 
   //4. converts objectID to a string and returns it
@@ -184,7 +194,9 @@ const getEmployeeIdByUserName = async (userName) => {
   const usersCollection = await users();
 
   //3. checks if the user with the given id is already in the DB
-  const thisUser = await usersCollection.findOne({ userName: userName.toLowerCase() });
+  const thisUser = await usersCollection.findOne({
+    userName: userName.toLowerCase(),
+  });
   if (thisUser === null) throw "No user with that id found";
 
   return thisUser.employeeId;
@@ -199,36 +211,38 @@ const getEmployerIdByUserName = async (userName) => {
   const usersCollection = await users();
 
   //3. checks if the user with the given id is already in the DB
-  const thisUser = await usersCollection.findOne({ userName: userName.toLowerCase() });
+  const thisUser = await usersCollection.findOne({
+    userName: userName.toLowerCase(),
+  });
   if (thisUser === null) throw "No user with that id found";
 
   return thisUser.employerId;
 };
 
 const updateUser = async (
-  UserId,
   userName,
   firstName,
   lastName,
-  email,
-  password,
   contactNumber,
   gender,
-  dob,
-  preferences
+  resume
 ) => {
   //1. get user's data with the given id and assign the previously stored values to individually update the fields
-  let user_var = await getUserById(UserId);
+
+  let user_var = await getUserByUserName(userName);
+  console.log(user_var);
+  const thisUserName = user_var.userName;
   if (firstName === undefined) firstName = user_var.firstName;
   if (lastName === undefined) lastName = user_var.lastName;
-  if (email === undefined) email = user_var.email;
-  if (password === undefined) password = user_var.password;
-  if (contactNumber === undefined) email = user_var.contactNumber;
-  if (gender === undefined) email = user_var.gender;
-  if (preferences === undefined) preferences = user_var.preferences;
+  const email = user_var.email;
+  const dob = user_var.dob;
+  if (contactNumber === undefined) contactNumber = user_var.contactNumber;
+  if (gender === undefined) gender = user_var.gender;
+  // constcreatedAt = user_var.createdAt;
+  // employeeId = user_var.employeeId;
 
   //2. validate the input arguments
-  validations.validateID(UserId);
+  // validations.validateID(UserId);
   //validations.UserValidation(userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences);
 
   validations.validateEmail(email);
@@ -236,27 +250,27 @@ const updateUser = async (
   validations.validateName(firstName);
   validations.validateName(lastName);
   validations.validateDOB(dob);
-  validations.validatePassword(password);
+
   validations.validatePhoneNumber(contactNumber);
   //3. establish db connection
   const usersCollection = await users();
 
   //4. Updating user obj
   const updatedUser = {
-    userName: userName.trim(),
+    userName: thisUserName.trim(),
     firstName: firstName,
     lastName: lastName,
     email: email,
-    password: password.trim(),
+    dob: dob,
     contactNumber: contactNumber.trim(),
     gender: gender,
-    dob: dob,
-    preferences: preferences,
-    emailVerified: user_var.emailVerified,
   };
 
   //5. Storing the updated user in DB
-  const updatedInfo = await usersCollection.updateOne({ _id: ObjectId(UserId) }, { $set: updatedUser });
+  const updatedInfo = await usersCollection.updateOne(
+    { userName: userName.trim() },
+    { $set: updatedUser }
+  );
 
   //6. checks if the user was successfully updated and stored in the DB
   if (updatedInfo.modifiedCount === 0) {
@@ -264,7 +278,7 @@ const updateUser = async (
   }
 
   //7. returns the updated user's id
-  return await getUserById(UserId);
+  return await getUserByUserName(userName);
 };
 
 const updateEmailVerificationStatus = async (userId) => {
@@ -288,7 +302,10 @@ const updateEmailVerificationStatus = async (userId) => {
   };
 
   //5. Storing the updated user in DB
-  const updatedInfo = await usersCollection.updateOne({ _id: ObjectId(userId) }, { $set: updatedUser });
+  const updatedInfo = await usersCollection.updateOne(
+    { _id: ObjectId(userId) },
+    { $set: updatedUser }
+  );
 
   //6. checks if the user was successfully updated and stored in the DB
   if (updatedInfo.modifiedCount === 0) {
