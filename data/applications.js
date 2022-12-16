@@ -12,22 +12,15 @@ const Employee = require("./employee");
 const Employer = require("./employer");
 const userData = require("./user");
 const postData = require("./post");
-const { post } = require("../routes/user");
+//const { post } = require("../routes/user");
 
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */
-const createApplication = async (
-  userName,
-  postID,
-  education,
-  workEXP,
-  address,
-  salary
-) => {
+const createApplication = async (userName, postID, education, workEXP, address, salary) => {
   validations.validateUsername(userName);
   validations.validateID(postID);
   validations.validateSalary(salary);
-  
+
   //const alreadyApplied = await postData.addApplicants();
 
   const applicationsCollection = await applications();
@@ -59,8 +52,7 @@ const createApplication = async (
   };
 
   let insertData = await applicationsCollection.insertOne(newApplication);
-  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0)
-    throw "Could not Apply!";
+  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0) throw "Could not Apply!";
 
   let addedApplication = await applicationsCollection.findOne({
     ApplicantuserName: userName.toLowerCase(),
@@ -78,9 +70,7 @@ const getallApplicationByPostID = async (postID) => {
   const applicationsCollection = await applications();
 
   //3. checks if the user with the given id is already in the DB
-  const ApplicationList = await applicationsCollection
-    .find({ postID: postID.trim() })
-    .toArray();
+  const ApplicationList = await applicationsCollection.find({ postID: postID.trim() }).toArray();
   if (ApplicationList === null) throw "No application with this id found";
 
   //4. converts objectID to a string and returns it
