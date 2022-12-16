@@ -7,5 +7,6 @@ module.exports = {
   employeeCollection: collections.employees,
   reviewCollection: collections.reviews,
   postsCollection: collections.posts,
+  applicationsCollection: collections.applications,
   connection: mongoConnection,
 };

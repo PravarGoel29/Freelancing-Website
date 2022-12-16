@@ -362,11 +362,16 @@ router.route("/:postId/applied").get(async (req, res) => {
   try {
     validations.validateID(id);
     id = id.trim();
-    const updatedPost = await postData.addApplicants(user.userName, id);
-    console.log(updatedPost);
+    
+    if (post.applicants.includes(user.userName.toLowerCase())) {
+      throw "You have already applied to this job";
+    }
+    // const updatedPost = await postData.addApplicants(user.userName, id);
+    // console.log(updatedPost);
 
     if (user) {
-      res.status(200).render("../views/pages/jobapplied", { user: user });
+      res.redirect("/application/"+id+"/apply");
+      // res.status(200).render("../views/pages/jobapplied", { user: user });
       return;
     } else {
       res.status(400).render("../views/pages/forbiddenAccess");
