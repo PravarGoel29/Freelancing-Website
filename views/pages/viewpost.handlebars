@@ -21,7 +21,7 @@
   <h2>Applicants</h2>
       {{#if activeFlag}}
         {{#each applicants}}
-          <div><p><a href="/user/{{this}}">{{this.ApplicantuserName}} {{this.workEXP}} {{this.address}} {{this.salaryExpected}} {{this.appliedAt}}</a>
+          <div><p><a href="/user/{{this}}">{{this}}</a>
           <button type="button" id = "invite" onclick="location.href='/post/{{../post._id}}/{{this}}/invite'">Invite</button>
           </p>
           </div>
