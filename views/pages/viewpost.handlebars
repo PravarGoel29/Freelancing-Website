@@ -21,7 +21,7 @@
   <h2>Applicants</h2>
       {{#if activeFlag}}
         {{#each applicants}}
-          <div><p><a href="/user/{{this}}">{{this}}</a>
+          <div><p><a href="/user/{{this}}">{{this.ApplicantuserName}} {{this.workEXP}} {{this.address}} {{this.salaryExpected}} {{this.appliedAt}}</a>
           <button type="button" id = "invite" onclick="location.href='/post/{{../post._id}}/{{this}}/invite'">Invite</button>
           </p>
           </div>
@@ -60,7 +60,7 @@
       </div>
 
     {{#each post.reviewIDs}}
-      <div><p><a href="/post/{{../post._id}}/reviewedandrated/{{this}}">{{this}}</button></a><p></div>
+      <div><p><a href="/post/{{../post._id}}/reviewedandrated/{{this}}">{{this}} </button></a><p></div>
     {{/each}}
 
   {{/if}}

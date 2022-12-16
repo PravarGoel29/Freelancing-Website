@@ -186,6 +186,30 @@ const validateEmployeeToEmployerFlag = (inputEmployeeToEmployerFlag) => {
   if (typeof inputEmployeeToEmployerFlag !== "boolean") throw "EmployeeToEmployerFlag should be a boolean.";
 };
 
+function validateStAddress(address) {
+  var illegalChars = [ '#',  
+    '!', '@', '$', "%",  '^', 
+    '*', '(', ")", "{",  '}', 
+    '|', '[', "]" , "\\"];
+
+    for(var i = 0; i < illegalChars.length; i++) {
+        if(address == illegalChars[i]) throw 'Enter address in correct format';
+    }
+    if (address.length >60) throw 'address must be atleast 60 characters in length'
+    const regex = new RegExp("^[0-9]*$");
+    if (regex.test(address)) throw "Address cannot be only digits.";
+}
+
+const validateWorkEXP = (workExpYrs) => {
+  if (workExpYrs === undefined || workExpYrs === null)
+    throw "work experience not provided.";
+  if (typeof workExpYrs !== "string")
+    throw "work experience is not of valid input type.";
+  if (workExpYrs.trim().length === 0) throw "work experience is empty.";
+  const regex = new RegExp("^[0-9]*$");
+  if (!regex.test(workExpYrs)) throw "work experience field must only have digits.";
+};
+
 module.exports = {
   validateID,
   validateUsername,
@@ -205,4 +229,7 @@ module.exports = {
   validateReview,
   validateRating,
   validateEmployeeToEmployerFlag,
+  validateStAddress,
+  validateWorkEXP
+
 };
