@@ -27,6 +27,7 @@ const createApplication = async (
   validations.validateUsername(userName);
   validations.validateID(postID);
   validations.validateSalary(salary);
+  
   //const alreadyApplied = await postData.addApplicants();
 
   const applicationsCollection = await applications();
