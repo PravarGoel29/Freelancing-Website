@@ -69,7 +69,7 @@ router.route("/:postId").get(async (req, res) => {
       post: post,
       reviews: post.reviewIDs,
       thisUserPostFlag: thisUserPostFlag,
-      applicants: applications,
+      applicants: applicants,
       savedFlag: savedFlag,
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
