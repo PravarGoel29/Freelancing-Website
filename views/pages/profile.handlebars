@@ -1,6 +1,7 @@
 {{#if user}}
   <div class="user-class">
     <button type="button" onclick="location.href='/profile/{{user.userName}}/addPost'">Create Post</button>
+    <button type="button" onclick="location.href='/profile/{{user.userName}}/edit'">Edit Profile</button>
   </div>
 
   <h1>{{user.userName}}</h1>

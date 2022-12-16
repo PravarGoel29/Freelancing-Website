@@ -1,18 +1,11 @@
 const db = require("../config");
 const applications = db.applicationsCollection;
-const users = db.usersCollection;
-const posts = db.postsCollection;
-const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
 const errorHandling = require("../validations");
 const validations = errorHandling.userValidations;
 const { ObjectId } = require("mongodb");
 const moment = require("moment");
 const Employee = require("./employee");
-const Employer = require("./employer");
-const userData = require("./user");
 const postData = require("./post");
-//const { post } = require("../routes/user");
 
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */

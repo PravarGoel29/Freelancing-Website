@@ -274,6 +274,69 @@ router.route("/profile/:userName/addPost").get(async (req, res) => {
     return;
   }
 });
+router.route("/profile/:userName/edit").get(async (req, res) => {
+  const user = req.session.user;
+  if (user) {
+    res.status(200).render("../views/pages/editProfile", { username: user.userName });
+    return;
+  } else {
+    res.status(400).render("../views/pages/forbiddenAccess");
+    return;
+  }
+});
+router.route("/profile/:userName/edit").post(upload,async (req, res) => {
+  const UserInfo = req.body;
+  const user = req.session.user;
+  try {
+    const { firstName, lastName,  contactNumber, gender, } = UserInfo;
+    //console.log(req);
+    //Validating the contents of UserInfo obj
+    try {
+      //validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
+
+      validations.validateUsername(user.userName);
+      validations.validateName(firstName);
+      validations.validateName(lastName);
+      validations.validatePhoneNumber(contactNumber);
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({ error: e });
+      return;
+    }
+
+    let resumeInput;
+    if (!req.file) {
+      resumeInput = "noResume.pdf";
+    } else {
+      // check file suffix
+      if (!/\.(pdf)$/.test(req.file.filename)) {
+        res.status(400).json({ error: "Please provide valid pdf document." });
+        return;
+      } else {
+        resumeInput = xss(req.file.filename);
+        resumeInput = resumeInput.split(" ").join("");
+      }
+    }
+
+    //calling the createUser function with post body contents as it's arguments
+    const updatedUser = await userData.updateUser(
+      user.userName,
+      firstName,
+      lastName,
+      contactNumber,
+      gender,
+      // resumeInput
+    );
+    //res.redirect("/");
+    res.status(200).json({ message: "Succefully updated user.", success: true });
+    return;
+  } catch (e) {
+    console.log(e);
+    //res.status(400).render("../views/pages/signup", { error: e });
+    res.status(400).json({ error: e, success: false });
+    return;
+  }
+});
 
 router.route("/logout").get(async (req, res) => {
   //destroying the session
