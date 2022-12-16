@@ -22,4 +22,5 @@ module.exports = {
   employees: getCollectionFn("employees"),
   reviews: getCollectionFn("reviews"),
   posts: getCollectionFn("posts"),
+  applications: getCollectionFn("applications"),
 };
