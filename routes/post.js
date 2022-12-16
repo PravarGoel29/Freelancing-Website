@@ -7,6 +7,7 @@ const postData = data.posts;
 const employerData = data.employers;
 const employeeData = data.employees;
 const reviewData = data.reviews;
+const applicationData = data.applications;
 const validations = require("../validations/routeValidations");
 //let alert = require("alert");
 const xss = require("xss");
@@ -43,6 +44,8 @@ router.route("/:postId").get(async (req, res) => {
     const user = req.session.user;
     const post = await postData.getPostById(id);
     const applicants = await postData.getApplicantsByPostId(id);
+    const applications = await applicationData.getallApplicationByPostID(id);
+
     let thisUserPostFlag = false;
     if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
       thisUserPostFlag = true;
@@ -66,7 +69,7 @@ router.route("/:postId").get(async (req, res) => {
       post: post,
       reviews: post.reviewIDs,
       thisUserPostFlag: thisUserPostFlag,
-      applicants: applicants,
+      applicants: applications,
       savedFlag: savedFlag,
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
