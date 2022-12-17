@@ -1,5 +1,6 @@
 const emailValidate = require("email-validator");
 $("#registration-form").submit(function (event) {
+  event.preventDefault();
   let username = $("#userName").val();
   let firstName = $("#firstName").val();
   let lastName = $("#lastName").val();
@@ -15,7 +16,7 @@ $("#registration-form").submit(function (event) {
       throw "Please select gender";
     }
 
-    validateUserName(username);
+    validateUsername(username);
     validatePassword(password);
     validateName(firstName);
     validateName(lastName);
@@ -63,19 +64,19 @@ const validatePassword = (inputPassword) => {
   if (!inputPassword) throw "Password not provided.";
   if (typeof inputPassword !== "string") throw "Password is not of valid input type.";
   if (inputPassword.trim().length === 0) throw "Password contains only whitespaces.";
-  if (inputPassword.includes(" ")) throw "Either the userName or Password is incorrect.";
-  if (inputPassword.length < 6) throw "Either the userName or Password is incorrect.";
+  if (inputPassword.includes(" ")) throw "Password should not contain spaces.";
+  if (inputPassword.length < 6) throw "Password should contain at least 6 characters.";
   const regexDigit = /[0-9]/;
   if (inputPassword.search(regexDigit) < 0) {
-    throw "Either the userName or Password is incorrect.";
+    throw "Password should contain at least one number";
   }
   const regexUppercase = /[A-Z]/;
   if (inputPassword.search(regexUppercase) < 0) {
-    throw "Either the userName or Password is incorrect.";
+    throw "Password should contain at least one uppercase character";
   }
   const regexSpecialCharacter = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
   if (inputPassword.search(regexSpecialCharacter) < 0) {
-    throw "Either the userName or Password is incorrect.";
+    throw "Password should contain at least one special character";
   }
 }
 

@@ -43,8 +43,8 @@ const validateTags = (str) => {
 
 const validateUsername = (inputUsername) => {
     if (!inputUsername) throw "Username not provided.";
-    if (typeof inputUsername !== "string") throw "Username is not of valid input type.";
-    if (inputUsername.trim().length === 0) throw "Username is empty.";
+    if (typeof inputUsername !== "string") throw "Either the userName or Password is incorrect.";
+    if (inputUsername.trim().length === 0) throw "Either the userName or Password is incorrect.";
     if (inputUsername.includes(" ")) throw "Either the userName or Password is incorrect.";
     if (inputUsername.length < 4) throw "Either the userName or Password is incorrect.";
     const regexLetters = /[a-zA-Z]/;
@@ -57,8 +57,8 @@ const validateUsername = (inputUsername) => {
 
 const validatePassword = (inputPassword) => {
     if (!inputPassword) throw "Password not provided.";
-    if (typeof inputPassword !== "string") throw "Password is not of valid input type.";
-    if (inputPassword.trim().length === 0) throw "Password contains only whitespaces.";
+    if (typeof inputPassword !== "string") throw "Either the userName or Password is incorrect.";
+    if (inputPassword.trim().length === 0) throw "Either the userName or Password is incorrect.";
     if (inputPassword.includes(" ")) throw "Either the userName or Password is incorrect.";
     if (inputPassword.length < 6) throw "Either the userName or Password is incorrect.";
     const regexDigit = /[0-9]/;
