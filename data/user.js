@@ -1,5 +1,7 @@
 const db = require("../config");
+const employeesDB = db.employeeCollection;
 const users = db.usersCollection;
+//const employees = db.employeeCollection;
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const validations = require("../validations/dataValidations");
@@ -7,6 +9,8 @@ const { ObjectId } = require("mongodb");
 const moment = require("moment");
 const Employee = require("./employee");
 const Employer = require("./employer");
+const { employeeCollection } = require("../config");
+const { employees } = require(".");
 require("dotenv").config();
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */
@@ -33,7 +37,7 @@ const createUser = async (
   validations.validatePassword(password);
   validations.validatePhoneNumber(contactNumber);
   validations.validatePreferences(preferences);
-  validations.validateGender(gender)
+  validations.validateGender(gender);
   //2. establish db connection
   const usersCollection = await users();
 
@@ -170,7 +174,7 @@ const getUserById = async (UserId) => {
 const getUserByUserName = async (userName) => {
   //1. validate argument
   //validations.validateID(userName);
-  validations.validateUsername(userName)
+  validations.validateUsername(userName);
   userName = userName.trim();
 
   //2. establish db connection
@@ -190,7 +194,7 @@ const getUserByUserName = async (userName) => {
 const getEmployeeIdByUserName = async (userName) => {
   //1. validate argument
   //validations.validateID(userName);
-  validations.validateUsername(userName)
+  validations.validateUsername(userName);
   userName = userName.trim();
 
   //2. establish db connection
@@ -208,7 +212,7 @@ const getEmployeeIdByUserName = async (userName) => {
 const getEmployerIdByUserName = async (userName) => {
   //1. validate argument
   //validations.validateID(userName);
-  validations.validateUsername(userName)
+  validations.validateUsername(userName);
   userName = userName.trim();
 
   //2. establish db connection
@@ -223,21 +227,31 @@ const getEmployerIdByUserName = async (userName) => {
   return thisUser.employerId;
 };
 
+// const updateEmployeePreferences = async (userName, preferences) => {
+//   validations.validateUsername(userName);
+//   validations.validatePreferences(preferences);
+
+// }
+
+
 const updateUser = async (
   userName,
   firstName,
   lastName,
   contactNumber,
   gender,
+  preferences,
   resume
 ) => {
   //1. get user's data with the given id and assign the previously stored values to individually update the fields
-  validations.validateUsername(userName)
-  validations.validateName(firstName)
-  validations.validateName(lastName)
-  validations.validatePhoneNumber(contactNumber)
-  validations.validateGender(gender)
+  validations.validateUsername(userName);
+  validations.validateName(firstName);
+  validations.validateName(lastName);
+  validations.validatePhoneNumber(contactNumber);
+  validations.validateGender(gender);
   let user_var = await getUserByUserName(userName);
+  let employee_var = await Employee.getEmployeeByUserName(userName);
+  if (preferences === undefined) preferences = employee_var.preferences;
   console.log(user_var);
   const thisUserName = user_var.userName;
   if (firstName === undefined) firstName = user_var.firstName;
@@ -252,7 +266,7 @@ const updateUser = async (
   //2. validate the input arguments
   // validations.validateID(UserId);
   //validations.UserValidation(userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences);
-
+  validations.validatePreferences(preferences);
   validations.validateEmail(email);
   validations.validateUsername(userName);
   validations.validateName(firstName);
@@ -262,6 +276,7 @@ const updateUser = async (
   validations.validatePhoneNumber(contactNumber);
   //3. establish db connection
   const usersCollection = await users();
+  const employeeCollection = await employeesDB();
 
   //4. Updating user obj
   const updatedUser = {
@@ -273,16 +288,26 @@ const updateUser = async (
     contactNumber: contactNumber.trim(),
     gender: gender,
   };
-
+  const updatedEmployee = {
+    preferences: preferences,
+  };
+ const updatedEmployeeInfo = await employeeCollection.updateOne(
+    { userName: userName.trim() },
+    { $set: updatedEmployee }
+  );
   //5. Storing the updated user in DB
   const updatedInfo = await usersCollection.updateOne(
     { userName: userName.trim() },
     { $set: updatedUser }
   );
+ 
 
   //6. checks if the user was successfully updated and stored in the DB
   if (updatedInfo.modifiedCount === 0) {
     throw "could not update the user successfully";
+  }
+  if (updatedEmployeeInfo.modifiedCount === 0) {
+    throw "could not update preferences successfully";
   }
 
   //7. returns the updated user's id
@@ -291,7 +316,7 @@ const updateUser = async (
 
 const updateEmailVerificationStatus = async (userId) => {
   //1. get user's data with the given id and assign the previously stored values to individually update the fields
-  validations.validateID(userId)
+  validations.validateID(userId);
   const user = await getUserById(userId);
   const usersCollection = await users();
   //4. Updating user obj
