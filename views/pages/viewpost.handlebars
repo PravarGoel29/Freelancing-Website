@@ -83,7 +83,7 @@
         {{else}}
           {{#each post.candidates}}
             <div><p><a href="/user/{{this}}">{{this}}</a>
-            <button type="button" id = "reviewrateemployee" onclick="location.href='/post/{{../post._id}}/reviewrate/{{this}}'">Write a Review and Rate the Employee</button></p></div>
+            <button class="viewpost-reviewbtn-cls" type="button" id = "reviewrateemployee" onclick="location.href='/post/{{../post._id}}/reviewrate/{{this}}'">Review and Rate Employee</button></p></div>
           {{/each}}
         {{/if}}
     </div>

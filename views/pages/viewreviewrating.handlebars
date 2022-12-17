@@ -20,10 +20,12 @@
 </div>
 </nav>
 {{!-- ending of navbar section --}}
-<h1>{{review.reviewId}}</h1>
-<p><a href="/post/{{review.postId}}">{{review.postTitle}}</a></p>
-<p>reviewed By: <a href="/user/{{review.reviewedBy}}">{{review.reviewedBy}}</a></p>
-<p>Review: {{review.reviewString}} </p>
-<p> Rating : {{review.rating}} </p>
-</br>
-</br>
+<div class="container viewreviewrate-cont">
+  <h1>{{review.reviewId}}</h1>
+  <p><a href="/post/{{review.postId}}">{{review.postTitle}}</a></p>
+  <p>reviewed By: <a href="/user/{{review.reviewedBy}}">{{review.reviewedBy}}</a></p>
+  <p>Review: {{review.reviewString}} </p>
+  <p> Rating : {{review.rating}} </p>
+  </br>
+  </br>
+</div>

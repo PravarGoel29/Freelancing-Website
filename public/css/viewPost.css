@@ -57,3 +57,18 @@ body{
     background-color: white;
     color: black;
 }
+.viewpost-reviewbtn-cls{
+    border: none;
+    outline: none;
+    height: 50px;
+    width: 20%;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 10px;
+}
+.viewpost-reviewbtn-cls:hover{
+    background-color: white;
+    color: black;
+}
