@@ -12,6 +12,7 @@ const postData = require("./post");
 const createApplication = async (
   userName,
   postID,
+  education,
   workEXP,
   address,
   salary
