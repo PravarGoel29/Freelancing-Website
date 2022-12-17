@@ -499,7 +499,7 @@ router.route("/:postId/saved").get(async (req, res) => {
     const updatedPost = await employeeData.savePosttoWishList(employeeId, id);
 
     if (user) {
-      res.status(200).render("../views/pages/jobsaved", { user: user, post: post });
+      res.status(200).render("../views/pages/jobsaved", { user: user, post: post, style: "jobsaved.css"});
       return;
     } else {
       res.status(400).render("../views/pages/forbiddenAccess");
@@ -518,6 +518,7 @@ router.route("/:postId/saved").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
+      style: "viewPost.css",
     });
     return;
   }
