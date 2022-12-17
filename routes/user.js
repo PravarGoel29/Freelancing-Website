@@ -327,7 +327,7 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
   const UserInfo = req.body;
   const user = req.session.user;
   try {
-    const { firstName, lastName, contactNumber, gender } = UserInfo;
+    const { firstName, lastName, contactNumber, gender, preferences} = UserInfo;
     //console.log(req);
     //Validating the contents of UserInfo obj
     try {
@@ -337,6 +337,8 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
       validations.validateName(firstName);
       validations.validateName(lastName);
       validations.validatePhoneNumber(contactNumber);
+      validations.validatePreferences(preferences);
+
     } catch (e) {
       console.log(e);
       res.status(400).json({ error: e });
@@ -363,7 +365,8 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
       firstName,
       lastName,
       contactNumber,
-      gender
+      gender,
+      preferences,
       // resumeInput
     );
     //res.redirect("/");
