@@ -2,8 +2,7 @@ const db = require("../config");
 const users = db.usersCollection;
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-const errorHandling = require("../validations");
-const validations = errorHandling.userValidations;
+const validations = require("../validations/dataValidations");
 const { ObjectId } = require("mongodb");
 const moment = require("moment");
 const Employee = require("./employee");
@@ -33,6 +32,8 @@ const createUser = async (
   validations.validateDOB(dob);
   validations.validatePassword(password);
   validations.validatePhoneNumber(contactNumber);
+  validations.validatePreferences(preferences);
+  validations.validateGender(gender)
   //2. establish db connection
   const usersCollection = await users();
 
@@ -169,6 +170,7 @@ const getUserById = async (UserId) => {
 const getUserByUserName = async (userName) => {
   //1. validate argument
   //validations.validateID(userName);
+  validations.validateUsername(userName)
   userName = userName.trim();
 
   //2. establish db connection
@@ -188,6 +190,7 @@ const getUserByUserName = async (userName) => {
 const getEmployeeIdByUserName = async (userName) => {
   //1. validate argument
   //validations.validateID(userName);
+  validations.validateUsername(userName)
   userName = userName.trim();
 
   //2. establish db connection
@@ -205,6 +208,7 @@ const getEmployeeIdByUserName = async (userName) => {
 const getEmployerIdByUserName = async (userName) => {
   //1. validate argument
   //validations.validateID(userName);
+  validations.validateUsername(userName)
   userName = userName.trim();
 
   //2. establish db connection
@@ -228,7 +232,11 @@ const updateUser = async (
   resume
 ) => {
   //1. get user's data with the given id and assign the previously stored values to individually update the fields
-
+  validations.validateUsername(userName)
+  validations.validateName(firstName)
+  validations.validateName(lastName)
+  validations.validatePhoneNumber(contactNumber)
+  validations.validateGender(gender)
   let user_var = await getUserByUserName(userName);
   console.log(user_var);
   const thisUserName = user_var.userName;
@@ -283,6 +291,7 @@ const updateUser = async (
 
 const updateEmailVerificationStatus = async (userId) => {
   //1. get user's data with the given id and assign the previously stored values to individually update the fields
+  validations.validateID(userId)
   const user = await getUserById(userId);
   const usersCollection = await users();
   //4. Updating user obj
