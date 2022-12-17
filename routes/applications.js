@@ -31,13 +31,15 @@ router.route("/:postId/apply").get(async (req, res) => {
   //checks if the session is active
   if (req.session.user) {
     const postID = req.params.postId;
-<<<<<<< HEAD
-    validations.
-      res.status(200).render("../views/pages/application", { postID: postID, user: req.session.user });
-=======
-    res.status(200).render("../views/pages/application", { postID: postID, user: req.session.user, style: "application.css" });
->>>>>>> 66afd4b11e60f3d421f56f25fae5c62c7c55258a
-    return;
+    try {
+      validations.validateID(postID)
+      res.status(200).render("../views/pages/application", { postID: postID, user: req.session.user, style: "application.css" });
+      return;
+    }
+    catch (e) {
+      res.render("../views/errors/error", { error: e })
+      return
+    }
   } else {
     //renders signup page if not active
     res.redirect("/logout");
@@ -77,7 +79,7 @@ router.route("/:postId/applied").post(async (req, res) => {
     res.status(200).render("../views/pages/jobapplied", { user: ApplyingUser });
     return;
   } catch (e) {
-    res.status(400).render("../views/pages/application",{ error: e });
+    res.status(400).render("../views/pages/application", { error: e });
   }
 });
 
