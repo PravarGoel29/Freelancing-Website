@@ -1,47 +1,85 @@
-{{#if user}}
-  <div class="user-class">
-    <button type="button" onclick="location.href='/profile/{{user.userName}}/addPost'">Create Post</button>
-    <button type="button" onclick="location.href='/profile/{{user.userName}}/edit'">Edit Profile</button>
+{{!-- This is the navbar section --}}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="container-fluid">
+  <a class="navbar-brand" href="/home">Freelance</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-link active" aria-current="page" href="/home">Home</a>
+      <a class="nav-link" href="/profile/{{user.userName}}">profile</a>
+      <a class="nav-link" href="/profile/{{user.userName}}/addPost">create post</a>
+      <a class="nav-link" href="/profile/{{user.userName}}/edit" tabindex="-1">Edit Profile</a>
+    </div>
+    <div class="logout-nav-button">
+        <a class="nav-link" href="/logout">logOut</a>
+      </div>
   </div>
+</div>
+</nav>
+{{!-- ending of navbar section --}}
+<div class="container user-profile-area">
+  {{#if user}}
+    {{!-- <div class="user-class">
+      <button type="button" onclick="location.href='/profile/{{user.userName}}/addPost'">Create Post</button>
+      <button type="button" onclick="location.href='/profile/{{user.userName}}/edit'">Edit Profile</button>
+    </div> --}}
+  <ul class="list-group list-group-flush profile-data-list">
+    <li class="list-group-item">
+      <h1>{{user.userName}}</h1>
+      <div>{{user.firstName}} {{user.lastName}}</div>
+      <div class="label">{{user.email}}</div>
+    </li>
+    <li class="list-group-item">
+      <h2>Jobs Completed</h2>
+      {{#each historyOfJobs}}
+        <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+      {{/each}}
+      <br />
+    </li>
+    <li class="list-group-item">
+      <h2>Jobs Taken</h2>
+      {{#each currentJobs}}
+        <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+      {{/each}}
+      <br />
+    </li>
+    <li class="list-group-item">
+      <h2>Invites</h2>
+      {{#each invites}}
+        <div><p><a href="/post/{{this}}">{{this}}</a>
+        <button type="button" id = "acceptinvite" onclick="location.href='/post/{{this}}/acceptinvite'">Accept Invite</button></p></div>
+      {{/each}}
+      <br />
+    </li>
+    
+    <li class="list-group-item">
+      <h2>Saved Jobs</h2>
+      {{#each wishList}}
+        <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+      {{/each}}
+      <br />
+    </li>
+    <li class="list-group-item">
+      <div class="card job-posted-list">
+        <ul class="list-group list-group-flush">
+              <h2>Jobs posted</h2>
+              {{#each posts}}
+                <li class="list-group-item">
+                  <div><p><a href="/post/{{this._id}}">{{this._id}} {{this.title}}</a></p></div>
+                </li>
+              {{/each}}
 
-  <h1>{{user.userName}}</h1>
-  <div>{{user.firstName}} {{user.lastName}}</div>
-  <div class="label">{{user.email}}</div>
+              <br />
+              </br>
+            </br>
+        </ul>
+    </li>
 
-   <h2>Jobs Completed</h2>
-  {{#each historyOfJobs}}
-    <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
-  {{/each}}
-  <br />
+    
+  {{!-- <a href="/home">Home</a> --}}
+  {{/if}}
 
-  <h2>Jobs Taken</h2>
-  {{#each currentJobs}}
-    <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
-  {{/each}}
-  <br />
-
-  <h2>Invites</h2>
-  {{#each invites}}
-    <div><p><a href="/post/{{this}}">{{this}}</a>
-    <button type="button" id = "acceptinvite" onclick="location.href='/post/{{this}}/acceptinvite'">Accept Invite</button></p></div>
-  {{/each}}
-  <br />
-
-  <h2>Saved Jobs</h2>
-  {{#each wishList}}
-    <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
-  {{/each}}
-  <br />
-
-  <h2>Jobs posted</h2>
-  {{#each posts}}
-    <div><p><a href="/post/{{this._id}}">{{this._id}} {{this.title}}</a></p></div>
-  {{/each}}
-
-  <br />
-  </br>
-</br>
-<a href="/home">Home</a>
-{{/if}}
-
-{{#if error}}<div id="viewpost-error" class="error">{{error}}</div>{{/if}}
+  {{#if error}}<div id="viewpost-error" class="error">{{error}}</div>{{/if}}
+</div>

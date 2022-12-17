@@ -1,15 +1,32 @@
-<h2>{{employer.userName}}</h2>
-<p>Contact Details</p>
-<p>{{user.email}}</p>
+<div class="container">
+  <h2>{{employer.userName}}</h2>
+  <div class="card job-listing">
+    <ul class="list-group list-group-flush">
+      
+      <p>Contact Details</p>
+      <li class="list-group-item">
+        <p>{{user.contactNumber}}</p>
+      </li>
+      <li class="list-group-item">
+        <p>{{user.email}}</p>
+      </li>
+      <p>Employer Rating</p>
+    <p>{{employer.overallRating}}</p>
+    </ul>
 
-<p>Employer Rating</p>
-<p>{{employer.overallRating}}</p>
-
-<h2>Job History posted</h2>
-  {{#each employer.historyOfJobs}}
-    <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
-  {{/each}}
-</br>
-<button type="button" id = "backtouser" onclick="location.href='/user/{{user.userName}}'">Back</button>
-</br>
-<a href="/home">Home</a>
+    <h2>Job History posted</h2>
+     <div class="card employer-listing">
+      <ul class="list-group list-group-flush job-history-list">
+          {{#each employer.historyOfJobs}}
+            <li class="list-group-item">
+              <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+            </li>
+          {{/each}}
+        </br>
+      </ul>
+    </div>
+    <button class="employerprofile-button" type="button" id = "backtouser" onclick="location.href='/user/{{user.userName}}'">Back</button>
+    </br>
+    {{!-- <a href="/home">Home</a> --}}
+  </div>
+</div>
