@@ -73,6 +73,7 @@ router.route("/:postId").get(async (req, res) => {
       savedFlag: savedFlag,
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
+      style: "viewPost.css",
     });
     return;
   } catch (e) {
