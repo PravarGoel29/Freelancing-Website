@@ -20,26 +20,28 @@
 </div>
 </nav>
 {{!-- ending of navbar section --}}
-<h4>Review and Rate {{rateUser}} for job {{post.title}}</h4>
+<div class="container review-rate-cont">
+  <h4>Review and Rate {{rateUser}} for job {{post.title}}</h4>
 
-        <form action="/post/{{post._id}}/reviewrate/{{rateUser}}" method="POST" id="reviewrate-form">
+          <form action="/post/{{post._id}}/reviewrate/{{rateUser}}" method="POST" id="reviewrate-form">
 
-              <div class="mb-3">
-              <label for="reviewInput" class="form-label">Review</label>
-              <textarea id="reviewInput" type="text" name="reviewInput" placeholder="Write your Review" class="form-control" rows="3"></textarea>
-              </div>
-              
-              <div class="mb-3">
-                <label for="rateInput" class="form-label">Rate</label>
-                <select id="rateInput" type="password"name="rateInput"class="form-control" required/>
-                <option value="">--Rate--</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select></div>
-              
+                <div class="mb-3">
+                <label for="reviewInput" class="form-label">Review</label>
+                <textarea id="reviewInput" type="text" name="reviewInput" placeholder="Write your Review" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="rateInput" class="form-label">Rate</label>
+                  <select id="rateInput" type="password"name="rateInput"class="form-control" required/>
+                  <option value="">--Rate--</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                  </select></div>
+                
 
-                <div class="mb-3"><button type="submit" class="btnclass1 mt-3 mb-5">Submit Review and Rating</button></div>    
-    </form>
+                  <div class="mb-3"><button class="sub-review-btn" type="submit" class="btnclass1 mt-3 mb-5">Submit Review and Rating</button></div>    
+      </form>
+</div>
