@@ -11,9 +11,10 @@
       <a class="nav-link" href="/profile/{{user.userName}}">Profile</a>
       <a class="nav-link" href="/profile/{{user.userName}}/addPost">Post a Job</a>
     </div>
-      <div class="logout-nav-button">
+      {{!-- <div class="logout-nav-button">
         <a class="nav-link" href="/logout">Log Out</a>
-      </div>
+      </div> --}}
+      <button class="logout-nav-button btn-sm" onclick="location.href='/logout'">Logout</button>
   </div>
 </div>
 </nav>
@@ -21,18 +22,20 @@
 
 <div class="container">
   <h1>{{employer.userName}}</h1>
+  <h2>Employer Details</h2>
   <div class="card job-listing">
     <ul class="list-group list-group-flush">
-      
-      <p>Contact Details</p>
       <li class="list-group-item">
-        <p>{{user.contactNumber}}</p>
+        <p>Contact Number:{{user.contactNumber}}</p>
       </li>
       <li class="list-group-item">
-        <p>{{user.email}}</p>
+        <p>Email: {{user.email}}</p>
       </li>
-      <p>Employer Rating</p>
-    <p>{{employer.overallRating}}</p>
+      {{!-- <p>Employer Rating</p>
+      <p>{{employer.overallRating}}</p> --}}
+      <li class="list-group-item">
+        <p>Employer Rating: {{employer.overallRating}}</p>
+      </li>
     </ul>
 
     <h2>Job History posted</h2>

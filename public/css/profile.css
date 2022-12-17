@@ -21,13 +21,27 @@ body{
 }
 
 .logout-nav-button{
-    margin-left: 1100px;
     background-color: black;
     color: white;
     padding: 5px;
+    border-radius: 10px;
 }
-.logout-nav-button a:hover{
+.logout-nav-button:hover{
     color: black;
-    background-color: white;
-    
+    background-color: white;  
+}
+.profile-invite-btn{
+    border: none;
+    outline: none;
+    height: 25px;
+    width: 120px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.profile-invite-btn:hover{
+    background: white;
+    border: 1px solid;
+    color: black;
 }
