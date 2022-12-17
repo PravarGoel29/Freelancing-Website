@@ -8,7 +8,6 @@ const employerData = data.employers;
 const employeeData = data.employees;
 const applicationData = data.applications;
 const validations = require("../validations/dataValidations");
-const validations = require("../validations/routeValidations")
 const path = require("path");
 const multer = require("multer");
 const xss = require("xss");
