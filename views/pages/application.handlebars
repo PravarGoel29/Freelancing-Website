@@ -31,6 +31,11 @@
   <form class="col-lg-9 offset-lg-3" name="job_apply" action="/application/{{postID}}/applied" method="post" id = "applyjob-form">
     <h1>{{user.userName}}</h1>
     <div class="row justify-content-center">
+     <div class="form-row">
+         <div class="col-lg-7">
+           <input type="text" name="education" id="education" placeholder="Highest Education" class="form-control my-3 p-4" />
+         </div>
+       </div>
        <div class="form-row">
         <div class="col-lg-7">
           <input type="text" name="workExpYrs" id="workExpYrs" placeholder="Work Experience" class="form-control my-3 p-4" />
