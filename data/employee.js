@@ -10,6 +10,8 @@ const moment = require("moment");
 const createEmployee = async (userName, preferences, resume) => {
   userName = userName.toLowerCase();
   validations.validateUsername(userName);
+  validations.validatePreferences(preferences);
+
   //0. establish db connection
   const employeeCollection = await employees();
 
@@ -57,6 +59,7 @@ const getEmployeeById = async (employeeId) => {
 
 const savePosttoWishList = async (employeeId, postID) => {
   validations.validateID(employeeId);
+  validations.validateID(postID)
   const employeeCollection = await employees();
 
   //2. checks if the employer with the given employerID is already in the DB
@@ -99,6 +102,7 @@ const savePosttoWishList = async (employeeId, postID) => {
 
 const takeAJob = async (employeeId, postID) => {
   validations.validateID(employeeId);
+  validations.validateID(postID)
   const employeeCollection = await employees();
 
   //2. checks if the employer with the given employerID is already in the DB
@@ -146,6 +150,7 @@ const takeAJob = async (employeeId, postID) => {
 
 const unsavePosttoWishList = async (employeeId, postID) => {
   validations.validateID(employeeId);
+  validations.validateID(postID)
   const employeeCollection = await employees();
 
   //2. checks if the employer with the given employerID is already in the DB
@@ -190,6 +195,7 @@ const unsavePosttoWishList = async (employeeId, postID) => {
 
 const getInvite = async (employeeId, postID) => {
   validations.validateID(employeeId);
+  validations.validateID(postID)
   const employeeCollection = await employees();
 
   //2. checks if the employer with the given employerID is already in the DB
@@ -232,6 +238,7 @@ const getInvite = async (employeeId, postID) => {
 
 const markJobAsCompleted = async (employeeId, postID) => {
   validations.validateID(employeeId);
+  validations.validateID(postID)
   const employeeCollection = await employees();
 
   //2. checks if the employer with the given employerID is already in the DB
@@ -333,6 +340,8 @@ const checkIfWishlisted = async (userName, postId) => {
 
 const addRating = async (employeeId, rating, addFlag, oldRating) => {
   validations.validateID(employeeId);
+  validations.validateRating(rating);
+
   const employeeCollection = await employees();
   rating = parseInt(rating);
   //2. checks if the employer with the given employerID is already in the DB

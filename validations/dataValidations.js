@@ -26,6 +26,10 @@ const validateUsername = (inputUsername) => {
   if (inputUsername.trim().length === 0) throw "Username is empty.";
   if (inputUsername.includes(" ")) throw "Username should not contain spaces.";
   if (inputUsername.length < 4) throw "Username must contain at least 4 characters.";
+  const regexLetters = /[a-zA-Z]/;
+  if (inputUsername.search(regexLetters) < 0) {
+    throw "The userName must contains alphabets.";
+  }
   const regex = new RegExp("^[a-zA-Z0-9]*$");
   if (!regex.test(inputUsername)) throw "Username should contain only alphanumeric characters.";
 };
@@ -66,6 +70,10 @@ const validateName = (inputName) => {
   if (inputName.trim().length === 0) throw "Name is empty.";
   if (inputName.includes(" ")) throw "Name should not contain spaces.";
   if (inputName.length < 2) throw "Name must contain at least 2 characters.";
+  const regexLetters = /[a-zA-Z]/;
+  if (inputName.search(regexLetters) < 0) {
+    throw "The userName must contains alphabets.";
+  }
   const regex = new RegExp("^[a-zA-Z0-9]*$");
   if (!regex.test(inputName)) throw "Name should contain only alphanumeric characters.";
 };
@@ -187,17 +195,17 @@ const validateEmployeeToEmployerFlag = (inputEmployeeToEmployerFlag) => {
 };
 
 function validateStAddress(address) {
-  var illegalChars = [ '#',  
-    '!', '@', '$', "%",  '^', 
-    '*', '(', ")", "{",  '}', 
-    '|', '[', "]" , "\\"];
+  var illegalChars = ['#',
+    '!', '@', '$', "%", '^',
+    '*', '(', ")", "{", '}',
+    '|', '[', "]", "\\"];
 
-    for(var i = 0; i < illegalChars.length; i++) {
-        if(address == illegalChars[i]) throw 'Enter address in correct format';
-    }
-    if (address.length >60) throw 'address must be atleast 60 characters in length'
-    const regex = new RegExp("^[0-9]*$");
-    if (regex.test(address)) throw "Address cannot be only digits.";
+  for (var i = 0; i < illegalChars.length; i++) {
+    if (address == illegalChars[i]) throw 'Enter address in correct format';
+  }
+  if (address.length > 60) throw 'address must be atleast 60 characters in length'
+  const regex = new RegExp("^[0-9]*$");
+  if (regex.test(address)) throw "Address cannot be only digits.";
 }
 
 const validateWorkEXP = (workExpYrs) => {
@@ -209,6 +217,18 @@ const validateWorkEXP = (workExpYrs) => {
   const regex = new RegExp("^[0-9]*$");
   if (!regex.test(workExpYrs)) throw "work experience field must only have digits.";
 };
+
+const validatePreferences = (preferences) => {
+  if (!preferences) throw 'Preferences not provided.';
+  if (typeof preferences !== "string") throw 'Preferences should be a string'
+  if (preferences.trim().length === 0) throw 'Preferences cannot be empty or whitespaces.'
+}
+
+const validateGender = (gender) => {
+  if (!gender) throw 'Gender not provided.';
+  if (typeof gender !== "string") throw 'Gender should be a string'
+  if (gender.trim().length === 0) throw 'Gender cannot be empty or whitespaces.'
+}
 
 module.exports = {
   validateID,
@@ -230,6 +250,8 @@ module.exports = {
   validateRating,
   validateEmployeeToEmployerFlag,
   validateStAddress,
-  validateWorkEXP
+  validateWorkEXP,
+  validatePreferences,
+  validateGender
 
 };

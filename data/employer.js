@@ -1,7 +1,6 @@
 const db = require("../config");
 const employers = db.employerCollection;
-const errorHandling = require("../validations");
-const validations = errorHandling.userValidations;
+const validations = require("../validations/dataValidations");
 const { ObjectId } = require("mongodb");
 const moment = require("moment");
 
@@ -56,8 +55,7 @@ const getAllEmployers = async () => {
 };
 
 const removeEmployer = async (employerId) => {
-  //check.idValidation(id);
-
+  validations.validateID(employerId)
   const employer = await getEmployerById(id);
   const employerCollection = await employers();
   const deletionInfo = await employerCollection.deleteOne({
@@ -72,6 +70,8 @@ const removeEmployer = async (employerId) => {
 
 const addPost = async (userName, employerId, postID) => {
   validations.validateUsername(userName);
+  validations.validateID(employerId)
+  validations.validateID(postID)
 
   const employerCollection = await employers();
 
@@ -105,6 +105,7 @@ const addPost = async (userName, employerId, postID) => {
 
 const addRating = async (employerId, rating, addFlag, oldRating) => {
   validations.validateID(employerId);
+  validations.validateRating(rating)
   const employerCollection = await employers();
   rating = parseInt(rating);
   //2. checks if the employer with the given employerID is already in the DB

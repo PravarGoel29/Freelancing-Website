@@ -101,6 +101,8 @@ const getReviewById = async (reviewId) => {
 const updateReview = async (reviewId, review, rating) => {
   //console.log(reviewId, typeof reviewId);
   validations.validateID(reviewId);
+  validations.validateReview(review);
+  validations.validateRating(rating);
   reviewId = reviewId.trim();
   const reviewObject = await getReviewById(reviewId);
 
