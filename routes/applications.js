@@ -46,7 +46,7 @@ router.route("/:postId/applied").post(async (req, res) => {
   const postID = req.params.postId;
 
   try {
-    const { workExpYrs, address, ex_salary } = applicationInfo;
+    const { education, workExpYrs, address, ex_salary } = applicationInfo;
 
     validations.validateID(postID);
     validations.validateUsername(userName);
@@ -57,6 +57,7 @@ router.route("/:postId/applied").post(async (req, res) => {
     const newApplication = await applicationData.createApplication(
       userName,
       postID,
+      education,
       workExpYrs,
       address,
       ex_salary
