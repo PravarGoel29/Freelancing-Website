@@ -328,7 +328,7 @@ router.route("/:postId/reviewedandrated/:reviewId").get(async (req, res) => {
     //console.log(updatedPost);
 
     if (user) {
-      res.status(200).render("../views/pages/viewreviewrating", { review: reviewDetails });
+      res.status(200).render("../views/pages/viewreviewrating", { user: user, review: reviewDetails });
       return;
     } else {
       res.status(400).render("../views/pages/forbiddenAccess");

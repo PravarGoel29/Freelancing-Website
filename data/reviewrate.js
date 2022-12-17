@@ -102,7 +102,8 @@ const updateReview = async (reviewId, review, rating) => {
   //console.log(reviewId, typeof reviewId);
   validations.validateID(reviewId);
   validations.validateReview(review);
-  validations.validateRating(rating);
+  // Because after the first time we are converting the rating to number and it is no longer a string so string type checks not required
+  //validations.validateRating(rating);
   reviewId = reviewId.trim();
   const reviewObject = await getReviewById(reviewId);
 
