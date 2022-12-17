@@ -30,7 +30,7 @@ router.route("/:postId/apply").get(async (req, res) => {
   //checks if the session is active
   if (req.session.user) {
     const postID = req.params.postId;
-    res.status(200).render("../views/pages/application", { postID: postID, user: req.session.user });
+    res.status(200).render("../views/pages/application", { postID: postID, user: req.session.user, style: "application.css" });
     return;
   } else {
     //renders signup page if not active
@@ -71,7 +71,7 @@ router.route("/:postId/applied").post(async (req, res) => {
     res.status(200).render("../views/pages/jobapplied", { user: ApplyingUser });
     return;
   } catch (e) {
-    res.status(400).json({ error: e, success: false });
+    res.status(400).render("../views/pages/application",{ error: e });
   }
 });
 

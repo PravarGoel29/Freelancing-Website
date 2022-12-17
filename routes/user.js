@@ -225,7 +225,7 @@ router.route("/user/:userName").get(async (req, res) => {
       return;
     }
     //console.log("user passed to user page", req.session.user);
-    res.status(200).render("../views/pages/user", { user: thatUser });
+    res.status(200).render("../views/pages/user", { user: thatUser, style: "user.css" });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
@@ -240,7 +240,7 @@ router.route("/user/:userName/employee").get(async (req, res) => {
   const thatUserAsEmployee = await employeeData.getEmployeeByUserName(userName);
 
   if (user) {
-    res.status(200).render("../views/pages/employeeprofile", { user: thatUser, employee: thatUserAsEmployee });
+    res.status(200).render("../views/pages/employeeprofile", { user: thatUser, employee: thatUserAsEmployee, style: "employeeProfile.css" });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
@@ -279,7 +279,7 @@ router.route("/profile/:userName/addPost").get(async (req, res) => {
 router.route("/profile/:userName/edit").get(async (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.status(200).render("../views/pages/editProfile", { username: user.userName, style: "stylesheet.css" });
+    res.status(200).render("../views/pages/editProfile", { username: user.userName, style: "editProfile.css" });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
