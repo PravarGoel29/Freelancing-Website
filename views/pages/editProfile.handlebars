@@ -10,27 +10,23 @@
       <a class="nav-link active" aria-current="page" href="/home">Home</a>
       <a class="nav-link" href="/profile/{{username}}">profile</a>
       <a class="nav-link" href="/profile/{{username}}/addPost">create post</a>
-      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">option3</a>
     </div>
   </div>
 </div>
 </nav>
 {{!-- ending of navbar section --}}
 <section class="form my-4 mx-5">
-  <div class="container">
-    <div class="row no-gutter">
-      <div class="col-lg-5">
-        <img src="../public/images/freelanceImg.jpg" class="img-fluid" alt="No image" />
-      </div>
+  <div class="container d-flex justify-content-center">
+    <div class="row edit-prof-cont">
       <div class="col-lg-7 px-5 pt-5">
         <h1 class="font-weight-bold py-3">Freelance</h1>
-        <h4>Edit {{username}}'s Profile</h4>
+        <h2>Edit {{username}}'s Profile</h2>
         <form action="/profile/{{username}}/edit" method="POST" id="profileEdit-form" enctype="multipart/form-data">
 {{!-- <input type="hidden" name="_method" value="PUT"> --}}
      
 
           <div class="form-row">
-            <div class="col-lg-7">
+            <div class="col-lg-12">
               <label for="firstName">FirstName</label>
               <input
                 required
@@ -41,7 +37,7 @@
                 class="form-control my-3 p-4"
               />
             </div>
-            <div class="col-lg-7">
+            <div class="col-lg-12">
               <label for="lastName">Lastname</label>
               <input
                 required
@@ -56,7 +52,7 @@
           <div class="form-row">
 
            
-            <div class="col-lg-7">
+            <div class="col-lg-12">
               <label for="contactNumber">Contact Number</label>
               <input
                 required
@@ -69,7 +65,7 @@
             </div>
           </div>
           <div class="form-row">
-            <div class="col-lg-7">
+            <div class="col-lg-12">
               <label for="gender">Gender</label><br />
               <input required type="radio" id="male" name="gender" value="male" class="radio" />
               <label for="male">Male</label><br />
@@ -84,7 +80,7 @@
           <br />
         
           <div class="form-row">
-            <div class="col-lg-7">
+            <div class="col-lg-12">
               <label for="preferences">Preferences</label>
               <input
                 required
@@ -98,7 +94,7 @@
           </div>
 
           <div class="form-row">
-            <div class="col-lg-7">
+            <div class="col-lg-12">
               <label for="resumeInput">Upload your resume</label>
               <br />
               Only .pdf format accepted
@@ -109,7 +105,7 @@
           <div class="signup-success" id="signup-success" hidden>Succesfully Logged in</div>
           <div class="signup-error" id="signup-failure" hidden>All fields needs to have valid values!</div>
           <div class="form-row">
-            <div class="col-lg-7">
+            <div class="col-lg-12">
               <button type="submit" class="btnclass1 mt-3 mb-5">Edit</button>
             </div>
           </div>

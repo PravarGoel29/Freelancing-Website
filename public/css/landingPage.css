@@ -11,6 +11,7 @@ body{
     border-radius: 15px;
     min-height: 650px;
     max-width: 1000px;
+    text-align: center;
 }
 .job-listing a{
     color: black;
@@ -22,13 +23,11 @@ body{
 
 }
 .logout-nav-button{
-    margin-left: 900px;
     background-color: black;
     color: white;
     padding: 5px;
 }
 .logout-nav-button a:hover{
     color: black;
-    background-color: white;
-    
+    background-color: white;  
 }

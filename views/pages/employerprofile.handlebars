@@ -1,5 +1,26 @@
+{{!-- This is the navbar section --}}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="container-fluid">
+  <a class="navbar-brand" href="/home">Freelance</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-link active" aria-current="page" href="/home">Home</a>
+      <a class="nav-link" href="/profile/{{user.userName}}">profile</a>
+      <a class="nav-link" href="/profile/{{user.userName}}/addPost">create post</a>
+    </div>
+      <div class="logout-nav-button">
+        <a class="nav-link" href="/logout">logOut</a>
+      </div>
+  </div>
+</div>
+</nav>
+{{!-- ending of navbar section --}}
+
 <div class="container">
-  <h2>{{employer.userName}}</h2>
+  <h1>{{employer.userName}}</h1>
   <div class="card job-listing">
     <ul class="list-group list-group-flush">
       
@@ -25,7 +46,9 @@
         </br>
       </ul>
     </div>
-    <button class="employerprofile-button" type="button" id = "backtouser" onclick="location.href='/user/{{user.userName}}'">Back</button>
+    <div class="employeer-btn-div">
+      <button class="employerprofile-button" type="button" id = "backtouser" onclick="location.href='/user/{{user.userName}}'">Back</button>
+    </div>
     </br>
     {{!-- <a href="/home">Home</a> --}}
   </div>

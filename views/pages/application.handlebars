@@ -31,34 +31,43 @@
   <form class="col-lg-9 offset-lg-3" name="job_apply" action="/application/{{postID}}/applied" method="post" id = "applyjob-form">
     <h1>{{user.userName}}</h1>
     <div class="row justify-content-center">
+  <div class="form-row">
+        <div class="col-lg-7">
+          <input type="text" name="education" id="education" placeholder="Highest Education" class="form-control my-3 p-4" />
+        </div>
+      </div>
+
        <div class="form-row">
         <div class="col-lg-7">
           <input type="text" name="workExpYrs" id="workExpYrs" placeholder="Work Experience" class="form-control my-3 p-4" />
         </div>
       </div>
 
- <div class="form-row">
-        <div class="col-lg-7">
-          <input type="textarea" name="address" id="address" placeholder="Address" class="form-control my-3 p-4" />
-        </div>
-      </div>
+          <div class="form-row">
+            <div class="col-lg-7">
+              <label for="address">Address</label>
+              <input type="textarea" name="address" id="address" placeholder="Address" class="form-control my-3 p-4" />
+            </div>
+          </div>
 
-      <div class="form-row">
-        <div class="col-lg-7">
-          <input type="text" name="ex_salary" id="ex_salary" placeholder="Expected Salary" class="form-control my-3 p-4" />
-        </div>
-      </div>
+          <div class="form-row">
+            <div class="col-lg-7">
+              <label for="ex_salary">Expected Salary</label>
+              <input type="text" name="ex_salary" id="ex_salary" placeholder="Expected Salary" class="form-control my-3 p-4" />
+            </div>
+          </div>
 
-      <div class = "createpost-success" id="createpost-success" hidden>Succesfully Posted</div>
-      <div class = "createpost-error" id = "createpost-failure" hidden>All fields needs to have values</div>
+          <div class = "createpost-success" id="createpost-success" hidden>Succesfully Posted</div>
+          <div class = "createpost-error" id = "createpost-failure" hidden>All fields needs to have values</div>
 
-      <div class="form-row">
-        <div class="col-lg-7">
-          <button type="submit" class="btnclass1 mt-3 mb-5">Post</button>
+          <div class="form-row">
+            <div class="col-lg-7">
+              <button type="submit" class="app-post-btn">Post</button>
+            </div>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
-  </form>
 </div>
 <script
   src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"

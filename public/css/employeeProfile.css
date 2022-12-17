@@ -11,12 +11,12 @@ body{
 .job-history-list a:hover{
     font-weight: bold;
 }
-.employeer-btn-div{
+.employee-btn-div{
     text-align: center;
-    margin-top: 10px;
+    margin-top: 20px;
     padding-bottom: 20px;
 }
-.employerprofile-button{
+.employeeprofile-button{
     border: none;
     outline: none;
     height: 50px;

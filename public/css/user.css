@@ -3,20 +3,11 @@ body{
     margin: 0px;
     box-sizing: border-box;
     background: rgb(219, 226, 226);
-}
-.job-history-list a{
-    text-decoration: none;
-    color: black;
-}
-.job-history-list a:hover{
-    font-weight: bold;
-}
-.employeer-btn-div{
+} 
+h2{
     text-align: center;
-    margin-top: 10px;
-    padding-bottom: 20px;
 }
-.employerprofile-button{
+.userpage-btn-class{
     border: none;
     outline: none;
     height: 50px;
@@ -25,13 +16,9 @@ body{
     color: white;
     border-radius: 5px;
     font-weight: bold;
-    margin-top: 20px;
 }
-
-p{
-    font-size: medium;
-    padding-left: 5px;
-}
-h2{
+.btn-div{
+    width: 100%;
     text-align: center;
+    margin-top: 20px;
 }
