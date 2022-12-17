@@ -7,7 +7,7 @@ const { ObjectId } = require("mongodb");
 const moment = require("moment");
 const Employee = require("./employee");
 const Employer = require("./employer");
-
+require("dotenv").config();
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */
 const createUser = async (
@@ -103,11 +103,11 @@ const createUser = async (
 const sendEmailVerification = async (user) => {
   const userId = user._id;
   const emailToken = "http://localhost:3000/confirmation/" + userId;
-  const adminMailID = "t@gmail.com";
+  const adminMailID = process.env.USER;
   let verificationSent = true;
   let mailTransporter = nodemailer.createTransport({
     service: "gmail",
-    auth: { user: adminMailID, pass: "pass" },
+    auth: { user: adminMailID, pass: process.env.PASS },
   });
   let details = {
     from: adminMailID,

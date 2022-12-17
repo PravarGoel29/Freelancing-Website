@@ -33,7 +33,7 @@ router.route("/").get(async (req, res) => {
     return;
   } else {
     //renders login page if not active
-    res.status(200).render("../views/pages/login", {style: "stylesheet.css"});
+    res.status(200).render("../views/pages/login", { style: "stylesheet.css" });
     return;
   }
 });
@@ -45,7 +45,7 @@ router.route("/signup").get(async (req, res) => {
     return;
   } else {
     //renders signup page if not active
-    res.status(200).render("../views/pages/signup", {style: "stylesheet.css"});
+    res.status(200).render("../views/pages/signup", { style: "stylesheet.css" });
     return;
   }
 });
@@ -187,17 +187,50 @@ router.route("/home").get(async (req, res) => {
   }
 });
 
+router.route("/home").post(async (req, res) => {
+  const searchInfo = req.body;
+  const user = req.session.user;
+  const allPosts = await postData.getAllPosts();
+  try {
+    const { searchTerm, filterJobType } = searchInfo;
+
+    //console.log(searchTerm);
+    //console.log(filterJobType);
+    //validations.validateSearchTerm(searchTerm);
+    //validations.validateFilterJobType(filterJobType);
+
+    const allReleventPosts = await postData.searchFilterPost(searchTerm, filterJobType);
+
+    if (user) {
+      res
+        .status(200)
+        .render("../views/pages/landing", { user: user, allPosts: allReleventPosts, style: "landingPage.css" });
+      return;
+    } else {
+      res.status(400).render("../views/pages/forbiddenAccess");
+      return;
+    }
+  } catch (e) {
+    res
+      .status(400)
+      .render("../views/pages/landing", { user: user, allPosts: allPosts, style: "landingPage.css", error: e });
+    return;
+  }
+});
+
 router.route("/profile/:userName").get(async (req, res) => {
   const user = req.session.user;
-  const thisUserPosts = await postData.getAllPostsbyUserName(user.userName);
-  const employeeId = await userData.getEmployeeIdByUserName(user.userName);
-  const wishList = await employeeData.getAllJobsinWishList(employeeId);
-  const invites = await employeeData.getAllinvites(employeeId);
-  const currentJobs = await employeeData.getAllCurrentJobs(employeeId);
-  const historyOfJobs = await employeeData.getAllJobsCompleted(employeeId);
-  req.session.posts = thisUserPosts;
-  const posts = req.session.posts;
+
   if (user) {
+    const thisUserPosts = await postData.getAllPostsbyUserName(user.userName);
+    const employeeId = await userData.getEmployeeIdByUserName(user.userName);
+    const wishList = await employeeData.getAllJobsinWishList(employeeId);
+    const invites = await employeeData.getAllinvites(employeeId);
+    const currentJobs = await employeeData.getAllCurrentJobs(employeeId);
+    const historyOfJobs = await employeeData.getAllJobsCompleted(employeeId);
+    req.session.posts = thisUserPosts;
+    const posts = req.session.posts;
+
     res.status(200).render("../views/pages/profile", {
       user: user,
       posts: posts,
@@ -205,7 +238,7 @@ router.route("/profile/:userName").get(async (req, res) => {
       invites: invites,
       currentJobs: currentJobs,
       historyOfJobs: historyOfJobs,
-      style: "profile.css"
+      style: "profile.css",
     });
     return;
   } else {
@@ -240,7 +273,11 @@ router.route("/user/:userName/employee").get(async (req, res) => {
   const thatUserAsEmployee = await employeeData.getEmployeeByUserName(userName);
 
   if (user) {
-    res.status(200).render("../views/pages/employeeprofile", { user: thatUser, employee: thatUserAsEmployee, style: "employeeProfile.css" });
+    res.status(200).render("../views/pages/employeeprofile", {
+      user: thatUser,
+      employee: thatUserAsEmployee,
+      style: "employeeProfile.css",
+    });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
@@ -257,7 +294,7 @@ router.route("/user/:userName/employer").get(async (req, res) => {
     res.status(200).render("../views/pages/employerprofile", {
       user: thatUser,
       employer: thatUserAsEmployer,
-      style: "employerProfile.css"
+      style: "employerProfile.css",
     });
     return;
   } else {
@@ -286,11 +323,11 @@ router.route("/profile/:userName/edit").get(async (req, res) => {
     return;
   }
 });
-router.route("/profile/:userName/edit").post(upload,async (req, res) => {
+router.route("/profile/:userName/edit").post(upload, async (req, res) => {
   const UserInfo = req.body;
   const user = req.session.user;
   try {
-    const { firstName, lastName,  contactNumber, gender, } = UserInfo;
+    const { firstName, lastName, contactNumber, gender } = UserInfo;
     //console.log(req);
     //Validating the contents of UserInfo obj
     try {
@@ -326,7 +363,7 @@ router.route("/profile/:userName/edit").post(upload,async (req, res) => {
       firstName,
       lastName,
       contactNumber,
-      gender,
+      gender
       // resumeInput
     );
     //res.redirect("/");

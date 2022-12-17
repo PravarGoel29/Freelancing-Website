@@ -148,6 +148,21 @@ const validateDomain = (inputDomain) => {
   if (!inputDomain) throw "Domain not provided.";
   if (typeof inputDomain !== "string") throw "Domain is not of valid input type.";
   if (inputDomain.trim().length === 0) throw "Domain is empty.";
+  const allowedValues = [
+    "Programming and Tech",
+    "Designing",
+    "Sales",
+    "Photography",
+    "Graphics and Design",
+    "Digital Marketing",
+    "Writing",
+    "Video and Animation",
+    "Music and Audio",
+    "Other",
+  ];
+  if (!allowedValues.includes(inputDomain)) {
+    throw "Invalid Domain";
+  }
 };
 
 const validateJobType = (inputJobType) => {
@@ -194,41 +209,48 @@ const validateEmployeeToEmployerFlag = (inputEmployeeToEmployerFlag) => {
   if (typeof inputEmployeeToEmployerFlag !== "boolean") throw "EmployeeToEmployerFlag should be a boolean.";
 };
 
+const validateSearchTerm = (inputSearchTerm) => {
+  //if (!inputSearchTerm) throw "Search term not provided.";
+  if (typeof inputSearchTerm !== "string") throw "Search term should be a string.";
+  //if (inputSearchTerm.trim().length === 0) throw "Search term is empty.";
+};
+
+const validateFilterJobType = (inputFilterJobType) => {
+  if (!(inputFilterJobType === "Remote" || inputFilterJobType === "In-Person" || inputFilterJobType === "Hybrid")) {
+    throw "Invalid Job Type";
+  }
+};
+
 function validateStAddress(address) {
-  var illegalChars = ['#',
-    '!', '@', '$', "%", '^',
-    '*', '(', ")", "{", '}',
-    '|', '[', "]", "\\"];
+  var illegalChars = ["#", "!", "@", "$", "%", "^", "*", "(", ")", "{", "}", "|", "[", "]", "\\"];
 
   for (var i = 0; i < illegalChars.length; i++) {
-    if (address == illegalChars[i]) throw 'Enter address in correct format';
+    if (address == illegalChars[i]) throw "Enter address in correct format";
   }
-  if (address.length > 60) throw 'address must be atleast 60 characters in length'
+  if (address.length > 60) throw "address must be atleast 60 characters in length";
   const regex = new RegExp("^[0-9]*$");
   if (regex.test(address)) throw "Address cannot be only digits.";
 }
 
 const validateWorkEXP = (workExpYrs) => {
-  if (workExpYrs === undefined || workExpYrs === null)
-    throw "work experience not provided.";
-  if (typeof workExpYrs !== "string")
-    throw "work experience is not of valid input type.";
+  if (workExpYrs === undefined || workExpYrs === null) throw "work experience not provided.";
+  if (typeof workExpYrs !== "string") throw "work experience is not of valid input type.";
   if (workExpYrs.trim().length === 0) throw "work experience is empty.";
   const regex = new RegExp("^[0-9]*$");
   if (!regex.test(workExpYrs)) throw "work experience field must only have digits.";
 };
 
 const validatePreferences = (preferences) => {
-  if (!preferences) throw 'Preferences not provided.';
-  if (typeof preferences !== "string") throw 'Preferences should be a string'
-  if (preferences.trim().length === 0) throw 'Preferences cannot be empty or whitespaces.'
-}
+  if (!preferences) throw "Preferences not provided.";
+  if (typeof preferences !== "string") throw "Preferences should be a string";
+  if (preferences.trim().length === 0) throw "Preferences cannot be empty or whitespaces.";
+};
 
 const validateGender = (gender) => {
-  if (!gender) throw 'Gender not provided.';
-  if (typeof gender !== "string") throw 'Gender should be a string'
-  if (gender.trim().length === 0) throw 'Gender cannot be empty or whitespaces.'
-}
+  if (!gender) throw "Gender not provided.";
+  if (typeof gender !== "string") throw "Gender should be a string";
+  if (gender.trim().length === 0) throw "Gender cannot be empty or whitespaces.";
+};
 
 module.exports = {
   validateID,
@@ -249,9 +271,10 @@ module.exports = {
   validateReview,
   validateRating,
   validateEmployeeToEmployerFlag,
+  validateSearchTerm,
+  validateFilterJobType,
   validateStAddress,
   validateWorkEXP,
   validatePreferences,
-  validateGender
-
+  validateGender,
 };

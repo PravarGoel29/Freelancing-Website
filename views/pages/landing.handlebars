@@ -11,13 +11,28 @@
       <a class="nav-link" href="/profile/{{user.userName}}">profile</a>
       <a class="nav-link" href="/profile/{{user.userName}}/addPost">create post</a>
     </div>
-    <div id="search">
-            <label for="searchTerm" class='headerLink marginLeft12'>Search:</label>
-              <input type="text" name="searchTerm" id="searchTerm">
-      </div>
-      <div class="logout-nav-button">
-     <a class="nav-link" href="/logout">logOut</a>
-  </div>
+      <form action="/home" method="POST" class="d-flex" role="search">
+        <div id="search">
+          <label for="searchTerm" class='headerLink marginLeft12'>Search:</label>
+          <input type="text" name="searchTerm" id="searchTerm">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </div>
+          
+        <div id="filter">
+        <select name="filterJobType" id="filterJobType" onchange="this.form.submit()">
+            <option value="Filter by Job Type">Filter by Job Type</option>
+            <option value="In-Person">In-Person</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="Remote">Remote</option>
+        </select>
+        </div>
+
+        </div>
+      </form>
+    <div class="logout-nav-button">
+        <a class="nav-link" href="/logout">Log Out</a>
+    </div>
+      
   </div>
 </div>
 </nav>
