@@ -53,8 +53,7 @@ const createPost = async (location, description, title, domain, tags, jobtype, s
     description: description,
     title: title,
     postedTime: postedTime,
-    updatedTime: null,
-    imageID: "123",
+    updatedTime: postedTime,
     domain: domain,
     tags: tags,
     reviewIDs: [],
@@ -99,7 +98,6 @@ const addApplicants = async (userName, postId) => {
         title: post.title,
         postedTime: post.postedTime,
         updatedTime: post.updatedTime,
-        imageID: "123",
         domain: post.domain,
         tags: post.tags,
         reviewIDs: post.reviewIDs,
@@ -147,7 +145,6 @@ const addCandidates = async (userName, postId) => {
         title: post.title,
         postedTime: post.postedTime,
         updatedTime: post.updatedTime,
-        imageID: "123",
         domain: post.domain,
         tags: post.tags,
         reviewIDs: post.reviewIDs,
@@ -193,7 +190,6 @@ const addReview = async (reviewId, postId) => {
         title: post.title,
         postedTime: post.postedTime,
         updatedTime: post.updatedTime,
-        imageID: "123",
         domain: post.domain,
         tags: post.tags,
         reviewIDs: reviewIDs_,
@@ -229,7 +225,6 @@ const markCompleted = async (postId) => {
         title: post.title,
         postedTime: post.postedTime,
         updatedTime: updatedTime_,
-        imageID: "123",
         domain: post.domain,
         tags: post.tags,
         reviewIDs: post.reviewIDs,
@@ -264,7 +259,7 @@ const getAllPosts = async () => {
 };
 
 const getAllPostsbyUserName = async (userName) => {
-  validations.validateUsername(userName)
+  validations.validateUsername(userName);
   userName = userName.toLowerCase();
   const postCollection = await posts();
   const PostList = await postCollection.find({ userName: userName }).toArray();
@@ -301,6 +296,30 @@ const getAllPostsbyUserName = async (userName) => {
 //   return reviewObjectList;
 // };
 
+const searchFilterPost = async (searchTerm, filterJobType) => {
+  let result = [];
+  const allPosts = await getAllPosts();
+  if (filterJobType !== "Filter by Job Type") {
+    for (const postObj of allPosts) {
+      const filterString = postObj.jobtype;
+      if (filterString === filterJobType) {
+        result.push(postObj);
+      }
+    }
+  } else {
+    validations.validateSearchTerm(searchTerm);
+    searchTerm = searchTerm.trim().toLowerCase();
+    for (const postObj of allPosts) {
+      const searchString =
+        postObj.title.toLowerCase() + " " + postObj.description.toLowerCase() + " " + postObj.tags.toLowerCase();
+      if (searchString.includes(searchTerm)) {
+        result.push(postObj);
+      }
+    }
+  }
+  return result;
+};
+
 const removePost = async (postId) => {
   //validation of id
   validations.validateID(postId);
@@ -328,4 +347,5 @@ module.exports = {
   addCandidates,
   markCompleted,
   addReview,
+  searchFilterPost,
 };

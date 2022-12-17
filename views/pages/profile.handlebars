@@ -7,13 +7,13 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a class="nav-link active" aria-current="page" href="/home">Home</a>
-      <a class="nav-link" href="/profile/{{user.userName}}">profile</a>
-      <a class="nav-link" href="/profile/{{user.userName}}/addPost">create post</a>
+      {{!-- <a class="nav-link active" aria-current="page" href="/home">Home</a> --}}
+      <a class="nav-link" href="/profile/{{user.userName}}">Profile</a>
+      <a class="nav-link" href="/profile/{{user.userName}}/addPost">Post a Job</a>
       <a class="nav-link" href="/profile/{{user.userName}}/edit" tabindex="-1">Edit Profile</a>
     </div>
     <div class="logout-nav-button">
-        <a class="nav-link" href="/logout">logOut</a>
+        <a class="nav-link" href="/logout">Log Out</a>
       </div>
   </div>
 </div>
@@ -31,6 +31,7 @@
       <div>{{user.firstName}} {{user.lastName}}</div>
       <div class="label">{{user.email}}</div>
     </li>
+    
     <li class="list-group-item">
       <h2>Jobs Completed</h2>
       {{#each historyOfJobs}}
@@ -38,6 +39,7 @@
       {{/each}}
       <br />
     </li>
+
     <li class="list-group-item">
       <h2>Jobs Taken</h2>
       {{#each currentJobs}}
@@ -45,6 +47,7 @@
       {{/each}}
       <br />
     </li>
+
     <li class="list-group-item">
       <h2>Invites</h2>
       {{#each invites}}
@@ -61,6 +64,7 @@
       {{/each}}
       <br />
     </li>
+
     <li class="list-group-item">
       <div class="card job-posted-list">
         <ul class="list-group list-group-flush">

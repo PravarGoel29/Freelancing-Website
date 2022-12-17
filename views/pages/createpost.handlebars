@@ -7,12 +7,12 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a class="nav-link active" aria-current="page" href="/home">Home</a>
-      <a class="nav-link" href="/profile/{{user.userName}}">profile</a>
-      <a class="nav-link" href="/profile/{{user.userName}}/addPost">create post</a>
+      {{!-- <a class="nav-link active" aria-current="page" href="/home">Home</a> --}}
+      <a class="nav-link" href="/profile/{{user.userName}}">Profile</a>
+      <a class="nav-link" href="/profile/{{user.userName}}/addPost">Post a Job</a>
     </div>
     <div class="logout-nav-button">
-      <a class="nav-link" href="/logout">logOut</a>
+      <a class="nav-link" href="/logout">Log Out</a>
     </div>
   </div>
 </div>
@@ -39,7 +39,7 @@
           <input type="text" name="location" id="location" placeholder="Location" class="form-control my-3 p-4" />
         </div>
         <div class="col-lg-12">
-          <label for="description">description</label>
+          <label for="description">Job Description</label>
           <input
             type="textarea"
             name="description"
@@ -51,31 +51,46 @@
       </div>
       <div class="form-row">
         <div class="col-lg-12">
-          <label for="title">title</label>
+          <label for="title">Job Title</label>
           <input type="text" name="title" id="title" placeholder="title" class="form-control my-3 p-4" />
         </div>
       </div>
       <div class="form-row">
         <div class="col-lg-12">
-          <label for="domain">Domain</label>
-          <input type="text" name="domain" id="domain" placeholder="Domain" class="form-control my-3 p-4" />
+                <label for="domain" class="form-label">Domain</label>
+                <select id="domain" type="text"name="domain"class="form-control my-3 p-4" required/>
+                  <option value="">--Domain--</option>
+                      <option value="Programming and Tech">Programming and Tech</option>
+                      <option value="Designing">Designing</option>
+                      <option value="Sales">Sales</option>
+                      <option value="Photography">Photography</option>
+                      <option value="Graphics and Design">Graphics and Design</option>
+                      <option value="Digital Marketing">Digital Marketing</option>
+                      <option value="Writing">Writing</option>
+                      <option value="Video and Animation">Video and Animation</option>
+                      <option value="Music and Audio">Music and Audio</option>
+                      <option value="Other">Other</option>
+                </select>
         </div>
       </div>
       <div class="form-row">
         <div class="col-lg-12">
           <label for="tags">Tags</label>
-          <input type="text" name="tags" id="tags" placeholder="Tags" class="form-control my-3 p-4" />
+          <input type="text" name="tags" id="tags" placeholder="Write Something like #design #webdevelopement" class="form-control my-3 p-4" />
         </div>
       </div>
+
       <div class="form-row">
         <div class="col-lg-12">
-                <label for="jobType" class="form-label">jobType</label>
+                <label for="jobType" class="form-label">Job Type</label>
                 <select id="jobtype" type="text"name="jobType"class="form-control my-3 p-4" required/>
-                <option value="">--JobType--</option>
-                    <option value="In-Person">In-Person</option>
-                    <option value="Hybrid">Hybrid</option>
-                    <option value="Remote">Remote</option>
-        </select></div>
+                  <option value="">--JobType--</option>
+                      <option value="In-Person">In-Person</option>
+                      <option value="Hybrid">Hybrid</option>
+                      <option value="Remote">Remote</option>
+                </select>
+        </div>
+      </div>
       <div class="form-row">
         <div class="col-lg-12">
           <label for="salary">Salary</label>

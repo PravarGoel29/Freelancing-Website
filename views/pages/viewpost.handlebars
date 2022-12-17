@@ -7,12 +7,12 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a class="nav-link active" aria-current="page" href="/home">Home</a>
-      <a class="nav-link" href="/profile/{{user.userName}}">profile</a>
-      <a class="nav-link" href="/profile/{{user.userName}}/addPost">create post</a>
+     {{!-- <a class="nav-link active" aria-current="page" href="/home">Home</a> --}}
+      <a class="nav-link" href="/profile/{{user.userName}}">Profile</a>
+      <a class="nav-link" href="/profile/{{user.userName}}/addPost">Post a Job</a>
     </div>
       <div class="logout-nav-button">
-        <a class="nav-link" href="/logout">logOut</a>
+        <a class="nav-link" href="/logout">Log Out</a>
       </div>
   </div>
 </div>
@@ -23,6 +23,9 @@
     <h1>{{post.title}}</h1>
     <li class="list-group-item">
       <p>Location : {{post.location}}</p>
+    </li>
+    <li class="list-group-item">
+      <p>Posted on : {{post.postedTime}}</p>
     </li>
     <li class="list-group-item">
       <p>Description: {{post.description}}</p>
@@ -107,6 +110,7 @@
         {{/if}}
         </div>
 
+    <h2>Reviews</h2>
       {{#each post.reviewIDs}}
         <div><p><button><a href="/post/{{../post._id}}/reviewedandrated/{{this}}">{{this}} </button></a><p></div>
       {{/each}}

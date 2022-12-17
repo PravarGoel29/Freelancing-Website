@@ -14,12 +14,13 @@ const xss = require("xss");
 
 router.route("/").get(async (req, res) => {
   //console.log("inside post / get");
-  res.status(200).render("../views/pages/profile");
+  res.status(200).redirect("/home");
 });
 
 router.route("/").post(async (req, res) => {
   //getting the post body
   const postInfo = req.body;
+  const user = req.session.user;
   const userName = req.session.user.userName;
   try {
     const { location, description, title, domain, tags, jobtype, salary } = postInfo;
@@ -28,8 +29,15 @@ router.route("/").post(async (req, res) => {
     //Displaying the success message
     //res.status(200).json("Job post successful");
     //res.redirect("/profile/" + userName);
-    res.status(200).json({ message: "Succefully Posted", success: true });
-    return;
+    //res.status(200).json({ message: "Succefully Posted", success: true });
+    if (user) {
+      //console.log()
+      res.status(200).redirect("/post/" + newPost._id);
+      return;
+    } else {
+      res.status(400).render("../views/pages/forbiddenAccess");
+      return;
+    }
   } catch (e) {
     res.status(400).json({ error: e, success: false });
     //res.status(500).json({ error: e });
@@ -320,7 +328,7 @@ router.route("/:postId/reviewedandrated/:reviewId").get(async (req, res) => {
     //console.log(updatedPost);
 
     if (user) {
-      res.status(200).render("../views/pages/viewreviewrating", { review: reviewDetails });
+      res.status(200).render("../views/pages/viewreviewrating", { user: user, review: reviewDetails });
       return;
     } else {
       res.status(400).render("../views/pages/forbiddenAccess");
@@ -366,7 +374,7 @@ router.route("/:postId/applied").get(async (req, res) => {
   try {
     validations.validateID(id);
     id = id.trim();
-    
+
     if (post.applicants.includes(user.userName.toLowerCase())) {
       throw "You have already applied to this job";
     }
@@ -374,7 +382,7 @@ router.route("/:postId/applied").get(async (req, res) => {
     // console.log(updatedPost);
 
     if (user) {
-      res.redirect("/application/"+id+"/apply");
+      res.redirect("/application/" + id + "/apply");
       // res.status(200).render("../views/pages/jobapplied", { user: user });
       return;
     } else {
@@ -394,7 +402,7 @@ router.route("/:postId/applied").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
-      style: "viewPost.css"
+      style: "viewPost.css",
     });
     return;
   }
@@ -500,7 +508,7 @@ router.route("/:postId/saved").get(async (req, res) => {
     const updatedPost = await employeeData.savePosttoWishList(employeeId, id);
 
     if (user) {
-      res.status(200).render("../views/pages/jobsaved", { user: user, post: post, style: "jobsaved.css"});
+      res.status(200).render("../views/pages/jobsaved", { user: user, post: post, style: "jobsaved.css" });
       return;
     } else {
       res.status(400).render("../views/pages/forbiddenAccess");

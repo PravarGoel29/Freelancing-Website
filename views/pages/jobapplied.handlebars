@@ -1,3 +1,23 @@
+{{!-- This is the navbar section --}}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="container-fluid">
+  <a class="navbar-brand" href="/home">Freelance</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      {{!-- <a class="nav-link active" aria-current="page" href="/home">Home</a> --}}
+      <a class="nav-link" href="/profile/{{user.userName}}">Profile</a>
+      <a class="nav-link" href="/profile/{{user.userName}}/addPost">Post a Job</a>
+    </div>
+      <div class="logout-nav-button">
+        <a class="nav-link" href="/logout">Log Out</a>
+      </div>
+  </div>
+</div>
+</nav>
+{{!-- ending of navbar section --}}
 <h2> Job Applied successfully</h2>
 </br>
 </br>

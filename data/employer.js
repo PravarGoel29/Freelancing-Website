@@ -55,7 +55,7 @@ const getAllEmployers = async () => {
 };
 
 const removeEmployer = async (employerId) => {
-  validations.validateID(employerId)
+  validations.validateID(employerId);
   const employer = await getEmployerById(id);
   const employerCollection = await employers();
   const deletionInfo = await employerCollection.deleteOne({
@@ -70,8 +70,8 @@ const removeEmployer = async (employerId) => {
 
 const addPost = async (userName, employerId, postID) => {
   validations.validateUsername(userName);
-  validations.validateID(employerId)
-  validations.validateID(postID)
+  validations.validateID(employerId);
+  validations.validateID(postID);
 
   const employerCollection = await employers();
 
@@ -105,7 +105,7 @@ const addPost = async (userName, employerId, postID) => {
 
 const addRating = async (employerId, rating, addFlag, oldRating) => {
   validations.validateID(employerId);
-  validations.validateRating(rating)
+  //validations.validateRating(rating)
   const employerCollection = await employers();
   rating = parseInt(rating);
   //2. checks if the employer with the given employerID is already in the DB
