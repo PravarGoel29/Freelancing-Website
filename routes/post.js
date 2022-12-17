@@ -186,6 +186,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
+      style: "viewPost.css"
     });
     return;
   }

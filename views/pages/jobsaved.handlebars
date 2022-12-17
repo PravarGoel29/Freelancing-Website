@@ -11,9 +11,10 @@
       <a class="nav-link" href="/profile/{{user.userName}}">Profile</a>
       <a class="nav-link" href="/profile/{{user.userName}}/addPost">Post a Job</a>
     </div>
-      <div class="logout-nav-button">
+      {{!-- <div class="logout-nav-button">
         <a class="nav-link" href="/logout">Log Out</a>
-      </div>
+      </div> --}}
+      <button class="logout-nav-button btn-sm" onclick="location.href='/logout'">Logout</button>
   </div>
 </div>
 </nav>

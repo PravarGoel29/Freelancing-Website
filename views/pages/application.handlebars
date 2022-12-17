@@ -11,9 +11,10 @@
       <a class="nav-link" href="/profile/{{user.userName}}">Profile</a>
       <a class="nav-link" href="/profile/{{user.userName}}/addPost">Post a Job</a>
     </div>
-      <div class="logout-nav-button">
+      {{!-- <div class="logout-nav-button">
         <a class="nav-link" href="/logout">Log Out</a>
-      </div>
+      </div> --}}
+      <button class="logout-nav-button btn-sm" onclick="location.href='/logout'">Logout</button>
   </div>
 </div>
 </nav>
@@ -27,21 +28,23 @@
     </div>
   </div>
 
-  <button type="button" id="profile" onclick="location.href='/profile/{{user.userName}}'">Profile</button>
+  {{!-- <button type="button" id="profile" onclick="location.href='/profile/{{user.userName}}'">Profile</button> --}}
   <form class="col-lg-9 offset-lg-3" name="job_apply" action="/application/{{postID}}/applied" method="post" id = "applyjob-form">
     <h1>{{user.userName}}</h1>
     <div class="row justify-content-center">
-  <div class="form-row">
-        <div class="col-lg-7">
-          <input type="text" name="education" id="education" placeholder="Highest Education" class="form-control my-3 p-4" />
-        </div>
-      </div>
+      <div class="form-row">
+            <div class="col-lg-7">
+              <label for="education">education</label>
+              <input type="text" name="education" id="education" placeholder="Highest Education" class="form-control my-3 p-4" />
+            </div>
+          </div>
 
-       <div class="form-row">
-        <div class="col-lg-7">
-          <input type="text" name="workExpYrs" id="workExpYrs" placeholder="Work Experience" class="form-control my-3 p-4" />
+        <div class="form-row">
+          <div class="col-lg-7">
+            <label for="workExpYrs">workExpYrs</label>
+            <input type="text" name="workExpYrs" id="workExpYrs" placeholder="Work Experience" class="form-control my-3 p-4" />
+          </div>
         </div>
-      </div>
 
           <div class="form-row">
             <div class="col-lg-7">
