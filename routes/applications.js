@@ -8,6 +8,7 @@ const employerData = data.employers;
 const employeeData = data.employees;
 const applicationData = data.applications;
 const validations = require("../validations/dataValidations");
+const validations = require("../validations/routeValidations")
 const path = require("path");
 const multer = require("multer");
 const xss = require("xss");
@@ -30,7 +31,8 @@ router.route("/:postId/apply").get(async (req, res) => {
   //checks if the session is active
   if (req.session.user) {
     const postID = req.params.postId;
-    res.status(200).render("../views/pages/application", { postID: postID, user: req.session.user });
+    validations.
+      res.status(200).render("../views/pages/application", { postID: postID, user: req.session.user });
     return;
   } else {
     //renders signup page if not active
