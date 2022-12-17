@@ -1,5 +1,6 @@
 const emailValidate = require("email-validator");
 $("#registration-form").submit(function (event) {
+  event.preventDefault();
   let username = $("#userName").val();
   let firstName = $("#firstName").val();
   let lastName = $("#lastName").val();
