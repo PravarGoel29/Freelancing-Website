@@ -77,6 +77,7 @@ const createPost = async (location, description, title, domain, tags, jobtype, s
 
 const addApplicants = async (userName, postId) => {
   validations.validateID(postId);
+  validations.validateUsername(userName);
   userName = userName.toLowerCase();
   postId = postId.trim();
   const post = await getPostById(postId);
@@ -120,6 +121,7 @@ const addApplicants = async (userName, postId) => {
 
 const addCandidates = async (userName, postId) => {
   validations.validateID(postId);
+  validations.validateUsername(userName);
   userName = userName.toLowerCase();
   postId = postId.trim();
   const post = await getPostById(postId);
@@ -262,6 +264,7 @@ const getAllPosts = async () => {
 };
 
 const getAllPostsbyUserName = async (userName) => {
+  validations.validateUsername(userName)
   userName = userName.toLowerCase();
   const postCollection = await posts();
   const PostList = await postCollection.find({ userName: userName }).toArray();

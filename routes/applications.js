@@ -30,7 +30,7 @@ router.route("/:postId/apply").get(async (req, res) => {
   //checks if the session is active
   if (req.session.user) {
     const postID = req.params.postId;
-    res.status(200).render("../views/pages/application", { postID: postID });
+    res.status(200).render("../views/pages/application", { postID: postID, user: req.session.user, style: "application.css" });
     return;
   } else {
     //renders signup page if not active
@@ -52,7 +52,7 @@ router.route("/:postId/applied").post(async (req, res) => {
     validations.validateUsername(userName);
     validations.validateSalary(ex_salary);
 
-
+    const ApplyingUser = await userData.getUserByUserName(userName);
     //calling the createUser function with post body contents as it's arguments
     const newApplication = await applicationData.createApplication(
       userName,
@@ -68,10 +68,10 @@ router.route("/:postId/applied").post(async (req, res) => {
     //Displaying the success message
     //res.status(200).json("Job post successful");
     //res.redirect("/profile/" + userName);
-    res.status(200).json({ message: "Succefully Applied", success: true });
+    res.status(200).render("../views/pages/jobapplied", { user: ApplyingUser });
     return;
   } catch (e) {
-    res.status(400).json({ error: e, success: false });
+    res.status(400).render("../views/pages/application",{ error: e });
   }
 });
 

@@ -33,7 +33,7 @@ router.route("/").get(async (req, res) => {
     return;
   } else {
     //renders login page if not active
-    res.status(200).render("../views/pages/login");
+    res.status(200).render("../views/pages/login", {style: "stylesheet.css"});
     return;
   }
 });
@@ -45,7 +45,7 @@ router.route("/signup").get(async (req, res) => {
     return;
   } else {
     //renders signup page if not active
-    res.status(200).render("../views/pages/signup");
+    res.status(200).render("../views/pages/signup", {style: "stylesheet.css"});
     return;
   }
 });
@@ -102,7 +102,7 @@ router.route("/signup").post(upload, async (req, res) => {
       resumeInput
     );
     //res.redirect("/");
-    res.status(200).json({ message: "Succefully signed in", success: true });
+    res.status(200).redirect("/");
     return;
   } catch (e) {
     console.log(e);
@@ -175,7 +175,7 @@ router.route("/home").get(async (req, res) => {
 
     // if authenticated user, renders landing page
     if (user) {
-      res.status(200).render("../views/pages/landing", { user: user, allPosts: allPosts });
+      res.status(200).render("../views/pages/landing", { user: user, allPosts: allPosts, style: "landingPage.css" });
       return;
     } else {
       res.status(400).render("../views/pages/forbiddenAccess");
@@ -205,6 +205,7 @@ router.route("/profile/:userName").get(async (req, res) => {
       invites: invites,
       currentJobs: currentJobs,
       historyOfJobs: historyOfJobs,
+      style: "profile.css"
     });
     return;
   } else {
@@ -224,7 +225,7 @@ router.route("/user/:userName").get(async (req, res) => {
       return;
     }
     //console.log("user passed to user page", req.session.user);
-    res.status(200).render("../views/pages/user", { user: thatUser });
+    res.status(200).render("../views/pages/user", { user: thatUser, style: "user.css" });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
@@ -239,7 +240,7 @@ router.route("/user/:userName/employee").get(async (req, res) => {
   const thatUserAsEmployee = await employeeData.getEmployeeByUserName(userName);
 
   if (user) {
-    res.status(200).render("../views/pages/employeeprofile", { user: thatUser, employee: thatUserAsEmployee });
+    res.status(200).render("../views/pages/employeeprofile", { user: thatUser, employee: thatUserAsEmployee, style: "employeeProfile.css" });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
@@ -256,6 +257,7 @@ router.route("/user/:userName/employer").get(async (req, res) => {
     res.status(200).render("../views/pages/employerprofile", {
       user: thatUser,
       employer: thatUserAsEmployer,
+      style: "employerProfile.css"
     });
     return;
   } else {
@@ -267,7 +269,7 @@ router.route("/user/:userName/employer").get(async (req, res) => {
 router.route("/profile/:userName/addPost").get(async (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.status(200).render("../views/pages/createPost", { user: user });
+    res.status(200).render("../views/pages/createPost", { user: user, style: "createPost.css" });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");
@@ -277,7 +279,7 @@ router.route("/profile/:userName/addPost").get(async (req, res) => {
 router.route("/profile/:userName/edit").get(async (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.status(200).render("../views/pages/editProfile", { username: user.userName });
+    res.status(200).render("../views/pages/editProfile", { username: user.userName, style: "editProfile.css" });
     return;
   } else {
     res.status(400).render("../views/pages/forbiddenAccess");

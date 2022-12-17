@@ -1,7 +1,6 @@
 const db = require("../config");
 const applications = db.applicationsCollection;
-const errorHandling = require("../validations");
-const validations = errorHandling.userValidations;
+const validations = require("../validations/dataValidations");
 const { ObjectId } = require("mongodb");
 const moment = require("moment");
 const Employee = require("./employee");
@@ -13,6 +12,8 @@ const createApplication = async (userName, postID, education, workEXP, address, 
   validations.validateUsername(userName);
   validations.validateID(postID);
   validations.validateSalary(salary);
+  validations.validateStAddress(address);
+  validations.validateWorkEXP(workEXP);
 
   //const alreadyApplied = await postData.addApplicants();
 
@@ -60,6 +61,7 @@ const getallApplicationByPostID = async (postID) => {
   //validations.validateID(userName);
   //userName = userName.trim();
   //2. establish db connection
+  validations.validateID(postID);
   const applicationsCollection = await applications();
 
   //3. checks if the user with the given id is already in the DB

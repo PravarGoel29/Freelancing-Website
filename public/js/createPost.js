@@ -58,6 +58,7 @@ const validateLocation = (inputLocation) => {
     if (!inputLocation) throw "Location not provided.";
     if (typeof inputLocation !== "string") throw "Location is not of valid input type.";
     if (inputLocation.trim().length === 0) throw "Location is empty.";
+    if (inputLocation.trim().length < 2) throw "Location must contain at least 2 characters.";
 };
 
 const validateDescription = (inputDescription) => {
@@ -82,6 +83,9 @@ const validateJobType = (inputJobType) => {
     if (!inputJobType) throw "Job Type not provided.";
     if (typeof inputJobType !== "string") throw "Job Type is not of valid input type.";
     if (inputJobType.trim().length === 0) throw "Job Type is empty.";
+    if (!(inputJobType === "Remote" || inputJobType === "In-Person" || inputJobType === "Hybrid")) {
+        throw "Invalid Job Type";
+    }
 };
 const validateTags = (inputTags) => {
     if (!inputTags) throw "Tags not provided.";
@@ -95,4 +99,3 @@ const validateSalary = (inputSalary) => {
     const regex = new RegExp("^[0-9]*$");
     if (!regex.test(inputSalary)) throw "Salary field must only have digits.";
 };
-

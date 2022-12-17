@@ -1,5 +1,25 @@
+{{!-- This is the navbar section --}}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<div class="container-fluid">
+  <a class="navbar-brand" href="/home">Freelance</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-link active" aria-current="page" href="/home">Home</a>
+      <a class="nav-link" href="/profile/{{user.userName}}">profile</a>
+      <a class="nav-link" href="/profile/{{user.userName}}/addPost">create post</a>
+    </div>
+    <div class="logout-nav-button">
+      <a class="nav-link" href="/logout">logOut</a>
+    </div>
+  </div>
+</div>
+</nav>
+{{!-- ending of navbar section --}}
 <div class="container">
-  <div class="row">
+  <div class="row top-header-row">
     <div class="col-lg-10 mx-auto mb-4">
       <div class="section-title text-center">
         <h1 class="top-c-sep">FREELANCE</h1>
@@ -7,15 +27,19 @@
     </div>
   </div>
 
-  <button type="button" id="profile" onclick="location.href='/profile/{{user.userName}}'">Profile</button>
-  <form class="col-lg-9 offset-lg-3" name="job_post" action="/post" method="post" id = "createpost-form">
-    <h1>{{user.userName}}</h1>
-    <div class="row justify-content-center">
+  {{!-- <button type="button" id="profile" onclick="location.href='/profile/{{user.userName}}'">Profile</button> --}}
+    <div class="text-center">
+      <h1>{{user.userName}}</h1>
+    </div>
+  <form class="d-flex justify-content-center" name="job_post" action="/post" method="post" id = "createpost-form">
+    <div class="row justify-content-center body-row">
       <div class="form-row">
-        <div class="col-lg-7">
+        <div class="col-lg-12">
+          <label for="location">Location</label>
           <input type="text" name="location" id="location" placeholder="Location" class="form-control my-3 p-4" />
         </div>
-        <div class="col-lg-7">
+        <div class="col-lg-12">
+          <label for="description">description</label>
           <input
             type="textarea"
             name="description"
@@ -26,23 +50,26 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="col-lg-7">
+        <div class="col-lg-12">
+          <label for="title">title</label>
           <input type="text" name="title" id="title" placeholder="title" class="form-control my-3 p-4" />
         </div>
       </div>
       <div class="form-row">
-        <div class="col-lg-7">
+        <div class="col-lg-12">
+          <label for="domain">Domain</label>
           <input type="text" name="domain" id="domain" placeholder="Domain" class="form-control my-3 p-4" />
         </div>
       </div>
       <div class="form-row">
-        <div class="col-lg-7">
+        <div class="col-lg-12">
+          <label for="tags">Tags</label>
           <input type="text" name="tags" id="tags" placeholder="Tags" class="form-control my-3 p-4" />
         </div>
       </div>
       <div class="form-row">
-        <div class="col-lg-7">
-                <label for="jobType" class="form-label">JobType</label>
+        <div class="col-lg-12">
+                <label for="jobType" class="form-label">jobType</label>
                 <select id="jobType" type="text"name="jobType"class="form-control my-3 p-4" required/>
                 <option value="">--JobType--</option>
                     <option value="In-Person">In-Person</option>
@@ -50,7 +77,8 @@
                     <option value="Remote">Remote</option>
         </select></div>
       <div class="form-row">
-        <div class="col-lg-7">
+        <div class="col-lg-12">
+          <label for="salary">Salary</label>
           <input type="text" name="salary" id="salary" placeholder="Salary" class="form-control my-3 p-4" />
         </div>
       </div>
@@ -59,7 +87,7 @@
       <div class = "createpost-error" id = "createpost-failure" hidden>All fields needs to have values</div>
 
       <div class="form-row">
-        <div class="col-lg-7">
+        <div class="col-lg-12">
           <button type="submit" class="btnclass1 mt-3 mb-5">Post</button>
         </div>
       </div>
