@@ -45,10 +45,32 @@ const validateUsername = (inputUsername) => {
     if (!inputUsername) throw "Username not provided.";
     if (typeof inputUsername !== "string") throw "Username is not of valid input type.";
     if (inputUsername.trim().length === 0) throw "Username is empty.";
+    if (inputUsername.includes(" ")) throw "Either the userName or Password is incorrect.";
+    if (inputUsername.length < 4) throw "Either the userName or Password is incorrect.";
+    const regexLetters = /[a-zA-Z]/;
+    if (inputUsername.search(regexLetters) < 0) {
+        throw "Either the userName or Password is incorrect.";
+    }
+    const regex = new RegExp("^[a-zA-Z0-9]*$");
+    if (!regex.test(inputUsername)) throw "Either the userName or Password is incorrect.";
 };
 
 const validatePassword = (inputPassword) => {
     if (!inputPassword) throw "Password not provided.";
     if (typeof inputPassword !== "string") throw "Password is not of valid input type.";
     if (inputPassword.trim().length === 0) throw "Password contains only whitespaces.";
+    if (inputPassword.includes(" ")) throw "Either the userName or Password is incorrect.";
+    if (inputPassword.length < 6) throw "Either the userName or Password is incorrect.";
+    const regexDigit = /[0-9]/;
+    if (inputPassword.search(regexDigit) < 0) {
+        throw "Either the userName or Password is incorrect.";
+    }
+    const regexUppercase = /[A-Z]/;
+    if (inputPassword.search(regexUppercase) < 0) {
+        throw "Either the userName or Password is incorrect.";
+    }
+    const regexSpecialCharacter = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (inputPassword.search(regexSpecialCharacter) < 0) {
+        throw "Either the userName or Password is incorrect.";
+    }
 };
