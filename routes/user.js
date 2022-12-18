@@ -33,7 +33,7 @@ router.route("/").get(async (req, res) => {
     return;
   } else {
     //renders login page if not active
-    res.status(200).render("../views/pages/login", { style: "stylesheet.css" });
+    res.status(200).render("../views/pages/login", { title: "Login", style: "stylesheet.css" });
     return;
   }
 });
@@ -45,7 +45,7 @@ router.route("/signup").get(async (req, res) => {
     return;
   } else {
     //renders signup page if not active
-    res.status(200).render("../views/pages/signup", { style: "stylesheet.css" });
+    res.status(200).render("../views/pages/signup", { title: "Sign Up", style: "stylesheet.css" });
     return;
   }
 });
@@ -157,10 +157,10 @@ router.route("/confirmation/:userId").get(async (req, res) => {
 
   try {
     const updatedUser = await userData.updateEmailVerificationStatus(userId);
-    res.status(200).render("../views/pages/emailverified");
+    res.status(200).render("../views/pages/emailverified", { title: "Email Verified" });
     return;
   } catch (e) {
-    res.status(400).render("../views/errors/error", { error: e });
+    res.status(400).render("../views/errors/error", { title: "Error", error: e });
     return;
   }
 });
@@ -176,10 +176,12 @@ router.route("/home").get(async (req, res) => {
 
     // if authenticated user, renders landing page
     if (user) {
-      res.status(200).render("../views/pages/landing", { user: user, allPosts: allPosts, style: "landingPage.css" });
+      res
+        .status(200)
+        .render("../views/pages/landing", { title: "Home", user: user, allPosts: allPosts, style: "landingPage.css" });
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
@@ -203,18 +205,25 @@ router.route("/home").post(async (req, res) => {
     const allReleventPosts = await postData.searchFilterPost(searchTerm, filterJobType);
 
     if (user) {
-      res
-        .status(200)
-        .render("../views/pages/landing", { user: user, allPosts: allReleventPosts, style: "landingPage.css" });
+      res.status(200).render("../views/pages/landing", {
+        title: "Home",
+        user: user,
+        allPosts: allReleventPosts,
+        style: "landingPage.css",
+      });
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
-    res
-      .status(400)
-      .render("../views/pages/landing", { user: user, allPosts: allPosts, style: "landingPage.css", error: e });
+    res.status(400).render("../views/pages/landing", {
+      title: "Home",
+      user: user,
+      allPosts: allPosts,
+      style: "landingPage.css",
+      error: e,
+    });
     return;
   }
 });
@@ -233,6 +242,7 @@ router.route("/profile/:userName").get(async (req, res) => {
     const posts = req.session.posts;
 
     res.status(200).render("../views/pages/profile", {
+      title: "Profile",
       user: user,
       posts: posts,
       wishList: wishList,
@@ -243,7 +253,7 @@ router.route("/profile/:userName").get(async (req, res) => {
     });
     return;
   } else {
-    res.status(400).render("../views/pages/forbiddenAccess");
+    res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
     return;
   }
 });
@@ -259,10 +269,10 @@ router.route("/user/:userName").get(async (req, res) => {
       return;
     }
     //console.log("user passed to user page", req.session.user);
-    res.status(200).render("../views/pages/user", { user: thatUser, style: "user.css" });
+    res.status(200).render("../views/pages/user", { title: userName, user: thatUser, style: "user.css" });
     return;
   } else {
-    res.status(400).render("../views/pages/forbiddenAccess");
+    res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
     return;
   }
 });
@@ -275,13 +285,14 @@ router.route("/user/:userName/employee").get(async (req, res) => {
 
   if (user) {
     res.status(200).render("../views/pages/employeeprofile", {
+      title: "Employee",
       user: thatUser,
       employee: thatUserAsEmployee,
       style: "employeeProfile.css",
     });
     return;
   } else {
-    res.status(400).render("../views/pages/forbiddenAccess");
+    res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
     return;
   }
 });
@@ -293,13 +304,14 @@ router.route("/user/:userName/employer").get(async (req, res) => {
   const thatUserAsEmployer = await employerData.getEmployerByUserName(userName);
   if (user) {
     res.status(200).render("../views/pages/employerprofile", {
+      title: "Employer",
       user: thatUser,
       employer: thatUserAsEmployer,
       style: "employerProfile.css",
     });
     return;
   } else {
-    res.status(400).render("../views/pages/forbiddenAccess");
+    res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
     return;
   }
 });
@@ -307,20 +319,22 @@ router.route("/user/:userName/employer").get(async (req, res) => {
 router.route("/profile/:userName/addPost").get(async (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.status(200).render("../views/pages/createPost", { user: user, style: "createPost.css" });
+    res.status(200).render("../views/pages/createPost", { title: "Create a Job", user: user, style: "createPost.css" });
     return;
   } else {
-    res.status(400).render("../views/pages/forbiddenAccess");
+    res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
     return;
   }
 });
 router.route("/profile/:userName/edit").get(async (req, res) => {
   const user = req.session.user;
   if (user) {
-    res.status(200).render("../views/pages/editProfile", { username: user.userName, style: "editProfile.css" });
+    res
+      .status(200)
+      .render("../views/pages/editProfile", { title: "Edit User", username: user.userName, style: "editProfile.css" });
     return;
   } else {
-    res.status(400).render("../views/pages/forbiddenAccess");
+    res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
     return;
   }
 });
@@ -328,7 +342,7 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
   const UserInfo = req.body;
   const user = req.session.user;
   try {
-    const { firstName, lastName, contactNumber, gender, preferences} = UserInfo;
+    const { firstName, lastName, contactNumber, gender, preferences } = UserInfo;
     //console.log(req);
     //Validating the contents of UserInfo obj
     try {
@@ -339,7 +353,6 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
       validations.validateName(lastName);
       validations.validatePhoneNumber(contactNumber);
       validations.validatePreferences(preferences);
-
     } catch (e) {
       console.log(e);
       res.status(400).json({ error: e });

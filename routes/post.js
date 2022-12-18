@@ -35,7 +35,7 @@ router.route("/").post(async (req, res) => {
       res.status(200).redirect("/post/" + newPost._id);
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
@@ -73,6 +73,7 @@ router.route("/:postId").get(async (req, res) => {
 
     console.log(post);
     res.status(200).render("../views/pages/viewpost", {
+      title: post.title,
       user: user,
       post: post,
       reviews: post.reviewIDs,
@@ -119,6 +120,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
     if (user) {
       if (!activeFlag) {
         res.status(400).render("../views/pages/viewpost", {
+          title: post.title,
           user: user,
           post: post,
           reviews: post.reviewIDs,
@@ -134,6 +136,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
       const applicantName = req.params.userName.toLowerCase();
       if (candidates.includes(applicantName)) {
         res.status(400).render("../views/pages/viewpost", {
+          title: post.title,
           user: user,
           post: post,
           reviews: post.reviewIDs,
@@ -153,6 +156,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
       if (invitedApplicant) {
         if (!applicants.includes(applicantName)) {
           res.status(400).render("../views/pages/viewpost", {
+            title: post.title,
             user: user,
             post: post,
             reviews: post.reviewIDs,
@@ -171,12 +175,13 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
       res.status(200).redirect("/post/" + id);
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
     console.log(e);
     res.status(400).render("../views/pages/viewpost", {
+      title: post.title,
       user: user,
       post: post,
       reviews: post.reviewIDs,
@@ -186,7 +191,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
-      style: "viewPost.css"
+      style: "viewPost.css",
     });
     return;
   }
@@ -221,6 +226,7 @@ router.route("/:postId/reviewrate/:userName").get(async (req, res) => {
     if (user) {
       if (user.userName.toLowerCase() === rateUser) {
         res.status(400).render("../views/pages/viewpost", {
+          title: post.title,
           user: user,
           post: post,
           reviews: post.reviewIDs,
@@ -233,15 +239,22 @@ router.route("/:postId/reviewrate/:userName").get(async (req, res) => {
         });
         return;
       }
-      res.status(200).render("../views/pages/reviewrate", { user: user, post: post, rateUser: rateUser, style: "reviewRate.css" });
+      res.status(200).render("../views/pages/reviewrate", {
+        title: post.title,
+        user: user,
+        post: post,
+        rateUser: rateUser,
+        style: "reviewRate.css",
+      });
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
     //console.log(e);
     res.status(400).render("../views/pages/viewpost", {
+      title: post.title,
       user: user,
       post: post,
       reviews: post.reviewIDs,
@@ -251,7 +264,7 @@ router.route("/:postId/reviewrate/:userName").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
-      style: "viewPost.css"
+      style: "viewPost.css",
     });
     return;
   }
@@ -333,16 +346,22 @@ router.route("/:postId/reviewedandrated/:reviewId").get(async (req, res) => {
     //console.log(updatedPost);
 
     if (user) {
-      res.status(200).render("../views/pages/viewreviewrating", { user: user, review: reviewDetails, style: "viewReviewRating.css" });
+      res.status(200).render("../views/pages/viewreviewrating", {
+        title: post.title,
+        user: user,
+        review: reviewDetails,
+        style: "viewReviewRating.css",
+      });
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
     console.log(e);
     //res.status(400).json({ error: e });
     res.status(400).render("../views/pages/viewpost", {
+      title: post.title,
       user: user,
       post: post,
       reviews: post.reviewIDs,
@@ -352,7 +371,7 @@ router.route("/:postId/reviewedandrated/:reviewId").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
-      style: "viewPost.css"
+      style: "viewPost.css",
     });
     return;
   }
@@ -392,13 +411,14 @@ router.route("/:postId/applied").get(async (req, res) => {
       // res.status(200).render("../views/pages/jobapplied", { user: user });
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
     console.log(e);
     //res.status(400).json({ error: e });
     res.status(400).render("../views/pages/viewpost", {
+      title: post.title,
       user: user,
       post: post,
       reviews: post.reviewIDs,
@@ -440,6 +460,7 @@ router.route("/:postId/acceptinvite").get(async (req, res) => {
     id = id.trim();
     if (!applicants.includes(user.userName.toLowerCase())) {
       res.status(400).render("../views/pages/viewpost", {
+        title: post.title,
         user: user,
         post: post,
         reviews: post.reviewIDs,
@@ -462,13 +483,14 @@ router.route("/:postId/acceptinvite").get(async (req, res) => {
       res.status(200).redirect("/post/" + id);
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
     console.log(e);
     //res.status(400).json({ error: e });
     res.status(400).render("../views/pages/viewpost", {
+      title: post.title,
       user: user,
       post: post,
       reviews: post.reviewIDs,
@@ -514,16 +536,19 @@ router.route("/:postId/saved").get(async (req, res) => {
     const updatedPost = await employeeData.savePosttoWishList(employeeId, id);
 
     if (user) {
-      res.status(200).render("../views/pages/jobsaved", { user: user, post: post, style: "jobsaved.css" });
+      res
+        .status(200)
+        .render("../views/pages/jobsaved", { title: post.title, user: user, post: post, style: "jobsaved.css" });
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
     console.log(e);
     //res.status(400).json({ error: e });
     res.status(400).render("../views/pages/viewpost", {
+      title: post.title,
       user: user,
       post: post,
       reviews: post.reviewIDs,
@@ -570,13 +595,14 @@ router.route("/:postId/unsaved").get(async (req, res) => {
       res.status(200).redirect("/post/" + id);
       return;
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
     console.log(e);
     //res.status(400).json({ error: e });
     res.status(400).render("../views/pages/viewpost", {
+      title: post.title,
       user: user,
       post: post,
       reviews: post.reviewIDs,
@@ -640,12 +666,13 @@ router.route("/:postId/completed").get(async (req, res) => {
         return;
       }
     } else {
-      res.status(400).render("../views/pages/forbiddenAccess");
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
       return;
     }
   } catch (e) {
     //res.status(400).json({ error: e });
     res.status(400).render("../views/pages/viewpost", {
+      title: post.title,
       user: user,
       post: post,
       reviews: post.reviewIDs,
@@ -656,28 +683,6 @@ router.route("/:postId/completed").get(async (req, res) => {
       candidateFlag: candidateFlag,
       error: e,
     });
-    return;
-  }
-});
-
-router.route("/:postId").delete(async (req, res) => {
-  //code here for DELETE
-  let id = req.params.postId;
-  try {
-    //validation of id
-    validations.validateID(id);
-    id = id.trim();
-  } catch (e) {
-    res.status(400).json({ error: e });
-    return;
-  }
-  try {
-    await postData.removePost(id);
-    res.status(200).json({ postId: id, deleted: true });
-    return;
-  } catch (e) {
-    console.log(e);
-    res.status(404).json({ error: e });
     return;
   }
 });
