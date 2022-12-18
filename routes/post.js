@@ -130,6 +130,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
           activeFlag: activeFlag,
           candidateFlag: candidateFlag,
           error: "Sorry! You can only send invite if the Job is active",
+          style: "viewPost.css"
         });
         return;
       }
@@ -146,6 +147,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
           activeFlag: activeFlag,
           candidateFlag: candidateFlag,
           error: "Employee has already taken this job",
+          style: "viewPost.css"
         });
         return;
       }
@@ -166,6 +168,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
             activeFlag: activeFlag,
             candidateFlag: candidateFlag,
             error: "Sorry! You can only send invite if the employee has applied to this Job",
+            style: "viewPost.css"
           });
           return;
         }
@@ -236,6 +239,7 @@ router.route("/:postId/reviewrate/:userName").get(async (req, res) => {
           activeFlag: activeFlag,
           candidateFlag: candidateFlag,
           error: "You can't rate yourself",
+          style: "viewPost.css"
         });
         return;
       }
@@ -470,6 +474,7 @@ router.route("/:postId/acceptinvite").get(async (req, res) => {
         activeFlag: activeFlag,
         candidateFlag: candidateFlag,
         error: "Sorry! You can only send invite if the employee has applied to this Job",
+        style: "viewPost.css"
       });
       return;
     }
@@ -500,6 +505,7 @@ router.route("/:postId/acceptinvite").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
+      style: "viewPost.css"
     });
     return;
   }
@@ -612,6 +618,7 @@ router.route("/:postId/unsaved").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
+      style: "viewPost.css"
     });
     return;
   }
@@ -662,6 +669,7 @@ router.route("/:postId/completed").get(async (req, res) => {
           activeFlag: activeFlag,
           candidateFlag: candidateFlag,
           error: "The Job is already marked Completed",
+          style: "viewPost.css"
         });
         return;
       }
@@ -682,6 +690,7 @@ router.route("/:postId/completed").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
+      style: "viewPost.css"
     });
     return;
   }
