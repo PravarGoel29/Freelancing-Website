@@ -69,7 +69,9 @@ const createPost = async (location, description, title, domain, tags, jobtype, s
   const postId = insertPostData.insertedId.toString();
   const post = await postCollection.findOne({ _id: ObjectId(postId) });
 
-  const user = await User.getUserByUserName(userName.toLowerCase());
+  // const user = await User.getUserByUserName(userName.toLowerCase());
+  let user = await User.getUserByUserName(userName.toLowerCase());
+  // console.log(user)
   const changedEmployer = await Employer.addPost(user.userName, user.employerId, postId);
   return post;
 };
