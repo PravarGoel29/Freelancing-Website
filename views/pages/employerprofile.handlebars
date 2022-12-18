@@ -19,17 +19,19 @@
 </div>
 </nav>
 {{!-- ending of navbar section --}}
+ <h1>{{employer.userName}}</h1>
 <div class="container">
-    <h1>{{employer.userName}}</h1>
   <h2>Employer Details</h2>
   <div class="card job-listing">
     <ul class="list-group list-group-flush">
       <li class="list-group-item">
         <p>Contact Number:{{user.contactNumber}}</p>
       </li>
+      </ul>
       <li class="list-group-item">
         <p>Email: {{user.email}}</p>
       </li>
+      </div>
       {{!-- <p>Employer Rating</p>
       <p>{{employer.overallRating}}</p> --}}
       <li class="list-group-item">
@@ -45,13 +47,13 @@
               <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
             </li>
           {{/each}}
-        </br>
+    
       </ul>
     </div>
     <div class="employeer-btn-div">
       <button class="employerprofile-button" type="button" id = "backtouser" onclick="location.href='/user/{{user.userName}}'">Back</button>
     </div>
-    </br>
+  
     {{!-- <a href="/home">Home</a> --}}
   </div>
 </div>

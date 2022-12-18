@@ -19,9 +19,8 @@
 </div>
 </nav>
 {{!-- ending of navbar section --}}
- 
+    <h1>{{employee.userName}}</h1>
 <div class="container">
-   <h1>{{employee.userName}}</h1>
     <h2>Employee Details</h2>
   <div class="card job-listing">
       <ul class="list-group list-group-flush">
@@ -30,21 +29,24 @@
           <p>Email: {{user.email}}</p>
         </li>
 
-        <p>Employee Preferences</p>
         <li class="list-group-item">
+
+        <p>Employee Preferences</p>
           <p>{{employee.preferences}}</p>
         </li>
         {{!-- <li class="list-group-item">
           <p>Employee Preferences: {{employee.preferences}}</p>
         </li> --}}
-        <p>Employee Rating</p>
+      
         <li class="list-group-item">
+            <p>Employee Rating</p>
           <p>{{employee.overallRating}}</p>
         </li>
         {{!-- <li class="list-group-item">
           <p>Employee Rating: {{employee.overallRating}}</p>
         </li> --}}
-
+</ul>
+</div>
         <p>Resume</p>
         <embed src="/public/images/resumes/{{employee.resume}}" width="500" height="700">
 
@@ -59,7 +61,7 @@
           </ul>
         </div>
 
-        </br>
+    </div>
         <div class="employee-btn-div">
           <button class="employeeprofile-button" type="button" id = "backtouser" onclick="location.href='/user/{{user.userName}}'">Back</button>
         </div>
@@ -67,6 +69,6 @@
 
 
         {{!-- <a href="/home">Home</a> --}}
-      </ul>
+
   </div>
 </div>
