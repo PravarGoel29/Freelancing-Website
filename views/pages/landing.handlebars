@@ -46,7 +46,7 @@
     {{!-- {{#if allPosts}} --}}
         {{#each allPosts}}
           <li class="list-group-item">
-            <div><p><a class="name" href="/post/{{this._id}}">{{this._id}} {{this.title}}  {{this.location}}</a></p></div>
+            <div><p><a class="name" href="/post/{{this._id}}">Title: {{this.title}}   Location: {{this.location}}   Domain: {{this.domain}}  Job Type: {{this.jobtype}}  Salary: {{this.salary}}  Posted Time: {{this.postedTime}}</a></p></div>
           </li>
         {{/each}}
       </ul>
