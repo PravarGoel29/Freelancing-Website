@@ -89,8 +89,7 @@ const createUser = async (
 
   //9. insert user into the db
   let insertData = await usersCollection.insertOne(newUser);
-  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0)
-    throw "Could not add new user!";
+  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0) throw "Could not add new user!";
 
   //10. get user id
   let user = await usersCollection.findOne({
@@ -109,7 +108,7 @@ const sendEmailVerification = async (user) => {
   const emailToken = "http://localhost:3000/confirmation/" + userId;
   //const adminMailID = process.env.USER;
   //USER = cs546team23
-//PASS = "PRRTT@team23"
+  //PASS = "PRRTT@team23"
   const adminMailID = "cs546team23@outlook.com";
   let verificationSent = true;
   let mailTransporter = nodemailer.createTransport({
@@ -151,8 +150,7 @@ const checkUser = async (userName, password) => {
 
   //4. check if password is same
   const passwordCheck = await bcrypt.compare(password, user["hashedPassword"]);
-  if (passwordCheck === false)
-    throw "Either the username or password is invalid";
+  if (passwordCheck === false) throw "Either the username or password is invalid";
 
   let authUser = { authenticated: true, user: user };
   return authUser;
@@ -237,16 +235,7 @@ const getEmployerIdByUserName = async (userName) => {
 
 // }
 
-
-const updateUser = async (
-  userName,
-  firstName,
-  lastName,
-  contactNumber,
-  gender,
-  preferences,
-  resume
-) => {
+const updateUser = async (userName, firstName, lastName, contactNumber, gender, preferences, resume) => {
   //1. get user's data with the given id and assign the previously stored values to individually update the fields
   validations.validateUsername(userName);
   validations.validateName(firstName);
@@ -300,17 +289,12 @@ const updateUser = async (
     { $set: updatedEmployee }
   );
   //5. Storing the updated user in DB
-  const updatedInfo = await usersCollection.updateOne(
-    { userName: userName.trim() },
-    { $set: updatedUser }
-  );
-
+  const updatedInfo = await usersCollection.updateOne({ userName: userName.trim() }, { $set: updatedUser });
 
   //6. checks if the user was successfully updated and stored in the DB
   if (updatedInfo.modifiedCount === 0 && updatedEmployeeInfo.modifiedCount === 0) {
     throw "could not update the user successfully";
   }
-
 
   //7. returns the updated user's id
   return await getUserByUserName(userName);
@@ -338,10 +322,7 @@ const updateEmailVerificationStatus = async (userId) => {
   };
 
   //5. Storing the updated user in DB
-  const updatedInfo = await usersCollection.updateOne(
-    { _id: ObjectId(userId) },
-    { $set: updatedUser }
-  );
+  const updatedInfo = await usersCollection.updateOne({ _id: ObjectId(userId) }, { $set: updatedUser });
 
   //6. checks if the user was successfully updated and stored in the DB
   if (updatedInfo.modifiedCount === 0) {
