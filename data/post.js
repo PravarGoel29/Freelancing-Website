@@ -298,6 +298,15 @@ const getAllPostsbyUserName = async (userName) => {
 //   return reviewObjectList;
 // };
 
+const getPostObjects = async (postIdArray) => {
+  //validations.validatePostIdArray(postIdArray);
+  let postObjectlist = [];
+  for (const postID of postIdArray) {
+    postObjectlist.push(await getPostById(postID));
+  }
+  return postObjectlist;
+};
+
 const searchFilterPost = async (searchTerm, filterJobType) => {
   let result = [];
   const allPosts = await getAllPosts();
@@ -350,4 +359,5 @@ module.exports = {
   markCompleted,
   addReview,
   searchFilterPost,
+  getPostObjects,
 };

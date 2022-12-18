@@ -111,6 +111,10 @@ const takeAJob = async (employeeId, postID) => {
 
   //console.log(thisEmployee);
   let currentJobsTaken_ = thisEmployee.currentJobsTaken;
+  if (currentJobsTaken_.length === 2) {
+    throw "You cannot take this job right now. Since you are already working on 2 Jobs currently.";
+  }
+
   if (currentJobsTaken_.includes(postID)) {
     throw "You have already taken this job";
   }
@@ -381,11 +385,49 @@ const addRating = async (employeeId, rating, addFlag, oldRating) => {
     }
   );
 
+  return await getEmployeeById(employeeId);
+};
+
+const reportAnEmployer = async (userName, employerName) => {
+  userName = userName.toLowerCase();
+  employerName = employerName.toLowerCase();
+  //const flaggingEmployee = await getEmployerByUserName;
+  const employeeCollection = await employees();
+  //2. checks if the employer with the given employerID is already in the DB
+  const thisEmployee = await employeeCollection.findOne({ userName: userName });
+  if (thisEmployee === null) throw "No employer with that userName found";
+
+  let reported_ = thisEmployee.reported;
+  if (reported_.includes(employerName)) {
+    throw " You have already flagged this employer";
+  }
+
+  reported_.push(employerName);
+
+  const updatedEmployee = await employeeCollection.updateOne(
+    { userName: userName },
+    {
+      $set: {
+        userName: thisEmployee.userName,
+        preferences: thisEmployee.preferences,
+        resume: thisEmployee.resume,
+        wishList: thisEmployee.wishList,
+        historyOfJobs: thisEmployee.historyOfJobs,
+        overallRating: thisEmployee.overallRating,
+        numberOfRatingsRecieved: thisEmployee.numberOfRatingsRecieved,
+        reported: reported_,
+        flag: thisEmployee.flag,
+        currentJobsTaken: thisEmployee.currentJobsTaken,
+        invites: thisEmployee.invites,
+      },
+    }
+  );
+
   if (updatedEmployee.modifiedCount === 0) {
     throw "Employee not modified!";
   }
 
-  return await getEmployeeById(employeeId);
+  return await getEmployeeByUserName(userName);
 };
 
 /**Exporting Modules*/
@@ -404,4 +446,5 @@ module.exports = {
   takeAJob,
   markJobAsCompleted,
   addRating,
+  reportAnEmployer,
 };

@@ -41,7 +41,7 @@
       <p>jobtype: {{post.jobtype}} </p>
     </li>
     <li class="list-group-item">
-      <p> Salary : {{post.salary}} </p>
+      <p> Salary per hour : {{post.salary}} </p>
     </li>
     <li class="list-group-item">
       <p> tags: {{post.tags}} </p>
@@ -56,34 +56,55 @@
     {{/if}}
     </div>
 
+
     <div>
+    <li class="list-group-item">
     <h2>Applicants</h2>
+    <div class="card applicants-list">
+        <ul class="list-group list-group-flush">
         {{#if activeFlag}}
           {{#each applicants}}
+          <li class="list-group-item">
             <div><p><a href="/user/{{this}}">{{this}}</a>
             <button class="viewpost-invite-btn" type="button" id = "invite" onclick="location.href='/post/{{../post._id}}/{{this}}/invite'">Invite</button>
             </p>
             </div>
+            </li>
           {{/each}}
         {{else}}
           {{#each applicants}}
+          <li class="list-group-item">
             <div><p><a href="/user/{{this}}">{{this}}</a></p></div>
+            </li>
           {{/each}}
         {{/if}}
+        </ul>
+      </div>
+    </li>
     </div>
 
     <div>
+    <li class="list-group-item"></li>
     <h2>Candidates</h2>
+    <div class="card candidates-list">
+      <ul class="list-group list-group-flush">
         {{#if activeFlag}}
           {{#each post.candidates}}
+          <li class="list-group-item">
             <div><p><a href="/user/{{this}}">{{this}}</a></p></div>
+            </li>
           {{/each}}
         {{else}}
           {{#each post.candidates}}
+          <li class="list-group-item">
             <div><p><a href="/user/{{this}}">{{this}}</a>
             <button class="viewpost-reviewbtn-cls" type="button" id = "reviewrateemployee" onclick="location.href='/post/{{../post._id}}/reviewrate/{{this}}'">Review and Rate Employee</button></p></div>
+          </li>
           {{/each}}
         {{/if}}
+        </ul>
+      </div>
+    </li>
     </div>
 
 
@@ -108,11 +129,18 @@
         <button class="view-post-buttons" type="button" id = "reviewrateemployer" onclick="location.href='/post/{{post._id}}/reviewrate/{{post.userName}}'">Write a Review and Rate the Employer</button>
         {{/if}}
         </div>
-
+    <li class="list-group-item">
     <h2>Reviews</h2>
-      {{#each post.reviewIDs}}
-        <div><p><button><a href="/post/{{../post._id}}/reviewedandrated/{{this}}">{{this}} </button></a><p></div>
+    <div class="card reviews-list-list">
+      <ul class="list-group list-group-flush">
+      {{#each reviewIDs}}
+      <li class="list-group-item">
+        <div><p><button class="view-post-buttons"><a href="/post/{{../post._id}}/reviewedandrated/{{this._id}}">{{this.review}} </button></a><p></div>
+        </li>
       {{/each}}
+      </ul>
+      </div>
+      </li>
 
     {{/if}}
     </div>

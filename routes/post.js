@@ -53,7 +53,7 @@ router.route("/:postId").get(async (req, res) => {
     const post = await postData.getPostById(id);
     const applicants = await postData.getApplicantsByPostId(id);
     const applications = await applicationData.getallApplicationByPostID(id);
-
+    const reviewIDs = await reviewData.getReviewObjects(post.reviewIDs);
     let thisUserPostFlag = false;
     if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
       thisUserPostFlag = true;
@@ -71,7 +71,6 @@ router.route("/:postId").get(async (req, res) => {
     }
     //const reviewObjectList = await postData.getReviewObjectList(id);
 
-    console.log(post);
     res.status(200).render("../views/pages/viewpost", {
       title: post.title,
       user: user,
@@ -82,9 +81,12 @@ router.route("/:postId").get(async (req, res) => {
       savedFlag: savedFlag,
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
+      reviewIDs: reviewIDs,
       style: "viewPost.css",
     });
     return;
+
+    //console.log(post);
   } catch (e) {
     console.log(e);
     res.status(404).json({ error: e });
@@ -130,7 +132,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
           activeFlag: activeFlag,
           candidateFlag: candidateFlag,
           error: "Sorry! You can only send invite if the Job is active",
-          style: "viewPost.css"
+          style: "viewPost.css",
         });
         return;
       }
@@ -147,7 +149,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
           activeFlag: activeFlag,
           candidateFlag: candidateFlag,
           error: "Employee has already taken this job",
-          style: "viewPost.css"
+          style: "viewPost.css",
         });
         return;
       }
@@ -168,14 +170,26 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
             activeFlag: activeFlag,
             candidateFlag: candidateFlag,
             error: "Sorry! You can only send invite if the employee has applied to this Job",
-            style: "viewPost.css"
+            style: "viewPost.css",
           });
           return;
         }
         messageFlag = true;
-        console.log("Invite sent successfully to " + invitedApplicant.userName);
+        //console.log("Invite sent successfully to " + invitedApplicant.userName);
       }
-      res.status(200).redirect("/post/" + id);
+      res.status(200).render("../views/pages/viewpost", {
+        title: post.title,
+        user: user,
+        post: post,
+        reviews: post.reviewIDs,
+        thisUserPostFlag: thisUserPostFlag,
+        applicants: applicants,
+        savedFlag: savedFlag,
+        activeFlag: activeFlag,
+        candidateFlag: candidateFlag,
+        error: "Invite sent sucessfully!",
+        style: "viewPost.css",
+      });
       return;
     } else {
       res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
@@ -201,7 +215,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
 });
 
 router.route("/:postId/reviewrate/:userName").get(async (req, res) => {
-  //Here the :userName is the user who the session user is going to rate and review for the post id :postId
+  //Here the :userName is the user who the current session user is going to rate and review for the post id :postId
   let id = req.params.postId;
   const rateUser = req.params.userName.toLowerCase();
   const user = req.session.user;
@@ -239,7 +253,7 @@ router.route("/:postId/reviewrate/:userName").get(async (req, res) => {
           activeFlag: activeFlag,
           candidateFlag: candidateFlag,
           error: "You can't rate yourself",
-          style: "viewPost.css"
+          style: "viewPost.css",
         });
         return;
       }
@@ -250,6 +264,92 @@ router.route("/:postId/reviewrate/:userName").get(async (req, res) => {
         rateUser: rateUser,
         style: "reviewRate.css",
       });
+      return;
+    } else {
+      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
+      return;
+    }
+  } catch (e) {
+    //console.log(e);
+    res.status(400).render("../views/pages/viewpost", {
+      title: post.title,
+      user: user,
+      post: post,
+      reviews: post.reviewIDs,
+      thisUserPostFlag: thisUserPostFlag,
+      applicants: applicants,
+      savedFlag: savedFlag,
+      activeFlag: activeFlag,
+      candidateFlag: candidateFlag,
+      error: e,
+      style: "viewPost.css",
+    });
+    return;
+  }
+});
+
+router.route("/:postId/reviewrate/:userName/flagged").get(async (req, res) => {
+  //Here the :userName is the user who the current session user is going to rate and review for the post id :postId
+  let id = req.params.postId;
+  const rateUser = req.params.userName.toLowerCase();
+  const user = req.session.user;
+  const post = await postData.getPostById(id);
+  const candidates = post.candidates;
+  const applicants = await postData.getApplicantsByPostId(id);
+  let thisUserPostFlag = false;
+  if (post.userName.toLowerCase() === user.userName.toLowerCase()) {
+    thisUserPostFlag = true;
+  }
+  let candidateFlag = false;
+  if (post.candidates.includes(user.userName.toLowerCase())) {
+    candidateFlag = true;
+  }
+  let savedFlag = await employeeData.checkIfWishlisted(user.userName.toLowerCase(), id);
+  let activeFlag = true;
+  if (post.status !== "Active") {
+    activeFlag = false;
+  }
+  //const reviewObjectList = await postData.getReviewObjectList(id);
+
+  try {
+    validations.validateID(id);
+    id = id.trim();
+    if (user) {
+      if (user.userName.toLowerCase() === rateUser) {
+        res.status(400).render("../views/pages/viewpost", {
+          title: post.title,
+          user: user,
+          post: post,
+          reviews: post.reviewIDs,
+          thisUserPostFlag: thisUserPostFlag,
+          applicants: applicants,
+          savedFlag: savedFlag,
+          activeFlag: activeFlag,
+          candidateFlag: candidateFlag,
+          error: "You can't flag yourself",
+          style: "viewPost.css",
+        });
+        return;
+      }
+      try {
+        if (thisUserPostFlag) {
+          const flaggingEmployer = await employerData.reportAnEmployee(user.userName.toLowerCase(), rateUser);
+        } else {
+          const flaggingEmployee = await employeeData.reportAnEmployer(rateUser, user.userName.toLowerCase());
+        }
+      } catch (e) {
+        res.status(400).render("../views/pages/reviewrate", {
+          title: post.title,
+          user: user,
+          post: post,
+          rateUser: rateUser,
+          style: "reviewRate.css",
+          error: e,
+        });
+        return;
+      }
+
+      res.status(200).redirect("/post/" + id + "/reviewrate/" + rateUser);
       return;
     } else {
       res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
@@ -312,8 +412,15 @@ router.route("/:postId/reviewrate/:userName").post(async (req, res) => {
     res.status(200).redirect("/post/" + id);
     return;
   } catch (e) {
-    console.log(e);
-    res.status(400).json({ error: e });
+    //console.log(e);
+    res.status(400).render("../views/pages/reviewrate", {
+      title: post.title,
+      user: user,
+      post: post,
+      rateUser: rateUser,
+      style: "reviewRate.css",
+      error: e,
+    });
     return;
   }
 });
@@ -474,7 +581,7 @@ router.route("/:postId/acceptinvite").get(async (req, res) => {
         activeFlag: activeFlag,
         candidateFlag: candidateFlag,
         error: "Sorry! You can only send invite if the employee has applied to this Job",
-        style: "viewPost.css"
+        style: "viewPost.css",
       });
       return;
     }
@@ -485,7 +592,26 @@ router.route("/:postId/acceptinvite").get(async (req, res) => {
     // const updatedPost = await employeeData.savePosttoWishList(employeeId, id);
 
     if (user) {
-      res.status(200).redirect("/post/" + id);
+      //const thisUserPosts = await postData.getAllPostsbyUserName(user.userName);
+      const employeeId = await userData.getEmployeeIdByUserName(user.userName);
+      const wishList = await postData.getPostObjects(await employeeData.getAllJobsinWishList(employeeId));
+      const invites = await postData.getPostObjects(await employeeData.getAllinvites(employeeId));
+      const currentJobs = await postData.getPostObjects(await employeeData.getAllCurrentJobs(employeeId));
+      const historyOfJobs = await postData.getPostObjects(await employeeData.getAllJobsCompleted(employeeId));
+      //req.session.posts = thisUserPosts;
+      const posts = req.session.posts;
+
+      res.status(200).render("../views/pages/profile", {
+        title: "Profile",
+        user: user,
+        posts: posts,
+        wishList: wishList,
+        invites: invites,
+        currentJobs: currentJobs,
+        historyOfJobs: historyOfJobs,
+        style: "profile.css",
+        error: "Invite Accepted!",
+      });
       return;
     } else {
       res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
@@ -505,7 +631,7 @@ router.route("/:postId/acceptinvite").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
-      style: "viewPost.css"
+      style: "viewPost.css",
     });
     return;
   }
@@ -618,7 +744,7 @@ router.route("/:postId/unsaved").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
-      style: "viewPost.css"
+      style: "viewPost.css",
     });
     return;
   }
@@ -669,7 +795,7 @@ router.route("/:postId/completed").get(async (req, res) => {
           activeFlag: activeFlag,
           candidateFlag: candidateFlag,
           error: "The Job is already marked Completed",
-          style: "viewPost.css"
+          style: "viewPost.css",
         });
         return;
       }
@@ -690,7 +816,7 @@ router.route("/:postId/completed").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
-      style: "viewPost.css"
+      style: "viewPost.css",
     });
     return;
   }
