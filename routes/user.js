@@ -332,7 +332,7 @@ router.route("/profile/:userName/edit").get(async (req, res) => {
   if (user) {
     res
       .status(200)
-      .render("../views/pages/editProfile", { title: "Edit User", username: user.userName, style: "editProfile.css" });
+      .render("../views/pages/editProfile", { title: "Edit User", style: "editProfile.css" });
     return;
   } else {
     res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
@@ -390,7 +390,7 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
   } catch (e) {
     console.log(e);
     //res.status(400).render("../views/pages/signup", { error: e });
-    res.status(400).render("../views/pages/application", { error: e, style: "application.css" });
+    res.status(400).render("../views/pages/editProfile", { error: e, style: "editProfile.css" });
     return;
   }
 });
