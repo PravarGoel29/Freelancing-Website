@@ -303,12 +303,10 @@ const updateUser = async (
  
 
   //6. checks if the user was successfully updated and stored in the DB
-  if (updatedInfo.modifiedCount === 0) {
+  if (updatedInfo.modifiedCount === 0 && updatedEmployeeInfo.modifiedCount === 0) {
     throw "could not update the user successfully";
   }
-  if (updatedEmployeeInfo.modifiedCount === 0) {
-    throw "could not update preferences successfully";
-  }
+  
 
   //7. returns the updated user's id
   return await getUserByUserName(userName);
