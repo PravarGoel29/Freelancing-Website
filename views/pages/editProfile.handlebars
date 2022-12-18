@@ -16,9 +16,10 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         {{! <a class="nav-link active" aria-current="page" href="/home">Home</a> }}
-        <a class="nav-link" href="/profile/{{user.userName}}">Profile</a>
-        <a class="nav-link" href="/profile/{{user.userName}}/addPost">Post a Job</a>
+        <a class="nav-link" href="/profile/{{username}}">Profile</a>
+        <a class="nav-link" href="/profile/{{username}}/addPost">Post a Job</a>
       </div>
+      <button class="logout-nav-button btn-sm" onclick="location.href='/logout'">Logout</button>
     </div>
   </div>
 </nav>
@@ -34,24 +35,24 @@
 
           <div class="form-row">
             <div class="col-lg-12">
-              <label for="firstName">FirstName</label>
+              <label for="firstName">First Name</label>
               <input
                 required
                 type="text"
                 name="firstName"
                 id="firstName"
-                placeholder="Firstname"
+                placeholder="First Name"
                 class="form-control my-3 p-4"
               />
             </div>
             <div class="col-lg-12">
-              <label for="lastName">Lastname</label>
+              <label for="lastName">Last Name</label>
               <input
                 required
                 type="text"
                 name="lastName"
                 id="lastName"
-                placeholder="Lastname"
+                placeholder="Last Name"
                 class="form-control my-3 p-4"
               />
             </div>
@@ -103,7 +104,7 @@
             <div class="col-lg-12">
               <label for="resumeInput">Upload your resume</label>
               <br />
-              Only .pdf format accepted
+              <p><i>*Only .pdf format accepted</i></p>
               <input required type="file" id="resumeInput" class="form-control my-3 p-4" name="resumeInput" />
             </div>
           </div>

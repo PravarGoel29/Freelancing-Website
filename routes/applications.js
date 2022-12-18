@@ -75,10 +75,10 @@ router.route("/:postId/applied").post(async (req, res) => {
     //Displaying the success message
     //res.status(200).json("Job post successful");
     //res.redirect("/profile/" + userName);
-    res.status(200).render("../views/pages/jobapplied", { user: ApplyingUser });
+    res.status(200).render("../views/pages/jobapplied", { user: ApplyingUser, style: "jobApplied.css" });
     return;
   } catch (e) {
-    res.status(400).render("../views/pages/application", { error: e });
+    res.status(400).render("../views/pages/application", { postID: postID, error: e, style: "application.css"});
   }
 });
 

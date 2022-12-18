@@ -23,12 +23,52 @@ body{
 }
 
 .logout-nav-button{
-    margin-left: 900px;
     background-color: black;
     color: white;
     padding: 5px;
+    border-radius: 10px;
 }
-.logout-nav-button a:hover{
+.logout-nav-button:hover{
     color: black;
     background-color: white;  
+}
+.viewpost-invite-btn{
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.viewpost-invite-btn:hover{
+    background-color: white;
+    color: black;
+}
+.viewpost-markjob-btn{
+    border: none;
+    outline: none;
+    height: 50px;
+    width: 20%;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 10px;
+}
+.viewpost-markjob-btn:hover{
+    background-color: white;
+    color: black;
+}
+.viewpost-reviewbtn-cls{
+    border: none;
+    outline: none;
+    height: 50px;
+    width: 20%;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 10px;
+}
+.viewpost-reviewbtn-cls:hover{
+    background-color: white;
+    color: black;
 }

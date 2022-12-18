@@ -35,3 +35,13 @@ p{
 h2{
     text-align: center;
 }
+.logout-nav-button{
+    background-color: black;
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+}
+.logout-nav-button:hover{
+    color: black;
+    background-color: white;  
+}

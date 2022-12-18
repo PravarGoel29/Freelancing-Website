@@ -12,9 +12,10 @@
       <a class="nav-link" href="/profile/{{user.userName}}/addPost">Post a Job</a>
       <a class="nav-link" href="/profile/{{user.userName}}/edit" tabindex="-1">Edit Profile</a>
     </div>
-    <div class="logout-nav-button">
+    {{!-- <div class="logout-nav-button">
         <a class="nav-link" href="/logout">Log Out</a>
-      </div>
+      </div> --}}
+      <button class="logout-nav-button btn-sm" onclick="location.href='/logout'">Logout</button>
   </div>
 </div>
 </nav>
@@ -28,47 +29,72 @@
   <ul class="list-group list-group-flush profile-data-list">
     <li class="list-group-item">
       <h1>{{user.userName}}</h1>
-      <div>{{user.firstName}} {{user.lastName}}</div>
-      <div class="label">{{user.email}}</div>
+      <div>Name: {{user.firstName}} {{user.lastName}}</div>
+      <div>Contact Number: {{user.contactNumber}}</div>
+      <div class="label">Email: {{user.email}}</div>
     </li>
     
     <li class="list-group-item">
       <h2>Jobs Completed</h2>
-      {{#each historyOfJobs}}
-        <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
-      {{/each}}
-      <br />
+      <div class="card job-posted-list">
+        <ul class="list-group list-group-flush">
+            {{#each historyOfJobs}}
+              <li class="list-group-item">
+                <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+              </li>
+            {{/each}}
+            <br />
+        </ul>
+      </div>
     </li>
 
     <li class="list-group-item">
       <h2>Jobs Taken</h2>
-      {{#each currentJobs}}
-        <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
-      {{/each}}
-      <br />
+      <div class="card job-posted-list">
+        <ul class="list-group list-group-flush">
+          {{#each currentJobs}}
+            <li class="list-group-item">
+              <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+            </li>
+          {{/each}}
+          <br />
+        </ul>
+      </div>
     </li>
 
     <li class="list-group-item">
       <h2>Invites</h2>
-      {{#each invites}}
-        <div><p><a href="/post/{{this}}">{{this}}</a>
-        <button type="button" id = "acceptinvite" onclick="location.href='/post/{{this}}/acceptinvite'">Accept Invite</button></p></div>
-      {{/each}}
-      <br />
+      <div class="card job-posted-list">
+        <ul class="list-group list-group-flush">
+          {{#each invites}}
+            <li class="list-group-item">
+              <div><p><a href="/post/{{this}}">{{this}}</a>
+              <button class= "profile-invite-btn" type="button" id = "acceptinvite" onclick="location.href='/post/{{this}}/acceptinvite'">Accept Invite</button></p></div>
+            </li>
+          {{/each}}
+          <br />
+        </ul>
+      </div>
     </li>
     
     <li class="list-group-item">
       <h2>Saved Jobs</h2>
-      {{#each wishList}}
-        <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
-      {{/each}}
-      <br />
+      <div class="card job-posted-list">
+        <ul class="list-group list-group-flush">
+          {{#each wishList}}
+            <li class="list-group-item">
+              <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+            </li>
+          {{/each}}
+          <br />
+        </ul>
+      </div>
     </li>
 
     <li class="list-group-item">
+      <h2>Jobs posted</h2>
       <div class="card job-posted-list">
         <ul class="list-group list-group-flush">
-              <h2>Jobs posted</h2>
               {{#each posts}}
                 <li class="list-group-item">
                   <div><p><a href="/post/{{this._id}}">{{this._id}} {{this.title}}</a></p></div>

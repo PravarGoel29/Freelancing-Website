@@ -367,7 +367,7 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
       contactNumber,
       gender,
       preferences,
-      // resumeInput
+      resumeInput
     );
     //res.redirect("/");
     res.status(200).json({ message: "Succefully updated user.", success: true });

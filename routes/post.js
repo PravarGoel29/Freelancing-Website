@@ -186,6 +186,7 @@ router.route("/:postId/:userName/invite").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
+      style: "viewPost.css"
     });
     return;
   }
@@ -232,7 +233,7 @@ router.route("/:postId/reviewrate/:userName").get(async (req, res) => {
         });
         return;
       }
-      res.status(200).render("../views/pages/reviewrate", { user: user, post: post, rateUser: rateUser });
+      res.status(200).render("../views/pages/reviewrate", { user: user, post: post, rateUser: rateUser, style: "reviewRate.css" });
       return;
     } else {
       res.status(400).render("../views/pages/forbiddenAccess");
@@ -250,6 +251,7 @@ router.route("/:postId/reviewrate/:userName").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
+      style: "viewPost.css"
     });
     return;
   }
@@ -328,7 +330,7 @@ router.route("/:postId/reviewedandrated/:reviewId").get(async (req, res) => {
     //console.log(updatedPost);
 
     if (user) {
-      res.status(200).render("../views/pages/viewreviewrating", { user: user, review: reviewDetails });
+      res.status(200).render("../views/pages/viewreviewrating", { user: user, review: reviewDetails, style: "viewReviewRating.css" });
       return;
     } else {
       res.status(400).render("../views/pages/forbiddenAccess");
@@ -347,6 +349,7 @@ router.route("/:postId/reviewedandrated/:reviewId").get(async (req, res) => {
       activeFlag: activeFlag,
       candidateFlag: candidateFlag,
       error: e,
+      style: "viewPost.css"
     });
     return;
   }
