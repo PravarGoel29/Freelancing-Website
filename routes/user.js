@@ -132,11 +132,12 @@ router.route("/login").post(async (req, res) => {
     //storing the user session
     req.session.user = thisUser.user;
     req.session.posts = thisUserPosts;
-    if (req.session.user.emailVerified) {
+    if (thisUser.user.emailVerified) {
       //req.session.allPosts = allUsersPosts;
       //const allPosts = req.session.allPosts;
-      res.status(200).json({ message: "Succefully logged in", success: true });
+      //res.status(200).json({ message: "Succefully logged in", success: true });
       //res.status(200).render("../views/pages/landing", { user: thisUser.user, allPosts: allPosts });
+      return res.redirect("/home");
       return;
     } else {
       res.status(400).json({ error: "Please verify your account", success: false });

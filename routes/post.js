@@ -269,7 +269,9 @@ router.route("/:postId/reviewrate/:userName").post(async (req, res) => {
     let employeeToEmployerFlag = true;
     if (post.userName === user.userName.toLowerCase()) {
       employeeToEmployerFlag = false;
+
       const employeeId = await userData.getEmployeeIdByUserName(rateUser);
+      console.log(employeeToEmployerFlag);
       const addedReview = await reviewData.createReview(
         id,
         employeeId,
@@ -280,6 +282,7 @@ router.route("/:postId/reviewrate/:userName").post(async (req, res) => {
       );
     } else {
       const employerId = await userData.getEmployerIdByUserName(post.userName);
+      console.log(employeeToEmployerFlag);
       const addedReview = await reviewData.createReview(
         id,
         user.employeeId,

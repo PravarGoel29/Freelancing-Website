@@ -205,7 +205,7 @@ const validateRating = (inputRating) => {
 };
 
 const validateEmployeeToEmployerFlag = (inputEmployeeToEmployerFlag) => {
-  if (!inputEmployeeToEmployerFlag) throw "EmployeeToEmployerFlag not provided.";
+  if (inputEmployeeToEmployerFlag === undefined) throw "EmployeeToEmployerFlag not provided.";
   if (typeof inputEmployeeToEmployerFlag !== "boolean") throw "EmployeeToEmployerFlag should be a boolean.";
 };
 
