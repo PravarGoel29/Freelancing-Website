@@ -32,11 +32,11 @@ router.route("/:postId/apply").get(async (req, res) => {
     const postID = req.params.postId;
     try {
       validations.validateID(postID)
-      res.status(200).render("../views/pages/application", { postID: postID, user: req.session.user, style: "application.css" });
+      res.status(200).render("../views/pages/application", { title:"Application Page",postID: postID, user: req.session.user, style: "application.css" });
       return;
     }
     catch (e) {
-      res.render("../views/errors/error", { error: e })
+      res.render("../views/errors/error", { title:"error",error: e })
       return
     }
   } else {
@@ -75,10 +75,10 @@ router.route("/:postId/applied").post(async (req, res) => {
     //Displaying the success message
     //res.status(200).json("Job post successful");
     //res.redirect("/profile/" + userName);
-    res.status(200).render("../views/pages/jobapplied", { user: ApplyingUser, style: "jobApplied.css" });
+    res.status(200).render("../views/pages/jobapplied", { title:"tijobApplied",user: ApplyingUser, style: "jobApplied.css" });
     return;
   } catch (e) {
-    res.status(400).render("../views/pages/application", { postID: postID, error: e, style: "application.css"});
+    res.status(400).render("../views/pages/application", { title:"application page",postID: postID, error: e, style: "application.css"});
   }
 });
 
