@@ -34,13 +34,13 @@ app.use(
 //   }
 // });
 
-app.use("/login", (req, res, next) => {
-  if (req.session.user) {
-    return res.redirect("/home");
-  } else {
-    next();
-  }
-});
+// app.use("/login", (req, res, next) => {
+//   if (req.session.user) {
+//     return res.redirect("/home");
+//   } else {
+//     next();
+//   }
+// });
 
 configRoutes(app);
 

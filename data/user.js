@@ -106,11 +106,15 @@ const createUser = async (
 const sendEmailVerification = async (user) => {
   const userId = user._id;
   const emailToken = "http://localhost:3000/confirmation/" + userId;
-  const adminMailID = process.env.USER;
+  //const adminMailID = process.env.USER;
+  //USER = cs546team23
+//PASS = "PRRTT@team23"
+  const adminMailID = "cs546team23@outlook.com";
   let verificationSent = true;
   let mailTransporter = nodemailer.createTransport({
-    service: "gmail",
+    service: "hotmail",
     auth: { user: adminMailID, pass: process.env.PASS },
+    //auth: { user: adminMailID, pass: "PRRTT@team23" },
   });
   let details = {
     from: adminMailID,
