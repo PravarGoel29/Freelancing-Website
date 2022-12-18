@@ -283,6 +283,7 @@ const updateUser = async (userName, firstName, lastName, contactNumber, gender, 
   };
   const updatedEmployee = {
     preferences: preferences,
+    resume: resume,
   };
   const updatedEmployeeInfo = await employeeCollection.updateOne(
     { userName: userName.trim() },
