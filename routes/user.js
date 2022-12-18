@@ -105,9 +105,9 @@ router.route("/signup").post(upload, async (req, res) => {
     res.status(200).redirect("/");
     return;
   } catch (e) {
-    console.log(e);
-    //res.status(400).render("../views/pages/signup", { error: e });
-    res.status(400).json({ error: e, success: false });
+    //console.log(e);
+    res.status(400).render("../views/pages/signup", { error: e });
+    //res.status(400).json({ error: e, success: false });
     return;
   }
 });
