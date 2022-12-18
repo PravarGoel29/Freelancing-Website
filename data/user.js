@@ -108,7 +108,7 @@ const sendEmailVerification = async (user) => {
   const emailToken = "http://localhost:3000/confirmation/" + userId;
   //const adminMailID = process.env.USER;
   //USER = cs546team23
-//PASS = "PRRTT@team23"
+  //PASS = "PRRTT@team23"
   const adminMailID = "cs546team23@outlook.com";
   let verificationSent = true;
   let mailTransporter = nodemailer.createTransport({
