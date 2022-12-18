@@ -106,7 +106,7 @@ router.route("/signup").post(upload, async (req, res) => {
     return;
   } catch (e) {
     //console.log(e);
-    res.status(400).render("../views/pages/signup", { error: e });
+    res.status(400).render("../views/pages/signup", { error: e, style: "stylesheet.css" });
     //res.status(400).json({ error: e, success: false });
     return;
   }
@@ -130,9 +130,10 @@ router.route("/login").post(async (req, res) => {
     const allPosts = await postData.getAllPosts();
 
     //storing the user session
-    req.session.user = thisUser.user;
-    req.session.posts = thisUserPosts;
+    
     if (thisUser.user.emailVerified) {
+      req.session.user = thisUser.user;
+      req.session.posts = thisUserPosts;
       //req.session.allPosts = allUsersPosts;
       //const allPosts = req.session.allPosts;
       //res.status(200).json({ message: "Succefully logged in", success: true });
@@ -389,7 +390,7 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
   } catch (e) {
     console.log(e);
     //res.status(400).render("../views/pages/signup", { error: e });
-    res.status(400).json({ error: e, success: false });
+    res.status(400).render("../views/pages/application", { error: e, style: "application.css" });
     return;
   }
 });
