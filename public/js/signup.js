@@ -1,4 +1,4 @@
-const emailValidate = require("email-validator");
+//const emailValidate = require("email-validator");
 $("#registration-form").submit(function (event) {
   event.preventDefault();
   let username = $("#userName").val();
@@ -26,6 +26,7 @@ $("#registration-form").submit(function (event) {
     validateConfirmPassword(password, confirmPassword);
     validatePreferences(preferences);
   } catch (e) {
+    console.log(e);
     event.preventDefault();
     alert(e);
     return;
@@ -84,9 +85,15 @@ const validateEmail = (inputEmail) => {
   if (!inputEmail) throw "Email not provided.";
   if (typeof inputEmail !== "string") throw "Email is not of valid input type.";
   if (inputEmail.trim().length === 0) throw "Email is empty.";
-  email = inputEmail.trim();
-  let checkEmail = emailValidate.validate(email);
-  if (checkEmail === false) throw "Invalid email format!";
+  if (!/^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,6})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$/i.test(inputEmail)) {
+    throw "Email address is invalid format."
+  }
+};
+
+const validateNumber = (inputNum) => {
+  if (isNaN(inputNum)) throw "The given data is not a valid number";
+  if (inputNum % 1 !== 0) throw "The values in the date cannot be decimal";
+  return inputNum;
 };
 
 const validateDOB = (inputdate) => {

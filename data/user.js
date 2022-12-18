@@ -295,7 +295,7 @@ const updateUser = async (
   const updatedEmployee = {
     preferences: preferences,
   };
- const updatedEmployeeInfo = await employeeCollection.updateOne(
+  const updatedEmployeeInfo = await employeeCollection.updateOne(
     { userName: userName.trim() },
     { $set: updatedEmployee }
   );
@@ -304,13 +304,13 @@ const updateUser = async (
     { userName: userName.trim() },
     { $set: updatedUser }
   );
- 
+
 
   //6. checks if the user was successfully updated and stored in the DB
   if (updatedInfo.modifiedCount === 0 && updatedEmployeeInfo.modifiedCount === 0) {
     throw "could not update the user successfully";
   }
-  
+
 
   //7. returns the updated user's id
   return await getUserByUserName(userName);
