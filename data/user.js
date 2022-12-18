@@ -10,7 +10,7 @@ const moment = require("moment");
 const Employee = require("./employee");
 const Employer = require("./employer");
 const { employeeCollection } = require("../config");
-const { employees } = require(".");
+//const { employees } = require(".");
 require("dotenv").config();
 /**This function is for initital user signup  */
 /**Database function for the Users Collection */
@@ -89,8 +89,7 @@ const createUser = async (
 
   //9. insert user into the db
   let insertData = await usersCollection.insertOne(newUser);
-  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0)
-    throw "Could not add new user!";
+  if (insertData.acknowldeged === 0 || !insertData.insertedId === 0) throw "Could not add new user!";
 
   //10. get user id
   let user = await usersCollection.findOne({
@@ -147,8 +146,7 @@ const checkUser = async (userName, password) => {
 
   //4. check if password is same
   const passwordCheck = await bcrypt.compare(password, user["hashedPassword"]);
-  if (passwordCheck === false)
-    throw "Either the username or password is invalid";
+  if (passwordCheck === false) throw "Either the username or password is invalid";
 
   let authUser = { authenticated: true, user: user };
   return authUser;
@@ -233,16 +231,7 @@ const getEmployerIdByUserName = async (userName) => {
 
 // }
 
-
-const updateUser = async (
-  userName,
-  firstName,
-  lastName,
-  contactNumber,
-  gender,
-  preferences,
-  resume
-) => {
+const updateUser = async (userName, firstName, lastName, contactNumber, gender, preferences, resume) => {
   //1. get user's data with the given id and assign the previously stored values to individually update the fields
   validations.validateUsername(userName);
   validations.validateName(firstName);
@@ -291,22 +280,17 @@ const updateUser = async (
   const updatedEmployee = {
     preferences: preferences,
   };
- const updatedEmployeeInfo = await employeeCollection.updateOne(
+  const updatedEmployeeInfo = await employeeCollection.updateOne(
     { userName: userName.trim() },
     { $set: updatedEmployee }
   );
   //5. Storing the updated user in DB
-  const updatedInfo = await usersCollection.updateOne(
-    { userName: userName.trim() },
-    { $set: updatedUser }
-  );
- 
+  const updatedInfo = await usersCollection.updateOne({ userName: userName.trim() }, { $set: updatedUser });
 
   //6. checks if the user was successfully updated and stored in the DB
   if (updatedInfo.modifiedCount === 0 && updatedEmployeeInfo.modifiedCount === 0) {
     throw "could not update the user successfully";
   }
-  
 
   //7. returns the updated user's id
   return await getUserByUserName(userName);
@@ -334,10 +318,7 @@ const updateEmailVerificationStatus = async (userId) => {
   };
 
   //5. Storing the updated user in DB
-  const updatedInfo = await usersCollection.updateOne(
-    { _id: ObjectId(userId) },
-    { $set: updatedUser }
-  );
+  const updatedInfo = await usersCollection.updateOne({ _id: ObjectId(userId) }, { $set: updatedUser });
 
   //6. checks if the user was successfully updated and stored in the DB
   if (updatedInfo.modifiedCount === 0) {

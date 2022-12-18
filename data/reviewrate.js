@@ -109,6 +109,15 @@ const updateReview = async (reviewId, review, rating) => {
 
   const reviewCollection = await reviews();
   rating = parseInt(rating);
+
+  const addFlag = false;
+  const oldRating = reviewObject.rating;
+  if (reviewObject.employeeToEmployerFlag) {
+    const updatedEmployer = await Employer.addRating(reviewObject.employerId, rating, addFlag, oldRating);
+  } else {
+    const updatedEmployee = await Employee.addRating(reviewObject.employeeId, rating, addFlag, oldRating);
+  }
+
   const updatedReview = await reviewCollection.updateOne(
     { _id: ObjectId(reviewId) },
     {
@@ -125,14 +134,6 @@ const updateReview = async (reviewId, review, rating) => {
 
   if (updatedReview.modifiedCount === 0) {
     throw "Could not update review " + reviewId;
-  }
-
-  const addFlag = false;
-  const oldRating = reviewObject.rating;
-  if (reviewObject.employeeToEmployerFlag) {
-    const updatedEmployer = await Employer.addRating(reviewObject.employerId, rating, addFlag, oldRating);
-  } else {
-    const updatedEmployee = await Employee.addRating(reviewObject.employeeId, rating, addFlag, oldRating);
   }
 
   return await getReviewById(reviewId);
