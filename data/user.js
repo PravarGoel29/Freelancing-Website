@@ -111,7 +111,7 @@ const sendEmailVerification = async (user) => {
   //PASS = "PRRTT@team23"
   const adminMailID = "cs546team23@outlook.com";
   let verificationSent = true;
-  console.log(process.env.PASS);
+  //console.log(process.env.PASS);
   let mailTransporter = nodemailer.createTransport({
     //service: "hotmail",
     //auth: { user: adminMailID, pass: process.env.PASS },
@@ -134,6 +134,9 @@ const sendEmailVerification = async (user) => {
   mailTransporter.sendMail(details, (e) => {
     if (e) {
       verificationSent = false;
+      console.log(
+        "If there is an error due to outbound spam exception, it might be because my account is blocked. Either let me know and I'll unblock or please consider setting emailVerified flag for the user as true to login"
+      );
       console.log(e);
     } else {
       console.log("Verification  mail sent successfully!");

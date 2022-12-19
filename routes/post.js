@@ -42,10 +42,10 @@ router.route("/").post(async (req, res) => {
     if (user) {
       //console.log()
       //res.status(200).redirect("/post/" + newPost._id);
-      res.status(200).json({ message: "Succefully Posted", success: true });
+      res.status(200).json({ message: "Successfully Posted", success: true });
       return;
     } else {
-      res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
+      res.status(401).json({ error: "Forbidden Access! Please login", success: true });
       return;
     }
   } catch (e) {

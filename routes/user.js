@@ -169,6 +169,7 @@ router.route("/confirmation/:userId").get(async (req, res) => {
   let userId = req.params.userId;
 
   try {
+    validations.validateID(userId);
     const updatedUser = await userData.updateEmailVerificationStatus(userId);
     res.status(200).render("../views/pages/emailverified", { title: "Email Verified" });
     return;

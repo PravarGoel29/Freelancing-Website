@@ -133,7 +133,8 @@ const updateReview = async (reviewId, review, rating) => {
   );
 
   if (updatedReview.modifiedCount === 0) {
-    throw "Could not update review " + reviewId;
+    //throw "Could not update review " + reviewId;
+    throw "You have already added the same review!";
   }
 
   return await getReviewById(reviewId);

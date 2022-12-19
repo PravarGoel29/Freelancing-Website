@@ -137,6 +137,12 @@ const validateTitle = (inputTitle) => {
   if (inputTitle.trim().length === 0) throw "Title is empty.";
 };
 
+const validateEducation = (inputEducation) => {
+  if (!inputEducation) throw "Education not provided.";
+  if (typeof inputEducation !== "string") throw "Education is not of valid input type.";
+  if (inputEducation.trim().length === 0) throw "Education is empty.";
+};
+
 const validateDomain = (inputDomain) => {
   if (!inputDomain) throw "Domain not provided.";
   if (typeof inputDomain !== "string") throw "Domain is not of valid input type.";
@@ -280,4 +286,5 @@ module.exports = {
   validateWorkEXP,
   validatePreferences,
   validateGender,
+  validateEducation,
 };
