@@ -172,7 +172,7 @@ const validateJobType = (inputJobType) => {
 const validateTags = (inputTags) => {
   if (!inputTags) throw "Tags not provided.";
   if (typeof inputTags !== "string") throw "Tags is not of valid input type.";
-  if (inputTags.trim().length === 0) throw "Tags is empty.";
+  if (inputTags.trim().length === 0) throw "Tags is empty."; //res.status(200).json({ message: "Succefully Posted", success: true });
 };
 const validateSalary = (inputSalary) => {
   if (!inputSalary) throw "Salary not provided.";

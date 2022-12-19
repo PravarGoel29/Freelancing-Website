@@ -118,7 +118,7 @@ router.route("/:postId/applied").post(async (req, res) => {
       //res.redirect("/profile/" + userName);
       res
         .status(200)
-        .render("../views/pages/jobapplied", { title: "tijobApplied", user: ApplyingUser, style: "jobApplied.css" });
+        .render("../views/pages/jobapplied", { title: "Job Applied", user: ApplyingUser, style: "jobApplied.css" });
       return;
     } else {
       res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
