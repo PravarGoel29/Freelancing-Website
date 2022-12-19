@@ -44,10 +44,28 @@ Extra Features
 1. Email verification - User should be able to create their profile through 
 email verification, a token will be generated and sent to the user for 
 him/her to verify their email ID. 
-2. Google Sign up option – A user can create a profile through his/her Gmail 
-account.
-3. Save this job option – An Employee can add job posting to their wish list.
-4. Know your Employer Option - Employees can see the history of all job 
+2. Save this job option – An Employee can add job posting to their wish list.
+3. Know your Employer Option - Employees can see the history of all job 
 posting and their reviews and rating for an employer.
-5. Recommendation System – To recommend relevant services with 
-employee’s preference and purchase history.
+
+About Website:
+We have created a freelancing website. This website is an online platform for freelance services such as web development, app development, logo designing, photography, and digital marketing, etc. This website serves both people who are looking for freelancers as well as jobs.
+Before running the code:
+Run npm i to install all the dependencies.
+Run npm run seed to seed the initial users, posts, and applications in the database.
+Then run npm start to start the project.
+SignUp and Login:
+User have to register to use the freelancing website.
+First, the user needs to sign up to the website in order to be able to login. They will need to enter all and valid inputs for the sign up form. Username and email already registered to the web site cannot be signed up again.
+After the successful registration, the email verification is sent to the user. After that user can login and use the website.
+Once the user has successfully signed up, they will be redirected to the login page. From there, they can enter their username and password and then the application will ask them to validate their email in case both the username and password are correct.
+Once the user has verified their email through the provided url, they will be automatically logged in just that once.
+Freelancing page :
+After the user can see the landing/home page of the application. The user has the option to navigate to various pages like 'profile' and 'post a job page', logout out, and even search and filter through displayed jobs via a search bar and dropdown displayed on the nav bar. The main page of the home screen has a list of jobs displaying various info about them.
+The user can click on any of the jobs and they will be redirected to that specific post's page which will have all the details about the post. If it is not posted by the user and the job is still marked as active, they can see an option to apply to that job posting. Once the user applies to the job by clicking on apply and entering valid input in the rendered form, The application gets submitted.
+After that you can see the user's username under the applicant section of the applied post.
+The employer for that post can send an invite to the applicant and similarly, the employee can accept the invite.
+
+Upon completion of the job, the employer can mark that job as completed and only upon completion the user will see the review and rating button. The user will be redirected to.a form where they can post the review and rating for their employer or employee.
+After successfully submitting, the user can see the posted reviews under the reviews section on the viewPost page
+
