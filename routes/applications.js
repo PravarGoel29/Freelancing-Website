@@ -7,7 +7,7 @@ const postData = data.posts;
 const employerData = data.employers;
 const employeeData = data.employees;
 const applicationData = data.applications;
-const validations = require("../validations/dataValidations");
+const validations = require("../validations/routeValidations");
 const path = require("path");
 const multer = require("multer");
 const xss = require("xss");
@@ -105,10 +105,10 @@ router.route("/:postId/applied").post(async (req, res) => {
       const newApplication = await applicationData.createApplication(
         userName,
         postID,
-        education,
-        workExpYrs,
-        address,
-        ex_salary
+        xss(education),
+        xss(workExpYrs),
+        xss(address),
+        xss(ex_salary)
       );
 
       const updatedPost = await postData.addApplicants(userName, postID);

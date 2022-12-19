@@ -25,7 +25,16 @@ router.route("/").post(async (req, res) => {
   try {
     const { location, description, title, domain, tags, jobtype, salary } = postInfo;
     //calling the createUser function with post body contents as it's arguments
-    const newPost = await postData.createPost(location, description, title, domain, tags, jobtype, salary, userName);
+    const newPost = await postData.createPost(
+      xss(location),
+      xss(description),
+      xss(title),
+      xss(domain),
+      xss(tags),
+      xss(jobtype),
+      xss(salary),
+      xss(userName)
+    );
     //Displaying the success message
     //res.status(200).json("Job post successful");
     //res.redirect("/profile/" + userName);
@@ -350,7 +359,14 @@ router.route("/:postId/reviewrate/:userName/flagged").get(async (req, res) => {
         return;
       }
 
-      res.status(200).redirect("/post/" + id + "/reviewrate/" + rateUser);
+      res.status(200).render("../views/pages/reviewrate", {
+        title: post.title,
+        user: user,
+        post: post,
+        rateUser: rateUser,
+        style: "reviewRate.css",
+        error: "You have flagged the user " + rateUser,
+      });
       return;
     } else {
       res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
@@ -394,8 +410,8 @@ router.route("/:postId/reviewrate/:userName").post(async (req, res) => {
         id,
         employeeId,
         user.employerId,
-        reviewInput,
-        rateInput,
+        xss(reviewInput),
+        xss(rateInput),
         employeeToEmployerFlag
       );
     } else {
@@ -405,8 +421,8 @@ router.route("/:postId/reviewrate/:userName").post(async (req, res) => {
         id,
         user.employeeId,
         employerId,
-        reviewInput,
-        rateInput,
+        xss(reviewInput),
+        xss(rateInput),
         employeeToEmployerFlag
       );
     }

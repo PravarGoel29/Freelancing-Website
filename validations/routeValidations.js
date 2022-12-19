@@ -1,4 +1,6 @@
 const { ObjectId } = require("mongodb");
+const emailValidate = require("email-validator");
+
 const validateID = (id) => {
   if (!id) {
     throw "All fields need to have valid values";
@@ -65,7 +67,6 @@ const validateName = (inputName) => {
   if (inputName.trim().length === 0) throw "Name is empty.";
   if (inputName.includes(" ")) throw "Name should not contain spaces.";
   if (inputName.length < 2) throw "Name must contain at least 2 characters.";
-
   const regex = new RegExp("^[a-zA-Z]*$");
   if (!regex.test(inputName)) throw "Name should contain only alaphabets characters.";
 };
@@ -168,7 +169,7 @@ const validateJobType = (inputJobType) => {
 const validateTags = (inputTags) => {
   if (!inputTags) throw "Tags not provided.";
   if (typeof inputTags !== "string") throw "Tags is not of valid input type.";
-  if (inputTags.trim().length === 0) throw "Tags is empty.";
+  if (inputTags.trim().length === 0) throw "Tags is empty."; //res.status(200).json({ message: "Succefully Posted", success: true });
 };
 const validateSalary = (inputSalary) => {
   if (!inputSalary) throw "Salary not provided.";
@@ -197,8 +198,20 @@ const validateRating = (inputRating) => {
 };
 
 const validateEmployeeToEmployerFlag = (inputEmployeeToEmployerFlag) => {
-  if (!inputEmployeeToEmployerFlag) throw "EmployeeToEmployerFlag not provided.";
+  if (inputEmployeeToEmployerFlag === undefined) throw "EmployeeToEmployerFlag not provided.";
   if (typeof inputEmployeeToEmployerFlag !== "boolean") throw "EmployeeToEmployerFlag should be a boolean.";
+};
+
+const validateSearchTerm = (inputSearchTerm) => {
+  //if (!inputSearchTerm) throw "Search term not provided.";
+  if (typeof inputSearchTerm !== "string") throw "Search term should be a string.";
+  //if (inputSearchTerm.trim().length === 0) throw "Search term is empty.";
+};
+
+const validateFilterJobType = (inputFilterJobType) => {
+  if (!(inputFilterJobType === "Remote" || inputFilterJobType === "In-Person" || inputFilterJobType === "Hybrid")) {
+    throw "Invalid Job Type";
+  }
 };
 
 function validateStAddress(address) {
@@ -221,6 +234,7 @@ const validateWorkEXP = (workExpYrs) => {
 };
 
 const validatePreferences = (inputPreferences) => {
+  console.log(inputPreferences);
   if (!inputPreferences) throw "Preferences not provided.";
   if (!Array.isArray(inputPreferences) || inputPreferences.length < 1) {
     throw "Preferences should be an array and it should contains atleast one preference";
@@ -260,6 +274,8 @@ module.exports = {
   validateReview,
   validateRating,
   validateEmployeeToEmployerFlag,
+  validateSearchTerm,
+  validateFilterJobType,
   validateStAddress,
   validateWorkEXP,
   validatePreferences,
