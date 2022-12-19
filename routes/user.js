@@ -151,7 +151,8 @@ router.route("/login").post(async (req, res) => {
       //res.redirect("/home");
       return;
     } else {
-      res.status(400).render("../views/errors/error", { title: "Error", error: "Please verify your account" });
+      //res.status(400).render("../views/errors/error", { title: "Error", error: "Please verify your account" });
+      res.status(400).json({ error: "Please verify your account", success: false });
       return;
     }
   } catch (e) {
