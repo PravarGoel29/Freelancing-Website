@@ -6,7 +6,7 @@ const userData = data.users;
 const postData = data.posts;
 const employerData = data.employers;
 const employeeData = data.employees;
-const validations = require("../validations/dataValidations");
+const validations = require("../validations/routeValidations");
 const path = require("path");
 const multer = require("multer");
 const xss = require("xss");
@@ -63,10 +63,11 @@ router.route("/signup").post(upload, async (req, res) => {
       preferencesArr.push(preferences);
     } else {
       preferencesArr = preferences;
+      preferencesArr = preferencesArr.map((pref) => xss(pref));
     }
     try {
       //validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
-      validations.validateConfirmPassword(password, UserInfo.confirmPassword);
+      validations.validateConfirmPassword(xss(password), xss(UserInfo.confirmPassword));
       validations.validateEmail(email);
       validations.validateUsername(userName);
       validations.validateName(firstName);
@@ -99,14 +100,14 @@ router.route("/signup").post(upload, async (req, res) => {
 
     //calling the createUser function with post body contents as it's arguments
     const newUser = await userData.createUser(
-      userName,
-      firstName,
-      lastName,
-      email,
-      password,
-      contactNumber,
-      gender,
-      dob,
+      xss(userName),
+      xss(firstName),
+      xss(lastName),
+      xss(email),
+      xss(password),
+      xss(contactNumber),
+      xss(gender),
+      xss(dob),
       preferencesArr,
       resumeInput
     );
@@ -134,7 +135,7 @@ router.route("/login").post(async (req, res) => {
     validations.validatePassword(passwordInput);
 
     //calling the checUser function to check if the username and password match with the ones in db
-    const thisUser = await userData.checkUser(usernameInput, passwordInput);
+    const thisUser = await userData.checkUser(xss(usernameInput), xss(passwordInput));
     const thisUserPosts = await postData.getAllPostsbyUserName(thisUser.user.userName);
     const allPosts = await postData.getAllPosts();
 
@@ -213,7 +214,7 @@ router.route("/home").post(async (req, res) => {
     //validations.validateSearchTerm(searchTerm);
     //validations.validateFilterJobType(filterJobType);
 
-    const allReleventPosts = await postData.searchFilterPost(searchTerm, filterJobType);
+    const allReleventPosts = await postData.searchFilterPost(xss(searchTerm), xss(filterJobType));
 
     if (user) {
       res.status(200).render("../views/pages/landing", {
@@ -363,6 +364,7 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
       preferencesArr.push(preferences);
     } else {
       preferencesArr = preferences;
+      preferencesArr = preferencesArr.map((pref) => xss(pref));
     }
     try {
       //validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
@@ -397,11 +399,11 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
     //calling the createUser function with post body contents as it's arguments
     const updatedUser = await userData.updateUser(
       user.userName,
-      firstName,
-      lastName,
-      contactNumber,
-      gender,
-      preferences,
+      xss(firstName),
+      xss(lastName),
+      xss(contactNumber),
+      xss(gender),
+      xss(preferences),
       resumeInput
     );
 

@@ -1,6 +1,3 @@
-// const createUserValidation = async () => {
-
-// };
 const { ObjectId } = require("mongodb");
 const emailValidate = require("email-validator");
 
