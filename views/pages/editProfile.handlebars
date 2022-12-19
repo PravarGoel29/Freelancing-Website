@@ -30,7 +30,12 @@
       <div class="col-lg-7 px-5 pt-5">
         <h1 class="font-weight-bold py-3">Freelance</h1>
         <h2>Edit {{user.userName}}'s Profile</h2>
-        <form action="/profile/{{username}}/edit" method="POST" id="profileEdit-form" enctype="multipart/form-data">
+        <form
+          action="/profile/{{user.userName}}/edit"
+          method="POST"
+          id="profileEdit-form"
+          enctype="multipart/form-data"
+        >
           {{! <input type="hidden" name="_method" value="PUT"> }}
 
           <div class="form-row">
@@ -87,42 +92,36 @@
           <br />
 
           <div class="form-row">
-            <div class="col-lg-12">
+            <div class="col-lg-7">
               <label for="preferences">Preferences</label><br />
-              <input
-                required
-                type="checkbox"
-                id="Programming and Tech"
-                name="Programming and Tech"
-                value="Programming and Tech"
-              />
+              <input type="checkbox" id="Programming and Tech" name="preferences" value="Programming and Tech" />
               <label for="Programming and Tech">Programming and Tech</label><br />
 
-              <input type="checkbox" id="Designing" name="Designing" value="Designing" />
+              <input type="checkbox" id="Designing" name="preferences" value="Designing" />
               <label for="Designing">Designing</label><br />
 
-              <input type="checkbox" id="Sales" name="Sales" value="Sales" />
+              <input type="checkbox" id="Sales" name="preferences" value="Sales" />
               <label for="Sales">Sales</label><br />
 
-              <input type="checkbox" id="Photography" name="Photography" value="Photography" />
+              <input type="checkbox" id="Photography" name="preferences" value="Photography" />
               <label for="Photography">Photography</label><br />
 
-              <input type="checkbox" id="Graphics and Design" name="Graphics and Design" value="Graphics and Design" />
+              <input type="checkbox" id="Graphics and Design" name="preferences" value="Graphics and Design" />
               <label for="Graphics and Design">Graphics and Design</label><br />
 
-              <input type="checkbox" id="Digital Marketing" name="Digital Marketing" value="Digital Marketing" />
+              <input type="checkbox" id="Digital Marketing" name="preferences" value="Digital Marketing" />
               <label for="Digital Marketing">Digital Marketing</label><br />
 
-              <input type="checkbox" id="Writing" name="Writing" value="Writing" />
+              <input type="checkbox" id="Writing" name="preferences" value="Writing" />
               <label for="Writing">Writing</label><br />
 
-              <input type="checkbox" id="Video and Animation" name="Video and Animation" value="Video and Animation" />
+              <input type="checkbox" id="Video and Animation" name="preferences" value="Video and Animation" />
               <label for="Video and Animation">Video and Animation</label><br />
 
-              <input type="checkbox" id="Music and Audio" name="Music and Audio" value="Music and Audio" />
+              <input type="checkbox" id="Music and Audio" name="preferences" value="Music and Audio" />
               <label for="Music and Audio">Music and Audio</label><br />
 
-              <input type="checkbox" id="Other" name="Other" value="Other" />
+              <input type="checkbox" id="Other" name="preferences" value="Other" />
               <label for="Other">Other</label><br />
               <br />
             </div>

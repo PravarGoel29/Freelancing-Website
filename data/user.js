@@ -111,10 +111,18 @@ const sendEmailVerification = async (user) => {
   //PASS = "PRRTT@team23"
   const adminMailID = "cs546team23@outlook.com";
   let verificationSent = true;
+  console.log(process.env.PASS);
   let mailTransporter = nodemailer.createTransport({
-    service: "hotmail",
-    auth: { user: adminMailID, pass: process.env.PASS },
+    //service: "hotmail",
+    //auth: { user: adminMailID, pass: process.env.PASS },
     //auth: { user: adminMailID, pass: "PRRTT@team23" },
+    host: "smtp-mail.outlook.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: adminMailID,
+      pass: process.env.PASS,
+    },
   });
   let details = {
     from: adminMailID,
@@ -126,6 +134,7 @@ const sendEmailVerification = async (user) => {
   mailTransporter.sendMail(details, (e) => {
     if (e) {
       verificationSent = false;
+      console.log(e);
     } else {
       console.log("Verification  mail sent successfully!");
     }

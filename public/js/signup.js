@@ -5,7 +5,7 @@ $("#registration-form").submit(function (event) {
   let firstName = $("#firstName").val();
   let lastName = $("#lastName").val();
   let contactNumber = $("#contactNumber").val();
-  let preferences = $('input[type="checkbox"]:checked').val();
+  //let preferences = $('input[type="checkbox"]:checked').val();
   let email = $("#email").val();
   let dob = $("#dob").val();
   let password = $("#password").val();

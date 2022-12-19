@@ -32,7 +32,8 @@ router.route("/").post(async (req, res) => {
     //res.status(200).json({ message: "Succefully Posted", success: true });
     if (user) {
       //console.log()
-      res.status(200).redirect("/post/" + newPost._id);
+      //res.status(200).redirect("/post/" + newPost._id);
+      res.status(200).json({ message: "Succefully Posted", success: true });
       return;
     } else {
       res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
@@ -88,8 +89,8 @@ router.route("/:postId").get(async (req, res) => {
 
     //console.log(post);
   } catch (e) {
-    console.log(e);
-    res.status(404).json({ error: e });
+    //console.log(e);
+    res.status(400).render("../views/errors/error", { title: "Error", error: e });
     return;
   }
 });
