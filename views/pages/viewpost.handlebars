@@ -57,7 +57,7 @@
     </div>
 
 
-    <div>
+    <ul>
     <li class="list-group-item">
     <h2>Applicants</h2>
     <div class="card applicants-list">
@@ -81,10 +81,10 @@
         </ul>
       </div>
     </li>
-    </div>
+    </ul>
 
-    <div>
-    <li class="list-group-item"></li>
+  <ul>
+    <li class="list-group-item">
     <h2>Candidates</h2>
     <div class="card candidates-list">
       <ul class="list-group list-group-flush">
@@ -98,14 +98,15 @@
           {{#each post.candidates}}
           <li class="list-group-item">
             <div><p><a href="/user/{{this}}">{{this}}</a>
-            <button class="viewpost-reviewbtn-cls" type="button" id = "reviewrateemployee" onclick="location.href='/post/{{../post._id}}/reviewrate/{{this}}'">Review and Rate Employee</button></p></div>
+            <button class="viewpost-reviewbtn-cls" type="button" onclick="location.href='/post/{{../post._id}}/reviewrate/{{this}}'">Review and Rate Employee</button></p></div>
           </li>
           {{/each}}
         {{/if}}
         </ul>
       </div>
     </li>
-    </div>
+    </ul>
+  
 
 
   {{else}}
@@ -129,18 +130,20 @@
         <button class="view-post-buttons" type="button" id = "reviewrateemployer" onclick="location.href='/post/{{post._id}}/reviewrate/{{post.userName}}'">Write a Review and Rate the Employer</button>
         {{/if}}
         </div>
+        <ul>
     <li class="list-group-item">
     <h2>Reviews</h2>
     <div class="card reviews-list-list">
       <ul class="list-group list-group-flush">
       {{#each reviewIDs}}
       <li class="list-group-item">
-        <div><p><button class="view-post-buttons"><a href="/post/{{../post._id}}/reviewedandrated/{{this._id}}">{{this.review}} </button></a><p></div>
+        <div><p><a class="view-post-buttons" href="/post/{{../post._id}}/reviewedandrated/{{this._id}}">{{this.review}} </a></p></div>
         </li>
       {{/each}}
       </ul>
       </div>
       </li>
+      </ul>
 
     {{/if}}
     </div>

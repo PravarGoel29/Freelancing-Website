@@ -255,6 +255,12 @@ const validateGender = (gender) => {
   if (gender.trim().length === 0) throw "Gender cannot be empty or whitespaces.";
 };
 
+const validateEducation = (inputEducation) => {
+  if (!inputEducation) throw "Education not provided.";
+  if (typeof inputEducation !== "string") throw "Education is not of valid input type.";
+  if (inputEducation.trim().length === 0) throw "Education is empty.";
+};
+
 module.exports = {
   validateID,
   validateUsername,
@@ -280,4 +286,5 @@ module.exports = {
   validateWorkEXP,
   validatePreferences,
   validateGender,
+  validateEducation,
 };

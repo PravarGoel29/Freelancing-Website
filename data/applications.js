@@ -14,6 +14,7 @@ const createApplication = async (userName, postID, education, workEXP, address, 
   validations.validateSalary(salary);
   validations.validateStAddress(address);
   validations.validateWorkEXP(workEXP);
+  validations.validateEducation(education);
 
   //const alreadyApplied = await postData.addApplicants();
 

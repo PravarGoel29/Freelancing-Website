@@ -48,6 +48,7 @@ router.route("/:postId/apply").get(async (req, res) => {
   if (user) {
     const postID = req.params.postId;
     try {
+      validations.validateID(id);
       validations.validateID(postID);
 
       if (post.candidates.includes(user.userName.toLowerCase())) {
@@ -99,6 +100,7 @@ router.route("/:postId/applied").post(async (req, res) => {
       validations.validateID(postID);
       validations.validateUsername(userName);
       validations.validateSalary(ex_salary);
+      validations.validateEducation(education);
 
       const ApplyingUser = await userData.getUserByUserName(userName);
       //calling the createUser function with post body contents as it's arguments
