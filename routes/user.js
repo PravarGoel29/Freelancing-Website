@@ -58,6 +58,12 @@ router.route("/signup").post(upload, async (req, res) => {
     const { userName, firstName, lastName, email, password, contactNumber, gender, dob, preferences } = UserInfo;
     //console.log(req);
     //Validating the contents of UserInfo obj
+    let preferencesArr = [];
+    if (typeof preferences === "string") {
+      preferencesArr.push(preferences);
+    } else {
+      preferencesArr = preferences;
+    }
     try {
       //validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
       validations.validateConfirmPassword(password, UserInfo.confirmPassword);
@@ -68,9 +74,10 @@ router.route("/signup").post(upload, async (req, res) => {
       validations.validateDOB(dob);
       validations.validatePassword(password);
       validations.validatePhoneNumber(contactNumber);
+      validations.validatePreferences(preferencesArr);
     } catch (e) {
-      console.log(e);
-      res.status(400).json({ error: e });
+      //console.log(e);
+      res.status(400).render("../views/errors/error", { title: "Error", error: e });
       return;
     }
 
@@ -80,7 +87,9 @@ router.route("/signup").post(upload, async (req, res) => {
     } else {
       // check file suffix
       if (!/\.(pdf)$/.test(req.file.filename)) {
-        res.status(400).json({ error: "Please provide valid pdf document." });
+        res
+          .status(400)
+          .render("../views/errors/error", { title: "Error", error: "Please provide valid pdf document." });
         return;
       } else {
         resumeInput = xss(req.file.filename);
@@ -98,7 +107,7 @@ router.route("/signup").post(upload, async (req, res) => {
       contactNumber,
       gender,
       dob,
-      preferences,
+      preferencesArr,
       resumeInput
     );
     //res.redirect("/");
@@ -106,7 +115,7 @@ router.route("/signup").post(upload, async (req, res) => {
     return;
   } catch (e) {
     //console.log(e);
-    // res.status(400).render("../views/errors/error", { error: e });
+    res.status(400).render("../views/pages/signup", { error: e, style: "stylesheet.css" });
     //res.status(400).json({ error: e, success: false });
     return;
   }
@@ -116,7 +125,7 @@ router.route("/login").post(async (req, res) => {
   //getting the post body
   const userInfo = req.body;
 
-  console.log(userInfo);
+  //console.log(userInfo);
 
   try {
     const { usernameInput, passwordInput } = userInfo;
@@ -130,24 +139,26 @@ router.route("/login").post(async (req, res) => {
     const allPosts = await postData.getAllPosts();
 
     //storing the user session
-    req.session.user = thisUser.user;
-    req.session.posts = thisUserPosts;
+
     if (thisUser.user.emailVerified) {
+      req.session.user = thisUser.user;
+      req.session.posts = thisUserPosts;
       //req.session.allPosts = allUsersPosts;
       //const allPosts = req.session.allPosts;
-      //res.status(200).json({ message: "Succefully logged in", success: true });
+      res.status(200).json({ message: "Succefully logged in", success: true });
       //res.status(200).render("../views/pages/landing", { user: thisUser.user, allPosts: allPosts });
-      return res.redirect("/home");
+      //res.redirect("/home");
       return;
     } else {
-      res.status(400).json({ error: "Please verify your account", success: false });
+      res.status(400).render("../views/errors/error", { title: "Error", error: "Please verify your account" });
       return;
     }
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     //in case of error, rendering login page again with error message
     // res.status(400).render("../views/pages/login", { error: e });
     res.status(400).json({ error: "Either userName or Password is incorrect!", success: false });
+    //res.status(400).render("../views/errors/error", { title: "Error", error: "Either userName or Password is incorrect!" });
     return;
   }
 });
@@ -234,10 +245,10 @@ router.route("/profile/:userName").get(async (req, res) => {
   if (user) {
     const thisUserPosts = await postData.getAllPostsbyUserName(user.userName);
     const employeeId = await userData.getEmployeeIdByUserName(user.userName);
-    const wishList = await employeeData.getAllJobsinWishList(employeeId);
-    const invites = await employeeData.getAllinvites(employeeId);
-    const currentJobs = await employeeData.getAllCurrentJobs(employeeId);
-    const historyOfJobs = await employeeData.getAllJobsCompleted(employeeId);
+    const wishList = await postData.getPostObjects(await employeeData.getAllJobsinWishList(employeeId));
+    const invites = await postData.getPostObjects(await employeeData.getAllinvites(employeeId));
+    const currentJobs = await postData.getPostObjects(await employeeData.getAllCurrentJobs(employeeId));
+    const historyOfJobs = await postData.getPostObjects(await employeeData.getAllJobsCompleted(employeeId));
     req.session.posts = thisUserPosts;
     const posts = req.session.posts;
 
@@ -265,7 +276,7 @@ router.route("/user/:userName").get(async (req, res) => {
 
   if (user) {
     if (user.userName == thatUser.userName) {
-      res.status(200).redirect("/profile/" + user.userName);
+      res.status(200).redirect("/profile/" + userName);
       return;
     }
     //console.log("user passed to user page", req.session.user);
@@ -282,12 +293,14 @@ router.route("/user/:userName/employee").get(async (req, res) => {
   const userName = req.params.userName;
   const thatUser = await userData.getUserByUserName(userName);
   const thatUserAsEmployee = await employeeData.getEmployeeByUserName(userName);
+  const historyOfJobs = await postData.getPostObjects(thatUserAsEmployee.historyOfJobs);
 
   if (user) {
     res.status(200).render("../views/pages/employeeprofile", {
       title: "Employee",
       user: thatUser,
       employee: thatUserAsEmployee,
+      historyOfJobs: historyOfJobs,
       style: "employeeProfile.css",
     });
     return;
@@ -302,11 +315,13 @@ router.route("/user/:userName/employer").get(async (req, res) => {
   const userName = req.params.userName;
   const thatUser = await userData.getUserByUserName(userName);
   const thatUserAsEmployer = await employerData.getEmployerByUserName(userName);
+  const historyOfJobs = await postData.getPostObjects(thatUserAsEmployer.historyOfJobs);
   if (user) {
     res.status(200).render("../views/pages/employerprofile", {
       title: "Employer",
       user: thatUser,
       employer: thatUserAsEmployer,
+      historyOfJobs: historyOfJobs,
       style: "employerProfile.css",
     });
     return;
@@ -329,9 +344,7 @@ router.route("/profile/:userName/addPost").get(async (req, res) => {
 router.route("/profile/:userName/edit").get(async (req, res) => {
   const user = req.session.user;
   if (user) {
-    res
-      .status(200)
-      .render("../views/pages/editProfile", { title: "Edit User", username: user.userName, style: "editProfile.css" });
+    res.status(200).render("../views/pages/editProfile", { title: "Edit User", user: user, style: "editProfile.css" });
     return;
   } else {
     res.status(401).render("../views/pages/forbiddenAccess", { title: "Forbidden Access" });
@@ -345,6 +358,12 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
     const { firstName, lastName, contactNumber, gender, preferences } = UserInfo;
     //console.log(req);
     //Validating the contents of UserInfo obj
+    let preferencesArr = [];
+    if (typeof preferences === "string") {
+      preferencesArr.push(preferences);
+    } else {
+      preferencesArr = preferences;
+    }
     try {
       //validations.UserValidation(userName,firstName,lastName,email,password,contactNumber,gender,dob,preferences)
 
@@ -352,10 +371,10 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
       validations.validateName(firstName);
       validations.validateName(lastName);
       validations.validatePhoneNumber(contactNumber);
-      validations.validatePreferences(preferences);
+      validations.validatePreferences(preferencesArr);
     } catch (e) {
-      console.log(e);
-      res.status(400).json({ error: e });
+      //console.log(e);
+      res.status(400).render("../views/errors/error", { title: "Error", error: e });
       return;
     }
 
@@ -365,7 +384,9 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
     } else {
       // check file suffix
       if (!/\.(pdf)$/.test(req.file.filename)) {
-        res.status(400).json({ error: "Please provide valid pdf document." });
+        res
+          .status(400)
+          .render("../views/errors/error", { title: "Error", error: "Please provide valid pdf document." });
         return;
       } else {
         resumeInput = xss(req.file.filename);
@@ -383,13 +404,14 @@ router.route("/profile/:userName/edit").post(upload, async (req, res) => {
       preferences,
       resumeInput
     );
-    //res.redirect("/");
-    res.status(200).json({ message: "Succefully updated user.", success: true });
+
+    res.redirect("/profile/" + user.userName.toLowerCase());
+    //res.status(200).json({ message: "Succefully updated user.", success: true });
     return;
   } catch (e) {
     console.log(e);
     //res.status(400).render("../views/pages/signup", { error: e });
-    res.status(400).json({ error: e, success: false });
+    res.status(400).render("../views/pages/editProfile", { error: e, user: user, style: "editProfile.css" });
     return;
   }
 });

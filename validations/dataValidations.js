@@ -70,12 +70,8 @@ const validateName = (inputName) => {
   if (inputName.trim().length === 0) throw "Name is empty.";
   if (inputName.includes(" ")) throw "Name should not contain spaces.";
   if (inputName.length < 2) throw "Name must contain at least 2 characters.";
-  const regexLetters = /[a-zA-Z]/;
-  if (inputName.search(regexLetters) < 0) {
-    throw "The userName must contains alphabets.";
-  }
-  const regex = new RegExp("^[a-zA-Z0-9]*$");
-  if (!regex.test(inputName)) throw "Name should contain only alphanumeric characters.";
+  const regex = new RegExp("^[a-zA-Z]*$");
+  if (!regex.test(inputName)) throw "Name should contain only alaphabets characters.";
 };
 
 const validateEmail = (inputEmail) => {
@@ -176,7 +172,7 @@ const validateJobType = (inputJobType) => {
 const validateTags = (inputTags) => {
   if (!inputTags) throw "Tags not provided.";
   if (typeof inputTags !== "string") throw "Tags is not of valid input type.";
-  if (inputTags.trim().length === 0) throw "Tags is empty.";
+  if (inputTags.trim().length === 0) throw "Tags is empty."; //res.status(200).json({ message: "Succefully Posted", success: true });
 };
 const validateSalary = (inputSalary) => {
   if (!inputSalary) throw "Salary not provided.";
@@ -240,10 +236,20 @@ const validateWorkEXP = (workExpYrs) => {
   if (!regex.test(workExpYrs)) throw "work experience field must only have digits.";
 };
 
-const validatePreferences = (preferences) => {
-  if (!preferences) throw "Preferences not provided.";
-  if (typeof preferences !== "string") throw "Preferences should be a string";
-  if (preferences.trim().length === 0) throw "Preferences cannot be empty or whitespaces.";
+const validatePreferences = (inputPreferences) => {
+  console.log(inputPreferences);
+  if (!inputPreferences) throw "Preferences not provided.";
+  if (!Array.isArray(inputPreferences) || inputPreferences.length < 1) {
+    throw "Preferences should be an array and it should contains atleast one preference";
+  }
+  for (let i = 0; i < inputPreferences.length; i++) {
+    if (typeof inputPreferences[i] !== "string") {
+      throw "Please enter a valid string, the preference values must be a string";
+    }
+    if (inputPreferences[i].trim().length === 0) {
+      throw "preference field should not be an empty spaces";
+    }
+  }
 };
 
 const validateGender = (gender) => {

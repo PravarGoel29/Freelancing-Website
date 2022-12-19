@@ -140,10 +140,6 @@ const addRating = async (employerId, rating, addFlag, oldRating) => {
     }
   );
 
-  if (updatedEmployer.modifiedCount === 0) {
-    throw "Employer not modified!";
-  }
-
   return await getEmployerById(employerId);
 };
 
@@ -163,6 +159,43 @@ const getEmployerByUserName = async (userName) => {
   return thisEmployer;
 };
 
+const reportAnEmployee = async (userName, employeeName) => {
+  userName = userName.toLowerCase();
+  employeeName = employeeName.toLowerCase();
+  //const flaggingEmployer = await getEmployerByUserName;
+  const employerCollection = await employers();
+  //2. checks if the employer with the given employerID is already in the DB
+  const thisEmployer = await employerCollection.findOne({ userName: userName });
+  if (thisEmployer === null) throw "No employer with that userName found";
+
+  let reported_ = thisEmployer.reported;
+  if (reported_.includes(employeeName)) {
+    throw " You have already flagged this employee";
+  }
+
+  reported_.push(employeeName);
+
+  const updatedEmployer = await employerCollection.updateOne(
+    { userName: userName },
+    {
+      $set: {
+        userName: thisEmployer.userName,
+        historyOfJobs: thisEmployer.historyOfJobs,
+        overallRating: thisEmployer.overallRating,
+        numberOfRatingsRecieved: thisEmployer.numberOfRatingsRecieved,
+        reported: reported_,
+        flag: thisEmployer.flag,
+      },
+    }
+  );
+
+  if (updatedEmployer.modifiedCount === 0) {
+    throw "Employer not modified!";
+  }
+
+  return await getEmployerByUserName(userName);
+};
+
 /**Exporting Modules*/
 module.exports = {
   createEmployer,
@@ -172,4 +205,5 @@ module.exports = {
   addPost,
   getEmployerByUserName,
   addRating,
+  reportAnEmployee,
 };

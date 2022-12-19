@@ -40,10 +40,10 @@
         <ul class="list-group list-group-flush">
             {{#each historyOfJobs}}
               <li class="list-group-item">
-                <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+                <div><p><a href="/post/{{this._id}}">{{this.title}}</a></p></div>
               </li>
             {{/each}}
-            <br />
+         
         </ul>
       </div>
     </li>
@@ -54,10 +54,10 @@
         <ul class="list-group list-group-flush">
           {{#each currentJobs}}
             <li class="list-group-item">
-              <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+              <div><p><a href="/post/{{this._id}}">{{this.title}}</a></p></div>
             </li>
           {{/each}}
-          <br />
+         
         </ul>
       </div>
     </li>
@@ -68,11 +68,11 @@
         <ul class="list-group list-group-flush">
           {{#each invites}}
             <li class="list-group-item">
-              <div><p><a href="/post/{{this}}">{{this}}</a>
-              <button class= "profile-invite-btn" type="button" id = "acceptinvite" onclick="location.href='/post/{{this}}/acceptinvite'">Accept Invite</button></p></div>
+              <div><p><a href="/post/{{this._id}}">{{this.title}}</a>
+              <button class= "profile-invite-btn" type="button" id = "acceptinvite" onclick="location.href='/post/{{this._id}}/acceptinvite'">Accept Invite</button></p></div>
             </li>
           {{/each}}
-          <br />
+        
         </ul>
       </div>
     </li>
@@ -83,10 +83,10 @@
         <ul class="list-group list-group-flush">
           {{#each wishList}}
             <li class="list-group-item">
-              <div><p><a href="/post/{{this}}">{{this}}</a></p></div>
+              <div><p><a href="/post/{{this._id}}">{{this.title}}</a></p></div>
             </li>
           {{/each}}
-          <br />
+      
         </ul>
       </div>
     </li>
@@ -97,19 +97,19 @@
         <ul class="list-group list-group-flush">
               {{#each posts}}
                 <li class="list-group-item">
-                  <div><p><a href="/post/{{this._id}}">{{this._id}} {{this.title}}</a></p></div>
+                  <div><p><a href="/post/{{this._id}}">{{this.title}}</a></p></div>
                 </li>
               {{/each}}
 
-              <br />
-              </br>
-            </br>
+       
+           
         </ul>
-    </li>
+</div>
+</ul>
+</div>
 
     
   {{!-- <a href="/home">Home</a> --}}
   {{/if}}
 
   {{#if error}}<div id="viewpost-error" class="error">{{error}}</div>{{/if}}
-</div>

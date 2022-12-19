@@ -138,6 +138,14 @@ const updateReview = async (reviewId, review, rating) => {
 
   return await getReviewById(reviewId);
 };
+const getReviewObjects = async (reviewIdArray) => {
+  //validations.validatePostIdArray(postIdArray);
+  let reviewObjectlist = [];
+  for (const reviewID of reviewIdArray) {
+    reviewObjectlist.push(await getReviewById(reviewID));
+  }
+  return reviewObjectlist;
+};
 
 const getReviewDetailsByReviewId = async (reviewId) => {
   validations.validateID(reviewId);
@@ -169,4 +177,11 @@ const getReviewDetailsByReviewId = async (reviewId) => {
   return reviewDetails;
 };
 
-module.exports = { createReview, getAllReviews, updateReview, getReviewById, getReviewDetailsByReviewId };
+module.exports = {
+  createReview,
+  getAllReviews,
+  updateReview,
+  getReviewById,
+  getReviewDetailsByReviewId,
+  getReviewObjects,
+};

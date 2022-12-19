@@ -5,7 +5,7 @@ $("#registration-form").submit(function (event) {
   let firstName = $("#firstName").val();
   let lastName = $("#lastName").val();
   let contactNumber = $("#contactNumber").val();
-  let preferences = $("#preferences").val();
+  //let preferences = $('input[type="checkbox"]:checked').val();
   let email = $("#email").val();
   let dob = $("#dob").val();
   let password = $("#password").val();
@@ -16,6 +16,12 @@ $("#registration-form").submit(function (event) {
       throw "Please select gender";
     }
 
+    let preferencesValues = [];
+
+    for (const elem of $("input[name='preferences']:checked")) {
+      preferencesValues.push(elem.value);
+    }
+
     validateUsername(username);
     validatePassword(password);
     validateName(firstName);
@@ -24,7 +30,7 @@ $("#registration-form").submit(function (event) {
     validateDOB(dob);
     validateEmail(email);
     validateConfirmPassword(password, confirmPassword);
-    validatePreferences(preferences);
+    validatePreferences(preferencesValues);
   } catch (e) {
     console.log(e);
     event.preventDefault();
@@ -53,12 +59,8 @@ const validateName = (inputName) => {
   if (inputName.trim().length === 0) throw "Name is empty.";
   if (inputName.includes(" ")) throw "Name should not contain spaces.";
   if (inputName.length < 2) throw "Name must contain at least 2 characters.";
-  const regexLetters = /[a-zA-Z]/;
-  if (inputName.search(regexLetters) < 0) {
-    throw "Name must contains alaphabets.";
-  }
-  const regex = new RegExp("^[a-zA-Z0-9]*$");
-  if (!regex.test(inputName)) throw "Name should contain only alphanumeric characters.";
+  const regex = new RegExp("^[a-zA-Z]*$");
+  if (!regex.test(inputName)) throw "Name should contain only alaphabets characters.";
 };
 
 const validatePassword = (inputPassword) => {
@@ -79,14 +81,18 @@ const validatePassword = (inputPassword) => {
   if (inputPassword.search(regexSpecialCharacter) < 0) {
     throw "Password should contain at least one special character";
   }
-}
+};
 
 const validateEmail = (inputEmail) => {
   if (!inputEmail) throw "Email not provided.";
   if (typeof inputEmail !== "string") throw "Email is not of valid input type.";
   if (inputEmail.trim().length === 0) throw "Email is empty.";
-  if (!/^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,6})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$/i.test(inputEmail)) {
-    throw "Email address is invalid format."
+  if (
+    !/^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,6})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$/i.test(
+      inputEmail
+    )
+  ) {
+    throw "Email address is invalid format.";
   }
 };
 
@@ -133,8 +139,17 @@ const validateContactNumber = (inputContactNumber) => {
 
 const validatePreferences = (inputPreferences) => {
   if (!inputPreferences) throw "Preferences not provided.";
-  if (typeof inputPreferences !== "string") throw "Preferences is not of valid input type.";
-  if (inputPreferences.trim().length === 0) throw "Preferences is empty.";
+  if (!Array.isArray(inputPreferences) || inputPreferences.length < 1) {
+    throw "Preferences should be an array and it should contains atleast one preference";
+  }
+  for (let i = 0; i < inputPreferences.length; i++) {
+    if (typeof inputPreferences[i] !== "string") {
+      throw "Please enter a valid string, the preference values must be a string";
+    }
+    if (inputPreferences[i].trim().length === 0) {
+      throw "preference field should not be an empty spaces";
+    }
+  }
 };
 
 const validateConfirmPassword = (inputPassword, inputConfirmPassword) => {
@@ -146,5 +161,3 @@ const validateConfirmPassword = (inputPassword, inputConfirmPassword) => {
     throw "Password and Confirm Password doesnt match";
   }
 };
-
-
