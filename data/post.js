@@ -37,7 +37,6 @@ const getApplicantsByPostId = async (postId) => {
 const createPost = async (location, description, title, domain, tags, jobtype, salary, userName) => {
   const postCollection = await posts();
   let postedTime = new Date().toLocaleDateString("en-US");
-
   validations.validateLocation(location);
   validations.validateDescription(description);
   validations.validateTitle(title);
